@@ -1,0 +1,1516 @@
+{
+    "Benches": [
+        {
+            "location": "Лесной проезд",
+            "lattitude": 54.9941001,
+            "longtitude": 73.2591734,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дорстрой",
+            "lattitude": 54.9956935,
+            "longtitude": 73.2274466,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Декабристов",
+            "lattitude": 54.9845392,
+            "longtitude": 73.3926105,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Старозагородная роща",
+            "lattitude": 55.0121541,
+            "longtitude": 73.3344038,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "3-я Енисейская",
+            "lattitude": 54.9853563,
+            "longtitude": 73.3389111,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "КДЦ Маяковский",
+            "lattitude": 54.9919177,
+            "longtitude": 73.3629477,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Главпочтамт",
+            "lattitude": 54.991242,
+            "longtitude": 73.3711998,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Торговый город",
+            "lattitude": 54.9781649,
+            "longtitude": 73.335175,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Телецентр",
+            "lattitude": 55.0210803,
+            "longtitude": 73.3074081,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Телецентр",
+            "lattitude": 55.0206778,
+            "longtitude": 73.3077366,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Аграрный университет",
+            "lattitude": 55.0171044,
+            "longtitude": 73.3164071,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Поворотная",
+            "lattitude": 54.9877888,
+            "longtitude": 73.3069665,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Фрунзе",
+            "lattitude": 54.9951109,
+            "longtitude": 73.3727211,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дом печати",
+            "lattitude": 54.9630929,
+            "longtitude": 73.3859874,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Социальный рынок",
+            "lattitude": 54.9786175,
+            "longtitude": 73.3176706,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Конева",
+            "lattitude": 54.9765533,
+            "longtitude": 73.3118442,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Кинотеатр Первомайский",
+            "lattitude": 55.0433014,
+            "longtitude": 73.3132516,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Старозагородная роща",
+            "lattitude": 55.0113583,
+            "longtitude": 73.3357222,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон Прибрежный",
+            "lattitude": 55.0054196,
+            "longtitude": 73.2923943,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон Прибрежный",
+            "lattitude": 55.004551,
+            "longtitude": 73.2937608,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Технический университет",
+            "lattitude": 55.0265838,
+            "longtitude": 73.2916939,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Арена-Омск",
+            "lattitude": 55.0109383,
+            "longtitude": 73.2928852,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сибзавод",
+            "lattitude": 55.0011424,
+            "longtitude": 73.3514818,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Городок Водников",
+            "lattitude": 55.0079615,
+            "longtitude": 73.3431985,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Рабиновича",
+            "lattitude": 54.9979151,
+            "longtitude": 73.3560628,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Городок Водников",
+            "lattitude": 55.0084025,
+            "longtitude": 73.3433147,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Амбулатория",
+            "lattitude": 54.9825449,
+            "longtitude": 73.3367247,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "Дворец творчества",
+            "lattitude": 55.0144542,
+            "longtitude": 73.3255171,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "По требованию",
+            "lattitude": 54.9937555,
+            "longtitude": 73.3579109,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Бульвар Зеленый",
+            "lattitude": 55.0040701,
+            "longtitude": 73.2835711,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Библиотека им. Пушкина",
+            "lattitude": 54.9930061,
+            "longtitude": 73.361021,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Хлебозавод",
+            "lattitude": 55.0191275,
+            "longtitude": 73.434818,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Криогенная техника",
+            "lattitude": 55.0175434,
+            "longtitude": 73.4450541,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Кирпичный завод",
+            "lattitude": 55.0111798,
+            "longtitude": 73.4538814,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа №30",
+            "lattitude": 55.0197315,
+            "longtitude": 73.4205765,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа №30",
+            "lattitude": 55.0181596,
+            "longtitude": 73.4200588,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Переезд",
+            "lattitude": 55.0186302,
+            "longtitude": 73.42902,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Заря",
+            "lattitude": 55.0217214,
+            "longtitude": 73.4096704,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Торговый город",
+            "lattitude": 54.97853,
+            "longtitude": 73.33275,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "СКК им. Блинова",
+            "lattitude": 54.9738099,
+            "longtitude": 73.3957703,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Лизы Чайкиной",
+            "lattitude": 54.9670919,
+            "longtitude": 73.4141183,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Жемчужина",
+            "lattitude": 54.9729386,
+            "longtitude": 73.3812774,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "11 микрорайон",
+            "lattitude": 54.9802768,
+            "longtitude": 73.3225008,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "КДЦ Маяковский",
+            "lattitude": 54.9911198,
+            "longtitude": 73.3657292,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "СКК им. Блинова",
+            "lattitude": 54.9733884,
+            "longtitude": 73.3957605,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Поворотная",
+            "lattitude": 54.9881356,
+            "longtitude": 73.3067901,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО Полёт",
+            "lattitude": 54.9551283,
+            "longtitude": 73.4141819,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО им. Баранова",
+            "lattitude": 54.9604545,
+            "longtitude": 73.4136371,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО им. Баранова",
+            "lattitude": 54.9605377,
+            "longtitude": 73.4147958,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Детский Мир",
+            "lattitude": 54.9782111,
+            "longtitude": 73.3813457,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО Полёт",
+            "lattitude": 54.9571766,
+            "longtitude": 73.4146669,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дмитриева",
+            "lattitude": 54.9847802,
+            "longtitude": 73.3139953,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "11-й микрорайон",
+            "lattitude": 54.9808163,
+            "longtitude": 73.3232103,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дмитриева",
+            "lattitude": 54.9863502,
+            "longtitude": 73.3109555,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "11-й микрорайон",
+            "lattitude": 54.9812496,
+            "longtitude": 73.3229247,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Конева",
+            "lattitude": 54.976542,
+            "longtitude": 73.3139629,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Студенческая",
+            "lattitude": 54.9897399,
+            "longtitude": 73.2962011,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Студенческая",
+            "lattitude": 54.9902238,
+            "longtitude": 73.2947797,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Гашека",
+            "lattitude": 54.9084274,
+            "longtitude": 73.4453936,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Гашека",
+            "lattitude": 54.9085696,
+            "longtitude": 73.4449915,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "3-я Енисейская",
+            "lattitude": 54.9857148,
+            "longtitude": 73.3385424,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Аптека",
+            "lattitude": 54.9817074,
+            "longtitude": 73.3871477,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Бульвар Зеленый",
+            "lattitude": 55.0038388,
+            "longtitude": 73.2842367,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "МСЧ №11",
+            "lattitude": 55.0145054,
+            "longtitude": 73.4198365,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Крупской (по требованию)",
+            "lattitude": 54.993354,
+            "longtitude": 73.3167542,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Крупской",
+            "lattitude": 54.9914691,
+            "longtitude": 73.320575,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Арена-Омск",
+            "lattitude": 55.0106971,
+            "longtitude": 73.2936439,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Городская больница №1",
+            "lattitude": 54.9968947,
+            "longtitude": 73.291932,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Агрохимцентр",
+            "lattitude": 55.0282875,
+            "longtitude": 73.3370381,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "СибНИИСХоз",
+            "lattitude": 55.0313069,
+            "longtitude": 73.3299047,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Таксопарк",
+            "lattitude": 54.9747249,
+            "longtitude": 73.3404839,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "Лизы Чайкиной",
+            "lattitude": 54.9659654,
+            "longtitude": 73.4129462,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Краеведческий музей",
+            "lattitude": 54.9810019,
+            "longtitude": 73.377021,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО Большевичка",
+            "lattitude": 54.9718389,
+            "longtitude": 73.4052121,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Степная",
+            "lattitude": 54.9713749,
+            "longtitude": 73.3978033,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "20-я Линия",
+            "lattitude": 54.9755419,
+            "longtitude": 73.4264655,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Цирк",
+            "lattitude": 54.9558294,
+            "longtitude": 73.3876407,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Челюскинцев",
+            "lattitude": 55.0193681,
+            "longtitude": 73.4065964,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Челюскинцев",
+            "lattitude": 55.0189881,
+            "longtitude": 73.406185,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Заря",
+            "lattitude": 55.0217052,
+            "longtitude": 73.4103148,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа №93",
+            "lattitude": 55.0137864,
+            "longtitude": 73.4057225,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дом Туриста",
+            "lattitude": 54.9862313,
+            "longtitude": 73.3775811,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "СМУ Омскавтотранс",
+            "lattitude": 54.999448,
+            "longtitude": 73.453606,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "СМУ Омскавтотранс",
+            "lattitude": 54.9996621,
+            "longtitude": 73.4537434,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Фабрика нетканых материалов",
+            "lattitude": 54.9973246,
+            "longtitude": 73.4433882,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Фабрика нетканых материалов",
+            "lattitude": 54.9977933,
+            "longtitude": 73.443875,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Декабристов",
+            "lattitude": 54.9847347,
+            "longtitude": 73.3913523,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "17-я Линия",
+            "lattitude": 54.9913439,
+            "longtitude": 73.4184003,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа №107",
+            "lattitude": 54.9136991,
+            "longtitude": 73.456823,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дружбы",
+            "lattitude": 55.0338824,
+            "longtitude": 73.2445506,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дружбы",
+            "lattitude": 55.0340906,
+            "longtitude": 73.2436316,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "20-я Линия",
+            "lattitude": 54.9863011,
+            "longtitude": 73.4253953,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "20-я Линия",
+            "lattitude": 54.9866416,
+            "longtitude": 73.4263599,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Больница",
+            "lattitude": 54.9933651,
+            "longtitude": 73.2932012,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Больница",
+            "lattitude": 54.9935667,
+            "longtitude": 73.2933385,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "МСЧ №11",
+            "lattitude": 55.013641,
+            "longtitude": 73.4193308,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Переезд",
+            "lattitude": 55.0187952,
+            "longtitude": 73.4286932,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Хлебозавод",
+            "lattitude": 55.019265,
+            "longtitude": 73.4339142,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.7123356,
+            "longtitude": 73.6808802,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.7349278,
+            "longtitude": 73.6423638,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Главпочтамт",
+            "lattitude": 54.9909921,
+            "longtitude": 73.3710346,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Областная детская больница",
+            "lattitude": 54.9800641,
+            "longtitude": 73.3977206,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Надеждино",
+            "lattitude": 55.1982847,
+            "longtitude": 73.2794908,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Мысль",
+            "lattitude": 54.9716773,
+            "longtitude": 73.4119118,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО Большевичка",
+            "lattitude": 54.9720562,
+            "longtitude": 73.4059917,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "15-я Рабочая",
+            "lattitude": 54.9397076,
+            "longtitude": 73.4230623,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.6695232,
+            "longtitude": 73.7942581,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.8075342,
+            "longtitude": 73.5816927,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.8070164,
+            "longtitude": 73.5816315,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.8126654,
+            "longtitude": 73.5877572,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "пос. Светлый",
+            "lattitude": 54.8699421,
+            "longtitude": 73.4629596,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "пос. Светлый",
+            "lattitude": 54.8694286,
+            "longtitude": 73.4631499,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Новоселецк",
+            "lattitude": 54.6605363,
+            "longtitude": 73.5211882,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Радость",
+            "lattitude": 54.9727367,
+            "longtitude": 73.3838696,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Ленинградская площадь",
+            "lattitude": 54.9724124,
+            "longtitude": 73.3822097,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Академия транспорта",
+            "lattitude": 54.9705422,
+            "longtitude": 73.3849091,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Рождественского",
+            "lattitude": 54.9421998,
+            "longtitude": 73.3843066,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Рождественского",
+            "lattitude": 54.9420336,
+            "longtitude": 73.3837237,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Гуртьева",
+            "lattitude": 54.9198188,
+            "longtitude": 73.3999698,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "пос. Южный",
+            "lattitude": 54.9220915,
+            "longtitude": 73.4523354,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "По требованию",
+            "lattitude": 54.9245841,
+            "longtitude": 73.5494525,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дворец школьников",
+            "lattitude": 54.9674438,
+            "longtitude": 73.4293404,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Дворец школьников",
+            "lattitude": 54.9673019,
+            "longtitude": 73.43138,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ДОЦ",
+            "lattitude": 54.9469868,
+            "longtitude": 73.2939899,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Администрация Кировского округа",
+            "lattitude": 54.9318627,
+            "longtitude": 73.3295689,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Новостройка",
+            "lattitude": 54.9284384,
+            "longtitude": 73.2770029,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Новостройка",
+            "lattitude": 54.9288843,
+            "longtitude": 73.2760164,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Площадь Ленина",
+            "lattitude": 54.981289,
+            "longtitude": 73.3806634,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "Драмтеатр",
+            "lattitude": 54.9875346,
+            "longtitude": 73.3726453,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Парк имени 300-летия Омска",
+            "lattitude": 54.9843212,
+            "longtitude": 73.2982142,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "КДЦ Кристалл",
+            "lattitude": 55.0298581,
+            "longtitude": 73.2856045,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "КДЦ Кристалл",
+            "lattitude": 55.0294212,
+            "longtitude": 73.2834269,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "КДЦ Кристалл",
+            "lattitude": 55.0284891,
+            "longtitude": 73.2863297,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Студия Ермолаевой",
+            "lattitude": 55.0352793,
+            "longtitude": 73.2891147,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Академия транспорта",
+            "lattitude": 54.9689341,
+            "longtitude": 73.383734,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Технический университет",
+            "lattitude": 55.0270457,
+            "longtitude": 73.2912468,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Голубой огонёк",
+            "lattitude": 54.9745609,
+            "longtitude": 73.3816937,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Медицинская академия",
+            "lattitude": 55.0246953,
+            "longtitude": 73.2968936,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ПО Баранова",
+            "lattitude": 54.9611451,
+            "longtitude": 73.4134347,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ТК Оазис",
+            "lattitude": 54.9939893,
+            "longtitude": 73.257478,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ТК Оазис",
+            "lattitude": 54.9942796,
+            "longtitude": 73.2566586,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа милиции",
+            "lattitude": 54.9933233,
+            "longtitude": 73.2864603,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Санаторий Омский",
+            "lattitude": 55.0183594,
+            "longtitude": 73.3400638,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Песчаная",
+            "lattitude": 55.0495205,
+            "longtitude": 73.1795299,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "Школа",
+            "lattitude": 54.9736413,
+            "longtitude": 73.3056461,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа",
+            "lattitude": 54.9756782,
+            "longtitude": 73.3020175,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "1-я Садовая",
+            "lattitude": 54.9763512,
+            "longtitude": 73.30023,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "1-я Садовая",
+            "lattitude": 54.9784861,
+            "longtitude": 73.3025134,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "33-я Северная",
+            "lattitude": 55.0299515,
+            "longtitude": 73.3767897,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин Весна",
+            "lattitude": 55.0294235,
+            "longtitude": 73.2496714,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "По требованию",
+            "lattitude": 54.9582043,
+            "longtitude": 73.3502287,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "33-я Северная",
+            "lattitude": 55.0306133,
+            "longtitude": 73.3782274,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Гараж ЦС",
+            "lattitude": 55.0292423,
+            "longtitude": 73.3650462,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ДК Химик",
+            "lattitude": 55.0416589,
+            "longtitude": 73.2944216,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Орджоникидзе",
+            "lattitude": 55.0089293,
+            "longtitude": 73.3660918,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Орджоникидзе",
+            "lattitude": 55.0091271,
+            "longtitude": 73.3638381,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Средняя",
+            "lattitude": 55.0090212,
+            "longtitude": 73.3592413,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Средняя",
+            "lattitude": 55.0090339,
+            "longtitude": 73.3566174,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "7-я Северная",
+            "lattitude": 55.0090396,
+            "longtitude": 73.3730448,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Поворот",
+            "lattitude": 55.1543909,
+            "longtitude": 73.254033,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 55.1558979,
+            "longtitude": 73.2551547,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Областная детская больница",
+            "lattitude": 54.9807003,
+            "longtitude": 73.3978435,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 55.2662205,
+            "longtitude": 73.0319532,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "None",
+            "lattitude": 55.2667628,
+            "longtitude": 73.0320527,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "None",
+            "lattitude": 55.2679264,
+            "longtitude": 73.0320187,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "Агрохимцентр",
+            "lattitude": 55.0292138,
+            "longtitude": 73.3361779,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"Сыропятские\"",
+            "lattitude": 54.9848128,
+            "longtitude": 73.8828204,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"Селена\"",
+            "lattitude": 54.9859345,
+            "longtitude": 73.8941577,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"Полёт\"",
+            "lattitude": 54.9878622,
+            "longtitude": 73.9015242,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"Омь\"",
+            "lattitude": 54.9929892,
+            "longtitude": 73.9012927,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"Дубрава\"",
+            "lattitude": 54.9984002,
+            "longtitude": 73.8951722,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады \"33-й км\"",
+            "lattitude": 55.0250989,
+            "longtitude": 73.8721276,
+            "is_pending": false,
+            "is_covered": false
+        },
+        {
+            "location": "25-я Линия",
+            "lattitude": 54.9920321,
+            "longtitude": 73.4306464,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон Рябиновка",
+            "lattitude": 54.9869696,
+            "longtitude": 73.2019517,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Остановка Газелей-\"Дружба\"",
+            "lattitude": 55.0039907,
+            "longtitude": 74.1072476,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "По требованию",
+            "lattitude": 55.0287383,
+            "longtitude": 73.3377916,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ЖК Кристалл",
+            "lattitude": 54.9875379,
+            "longtitude": 73.3001843,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ЖК Кристалл",
+            "lattitude": 54.9882513,
+            "longtitude": 73.2991669,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Новостройка",
+            "lattitude": 55.0051569,
+            "longtitude": 73.463468,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "4-я Линия",
+            "lattitude": 54.9903378,
+            "longtitude": 73.4013151,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "4-я Линия",
+            "lattitude": 54.9905118,
+            "longtitude": 73.4005963,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Универсам",
+            "lattitude": 54.9900023,
+            "longtitude": 73.306803,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Бекишево",
+            "lattitude": 55.5750796,
+            "longtitude": 72.7114998,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Бекишево",
+            "lattitude": 55.5754654,
+            "longtitude": 72.7111907,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "70 лет Октября (по требованию)",
+            "lattitude": 54.9838119,
+            "longtitude": 73.3168854,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон Уютный",
+            "lattitude": 54.9105979,
+            "longtitude": 73.4655236,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон Уютный",
+            "lattitude": 54.9112648,
+            "longtitude": 73.4649912,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады Фантазия",
+            "lattitude": 55.0013551,
+            "longtitude": 73.5182427,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Аграрный университет",
+            "lattitude": 55.0178307,
+            "longtitude": 73.315513,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Любинский проспект",
+            "lattitude": 54.9847231,
+            "longtitude": 73.3749805,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Овчинно-меховая фабрика",
+            "lattitude": 54.9860043,
+            "longtitude": 73.3328819,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Магазин",
+            "lattitude": 54.9857827,
+            "longtitude": 73.311675,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Школа №33",
+            "lattitude": 55.0074842,
+            "longtitude": 73.465719,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Микрорайон АванГрад",
+            "lattitude": 54.9843006,
+            "longtitude": 73.3358043,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Садовая",
+            "lattitude": 54.9810116,
+            "longtitude": 73.293778,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "20-я Линия",
+            "lattitude": 54.991939,
+            "longtitude": 73.4252384,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "33-я Северная",
+            "lattitude": 55.0311559,
+            "longtitude": 73.3772872,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "1-я Садовая",
+            "lattitude": 54.9778536,
+            "longtitude": 73.3011817,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Гуртьева",
+            "lattitude": 54.9200893,
+            "longtitude": 73.3991124,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Большие Поля",
+            "lattitude": 55.0685979,
+            "longtitude": 73.418252,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ЛДС им. Фетисова",
+            "lattitude": 55.0091617,
+            "longtitude": 73.4005889,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 54.995889,
+            "longtitude": 73.3636925,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "По требованию",
+            "lattitude": 55.0388346,
+            "longtitude": 73.4486246,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 55.0390228,
+            "longtitude": 73.4465412,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "None",
+            "lattitude": 55.0395093,
+            "longtitude": 73.447655,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "17-я Линия",
+            "lattitude": 54.9914066,
+            "longtitude": 73.4170416,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "25-я Линия",
+            "lattitude": 54.9921944,
+            "longtitude": 73.4298679,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Сады Молния-5",
+            "lattitude": 55.0043103,
+            "longtitude": 73.513298,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Любинский проспект",
+            "lattitude": 54.9857081,
+            "longtitude": 73.3746265,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Овчинно-меховая фабрика",
+            "lattitude": 54.9865014,
+            "longtitude": 73.3320612,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Берёзовая роща",
+            "lattitude": 54.9784857,
+            "longtitude": 73.2959923,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Берёзовая роща",
+            "lattitude": 54.9789107,
+            "longtitude": 73.2954287,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ОВТИУ",
+            "lattitude": 54.8463848,
+            "longtitude": 73.4032957,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "ОВТИУ",
+            "lattitude": 54.8462406,
+            "longtitude": 73.4034451,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Транссибирская",
+            "lattitude": 54.9550149,
+            "longtitude": 73.3333835,
+            "is_pending": false,
+            "is_covered": true
+        },
+        {
+            "location": "Транссибирская",
+            "lattitude": 54.9556194,
+            "longtitude": 73.3329959,
+            "is_pending": false,
+            "is_covered": true
+        }
+    ]
+}
