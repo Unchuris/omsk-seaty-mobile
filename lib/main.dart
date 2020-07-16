@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
           create: (context) => MapBloc(
               repository: MarkerRepository(),
               geolocationRepository: GeolocationRepository()),
-          child: MapScreen()),
+          child: MaterialApp(
+            home: MapScreen(),
+          )),
     );
   }
 }

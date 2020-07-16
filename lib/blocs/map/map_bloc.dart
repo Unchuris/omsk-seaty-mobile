@@ -17,7 +17,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final GeolocationRepository _geolocationRepository;
   final MarkerRepository _repository;
   Map<String, Marker> _markers;
-
+  Position _currentPosition;
   StreamSubscription<Position> _currentPositionSubcription;
 
   MapBloc(
@@ -37,24 +37,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   ) async* {
     if (event is ButtonGetCurrentLocationPassedEvent) {
       yield* _mapCurrentLocationUpdatingToState(event);
-      //print(event.toString());
     }
     if (event is MapGetCurrentLocationUpdatingEvent) {
       yield* _mapMapGetCurrentLocationToState(event);
-      //print(event.toString());
-    }
-    if (event is CameraAnimateToUserLocation) {
-      yield CameraAnimatedToUserLocation();
-      //print(event.toString());
     }
     if (event is MapMarkerInitialing) {
+      yield MarkersInitial();
       _repository.getMarkers().then((value) {
         _markers = value;
         add(MapMarkerInitialedStop(markers: _markers));
       });
-      yield MarkersInitial();
-
-      //print(event.toString());
     }
     if (event is MapMarkerInitialedStop) {
       _markers = event.markers;
@@ -70,16 +62,23 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Stream<MapState> _mapCurrentLocationUpdatingToState(
       ButtonGetCurrentLocationPassedEvent event) async* {
-    yield MapCurrentLocationUpdatingState();
-    _currentPositionSubcription =
-        _geolocationRepository.getCurrentPositionStream().listen((position) {
-      add(MapGetCurrentLocationUpdatingEvent(currentPosition: position));
-    });
+    if (_currentPositionSubcription == null) {
+      yield MapCurrentLocationUpdatingState();
+      _currentPositionSubcription =
+          _geolocationRepository.getCurrentPositionStream().listen((position) {
+        _currentPosition = position;
+        add(MapGetCurrentLocationUpdatingEvent());
+      });
+    } else {
+      yield MapCurrentLocationUpdatingState();
+      _currentPositionSubcription.resume();
+      add(MapGetCurrentLocationUpdatingEvent());
+    }
   }
 
   Stream<MapState> _mapMapGetCurrentLocationToState(
       MapGetCurrentLocationUpdatingEvent event) async* {
-    _currentPositionSubcription?.cancel();
-    yield MapCurrentLocationUpdatedState(position: event.currentPosition);
+    yield MapCurrentLocationUpdatedState(position: _currentPosition);
+    _currentPositionSubcription.pause();
   }
 }

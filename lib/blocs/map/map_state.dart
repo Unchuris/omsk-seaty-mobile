@@ -39,15 +39,6 @@ class MapCurrentLocationUpdatingState extends MapState {
   String toString() => "MapCurrentLocationUpdatingState";
 }
 
-class CameraAnimatedToUserLocation extends MapState {
-  const CameraAnimatedToUserLocation();
-
-  List<Object> get props => [];
-
-  @override
-  String toString() => "MapCurrentLocationUpdatingState";
-}
-
 class MapCurrentLocationUpdatedState extends MapState {
   final Position position;
   const MapCurrentLocationUpdatedState({this.position});

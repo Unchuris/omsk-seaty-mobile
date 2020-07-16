@@ -16,25 +16,14 @@ class ButtonGetCurrentLocationPassedEvent extends MapEvent {
   String toString() => "ButtonGetCurrentLocationPass {}";
 }
 
-class CameraAnimateToUserLocation extends MapEvent {
-  const CameraAnimateToUserLocation();
+class MapGetCurrentLocationUpdatingEvent extends MapEvent {
+  const MapGetCurrentLocationUpdatingEvent();
+
   @override
   List<Object> get props => [];
 
   @override
-  String toString() => "CameraAnimateToUserLocation {}";
-}
-
-class MapGetCurrentLocationUpdatingEvent extends MapEvent {
-  final Position currentPosition;
-  const MapGetCurrentLocationUpdatingEvent({@required this.currentPosition});
-
-  @override
-  List<Object> get props => [currentPosition];
-
-  @override
-  String toString() =>
-      "MapGetCurrentLocationEvent {currentPosition: $currentPosition}";
+  String toString() => "MapGetCurrentLocationEvent ";
 }
 
 class MapMarkerInitialing extends MapEvent {

@@ -20,13 +20,12 @@ class _MapScreenState extends State<MapScreen> {
         listeners: [
           BlocListener<MapBloc, MapState>(listener: (context, state) async {
             if (state is MapCurrentLocationUpdatedState) {
-              await _controller.future.then(
-                (controller) => controller.animateCamera(
-                    CameraUpdate.newLatLngZoom(
-                        LatLng(
-                            state.position.latitude, state.position.longitude),
-                        16)),
-              );
+              print(state.toString());
+              await _controller.future.then((controller) {
+                controller.animateCamera(CameraUpdate.newLatLngZoom(
+                    LatLng(state.position.latitude, state.position.longitude),
+                    16));
+              });
             }
             if (state is MapInitial) {
               print(state.toString());
@@ -39,13 +38,10 @@ class _MapScreenState extends State<MapScreen> {
             }
 
             if (state is MapCurrentLocationUpdatingState) {
-              //print(state.toString());
+              print(state.toString());
             }
             if (state is MapErrorState) {
               //print(state.toString());
-            }
-            if (state is CameraAnimatedToUserLocation) {
-              print(state.toString());
             }
           }),
         ],
