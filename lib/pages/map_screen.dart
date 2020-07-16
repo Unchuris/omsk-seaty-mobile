@@ -82,6 +82,7 @@ class _MapScreenState extends State<MapScreen> {
     _controller.complete(controller);
   }
 
+  //создаю кнопку мое местоположение
   Widget _buildMyLocation() {
     return SizedBox(
       child: FloatingActionButton(
