@@ -36,10 +36,10 @@ class MapMarkerInitialing extends MapEvent {
 }
 
 class MapMarkerInitialedStop extends MapEvent {
-  final Map<String, Marker> markers;
-  const MapMarkerInitialedStop({this.markers});
+  final List<Benches> benches;
+  const MapMarkerInitialedStop({this.benches});
 
-  List<Object> get props => [markers];
+  List<Object> get props => [benches];
 
   @override
   String toString() => "MapMarkerInitialing {}";

@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.2"
+  fluster:
+    dependency: "direct main"
+    description:
+      name: fluster
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -113,6 +120,11 @@ packages:
     version: "1.0.8"
   flutter_test:
     dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -151,6 +163,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.12"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   location_permissions:
     dependency: transitive
     description:
@@ -158,6 +177,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0+1"
+  mapbox_gl:
+    dependency: "direct main"
+    description:
+      name: mapbox_gl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
+  mapbox_gl_dart:
+    dependency: transitive
+    description:
+      name: mapbox_gl_dart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
+  mapbox_gl_platform_interface:
+    dependency: transitive
+    description:
+      name: mapbox_gl_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
+  mapbox_gl_web:
+    dependency: transitive
+    description:
+      name: mapbox_gl_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   matcher:
     dependency: transitive
     description:

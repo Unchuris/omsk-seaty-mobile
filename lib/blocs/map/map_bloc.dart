@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:omsk_seaty_mobile/models/benches.dart';
 import 'package:omsk_seaty_mobile/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/repositories/marker_repository.dart';
 
@@ -16,7 +16,7 @@ part 'map_state.dart';
 class MapBloc extends Bloc<MapEvent, MapState> {
   final GeolocationRepository _geolocationRepository;
   final MarkerRepository _repository;
-  Map<String, Marker> _markers;
+  List<Benches> _benches;
   Position _currentPosition;
   StreamSubscription<Position> _currentPositionSubcription;
 
@@ -37,20 +37,24 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   ) async* {
     if (event is ButtonGetCurrentLocationPassedEvent) {
       yield* _mapCurrentLocationUpdatingToState(event);
-    }
-    if (event is MapGetCurrentLocationUpdatingEvent) {
+    } else if (event is MapGetCurrentLocationUpdatingEvent) {
       yield* _mapMapGetCurrentLocationToState(event);
-    }
-    if (event is MapMarkerInitialing) {
+    } else if (event is MapMarkerInitialing) {
       yield MarkersInitial();
+      if (_currentPositionSubcription == null) {
+        _currentPositionSubcription = _geolocationRepository
+            .getCurrentPositionStream()
+            .listen((position) {
+          _currentPosition = position;
+        });
+      }
       _repository.getMarkers().then((value) {
-        _markers = value;
-        add(MapMarkerInitialedStop(markers: _markers));
+        _benches = value;
+        add(MapMarkerInitialedStop(benches: _benches));
       });
-    }
-    if (event is MapMarkerInitialedStop) {
-      _markers = event.markers;
-      yield MarkersInitialed(markers: _markers);
+    } else if (event is MapMarkerInitialedStop) {
+      _benches = event.benches;
+      yield MarkersInitialed(benches: _benches);
     }
   }
 

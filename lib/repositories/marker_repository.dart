@@ -1,28 +1,25 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/models/benches.dart';
 
 /* Преобразую json в объекты лабочек затем в словарь с маркерами */
 class MarkerRepository {
-  Map<String, Marker> markers;
-
-  Future<Map<String, Marker>> getMarkers() async {
+  Future<List<Benches>> getMarkers() async {
     var data =
         await rootBundle.loadString("assets/127_0_0_1.json").then((data) {
       var file = jsonDecode(data);
       List<Benches> benches =
           List<Benches>.from(file["Benches"].map((i) => Benches.fromJson(i)));
-
-      markers = Map.fromIterable(benches,
+      return benches;
+    });
+    return data;
+  }
+}
+/* markers = Map.fromIterable(benches,
           key: (e) => e.location,
           value: (e) => Marker(
               markerId: MarkerId(e.location),
               position: LatLng(e.latitude, e.longitude),
               infoWindow: InfoWindow(title: e.location)));
-      return markers;
-    });
-    return data;
-  }
-}
+      return markers; */

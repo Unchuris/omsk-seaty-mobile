@@ -3,6 +3,33 @@
   json с лавочками в assets 
  */
 
+import 'package:fluster/fluster.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+/* class MapMarker extends Clusterable {
+  String locationName;
+  String thumbnailSrc;
+
+  MapMarker(
+      {this.locationName,
+      latitude,
+      longitude,
+      this.thumbnailSrc,
+      isCluster = false,
+      clusterId,
+      pointsSize,
+      markerId,
+      childMarkerId})
+      : super(
+            latitude: latitude,
+            longitude: longitude,
+            isCluster: isCluster,
+            clusterId: clusterId,
+            pointsSize: pointsSize,
+            markerId: markerId,
+            childMarkerId: childMarkerId);
+}
+ */
 class Benches {
   String location;
   double latitude;
