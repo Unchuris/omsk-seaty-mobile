@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:omsk_seaty_mobile/pages/googlemap_screen.dart';
 import 'package:omsk_seaty_mobile/pages/mapbox_screen.dart';
 
 class CustomDrawer extends StatelessWidget {

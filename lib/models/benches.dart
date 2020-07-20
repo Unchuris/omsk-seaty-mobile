@@ -4,7 +4,6 @@
  */
 
 import 'package:fluster/fluster.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /* class MapMarker extends Clusterable {
   String locationName;
