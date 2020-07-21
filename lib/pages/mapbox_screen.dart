@@ -44,11 +44,14 @@ class _MapBoxPageState extends State<MapBoxPage> {
                                 state.position.longitude),
                             18.0),
                       ));
-            } else if (state is MapInitial) {
+            }
+            if (state is MapInitial) {
               print(state.toString());
-            } else if (state is MarkersInitial) {
+            }
+            if (state is MarkersInitial) {
               print(state.toString());
-            } else if (state is MarkersInitialed) {
+            }
+            if (state is MarkersInitialed) {
               await addImageFromAsset('pin', 'assets/pin.png');
               await addImageFromAsset('selectedpin', 'assets/selected-pin.png');
               await addImageFromAsset('pin1', 'assets/pin1.png');
