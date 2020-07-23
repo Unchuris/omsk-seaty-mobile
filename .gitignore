@@ -50,6 +50,10 @@ captures/
 # is commented out by default.
 .vscode/
 
+#Flutter
+.packages
+pubspec.lock
+
 #Dart
 .dart_tool/
 
