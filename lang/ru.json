@@ -1,3 +1,7 @@
 {
-    "app_name": "Лавочки Омска"
+    "app_name": "Лавочки Омска",
+    "string_settings": "Настройки",
+    "string_help": "Помощь",
+    "string_about": "О приложении",
+    "string_starred": "Избранное"
 }
