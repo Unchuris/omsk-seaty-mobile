@@ -11,6 +11,9 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  MapBloc mapBloc = MapBloc(
+      repository: MarkerRepository(),
+      geolocationRepository: GeolocationRepository());
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,14 +22,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BlocProvider(
-          // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
-          create: (context) => MapBloc(
-              repository: MarkerRepository(),
-              geolocationRepository: GeolocationRepository()),
-          child: MaterialApp(
-            home: MapScreen(),
-          )),
+      initialRoute: MapScreen().routeName,
+      routes: {
+        MapScreen().routeName: (context) => BlocProvider<MapBloc>(
+              // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
+              create: (context) => mapBloc,
+
+              child: MapScreen(),
+            ),
+      },
     );
   }
 }

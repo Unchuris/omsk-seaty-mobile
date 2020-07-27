@@ -20,14 +20,12 @@ class MarkersInitial extends MapState {
 }
 
 class MarkersInitialed extends MapState {
-  final Map<String, Marker> markers;
-
-  const MarkersInitialed({this.markers});
+  const MarkersInitialed();
   @override
-  List<Object> get props => [markers];
+  List<Object> get props => [];
 
   @override
-  String toString() => "MarkersInitialed markers: {$markers}";
+  String toString() => "MarkersInitialed markers: {}";
 }
 
 class MapCurrentLocationUpdatingState extends MapState {
@@ -71,4 +69,11 @@ class MapMarkerPressedState extends MapState {
   @override
   String toString() =>
       "MapMarkerPressedState {markerId: $markerId, index: $index}";
+}
+
+class ZoomUpdated extends MapState {
+  const ZoomUpdated();
+
+  @override
+  List<Object> get props => [];
 }
