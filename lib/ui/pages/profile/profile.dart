@@ -24,10 +24,12 @@ class ProfilePage extends StatelessWidget {
                 background: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(profile.imageUrl),
-                    ),
+                    Hero(
+                        tag: 'avatar',
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(profile.imageUrl),
+                        )),
                     SizedBox(height: 10),
                     Text(
                       "Elon Musk",

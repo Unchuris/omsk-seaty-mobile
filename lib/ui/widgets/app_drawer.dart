@@ -50,12 +50,13 @@ class _AppDrawerState extends State<AppDrawer> {
 Widget _createHeader(
     {String name, String email, String imageUrl, GestureTapCallback onTap}) {
   return UserAccountsDrawerHeader(
-    accountName: Text(name),
-    accountEmail: Text(email),
-    onDetailsPressed: onTap,
-    currentAccountPicture:
-        CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
-  );
+      accountName: Text(name),
+      accountEmail: Text(email),
+      onDetailsPressed: onTap,
+      currentAccountPicture: Hero(
+        tag: 'avatar',
+        child: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+      ));
 }
 
 Widget _createDrawerItem(
