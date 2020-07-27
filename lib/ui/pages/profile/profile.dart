@@ -15,7 +15,7 @@ class ProfilePage extends StatelessWidget {
           return <Widget>[
             SliverAppBar(
               title: SliverAppBarTitle(
-                child: Text("${profile.firstName} ${profile.middleName}"),
+                child: Text('${profile.firstName} ${profile.middleName}'),
               ),
               primary: true,
               pinned: true,
@@ -32,7 +32,7 @@ class ProfilePage extends StatelessWidget {
                         )),
                     SizedBox(height: 10),
                     Text(
-                      "Elon Musk",
+                      'Elon Musk',
                       style: TextStyle(fontSize: 24),
                     ),
                   ],
@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
             )
           ];
         },
-        body: Center(child: Text("body")),
+        body: Center(child: Text('body')),
       ),
     );
   }

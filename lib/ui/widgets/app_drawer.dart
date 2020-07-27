@@ -18,7 +18,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: ListView(
           children: <Widget>[
             _createHeader(
-                name: "${profile.firstName} ${profile.middleName}",
+                name: '${profile.firstName} ${profile.middleName}',
                 email: profile.email,
                 imageUrl: profile.imageUrl,
                 onTap: () {
