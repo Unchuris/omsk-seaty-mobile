@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
+import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Omsk Seaty',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
+        accentColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       supportedLocales: [Locale('en', 'US'), Locale('ru', 'RU')],
@@ -31,7 +34,10 @@ class MyApp extends StatelessWidget {
         return supportedLocales.first;
       },
       initialRoute: '/',
-      routes: {'/': (context) => MapPage()},
+      routes: {
+        '/': (context) => MapPage(),
+        '/profile': (context) => ProfilePage()
+      },
     );
   }
 }

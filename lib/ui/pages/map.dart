@@ -17,7 +17,6 @@ class MapPage extends StatelessWidget {
             left: 5,
             child: SizedBox(
               child: IconButton(
-                splashColor: Colors.grey,
                 icon: Icon(Icons.menu),
                 onPressed: () => _scaffoldKey.currentState.openDrawer(),
               ),
