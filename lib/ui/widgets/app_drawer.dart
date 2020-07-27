@@ -13,9 +13,9 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return new SizedBox(
+    return SizedBox(
       child: Drawer(
-        child: new ListView(
+        child: ListView(
           children: <Widget>[
             _createHeader(
                 name: profile.firstName + ' ' + profile.middleName,

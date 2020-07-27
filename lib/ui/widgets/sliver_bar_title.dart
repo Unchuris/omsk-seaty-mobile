@@ -6,7 +6,7 @@ class SliverAppBarTitle extends StatefulWidget {
 
   @override
   _SliverAppBarTitleState createState() {
-    return new _SliverAppBarTitleState();
+    return _SliverAppBarTitleState();
   }
 }
 
