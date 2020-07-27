@@ -30,6 +30,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   StreamSubscription _cameraZoomSubscription;
 
   Map<String, MapMarker> _mediaPool = {};
+
   final _markerController = StreamController<Map<MarkerId, Marker>>.broadcast();
 
   final _cameraZoomController = StreamController<double>.broadcast();
@@ -134,7 +135,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _fluster = Fluster<MapMarker>(
         minZoom: 0,
         maxZoom: maxZoom,
-        radius: 120,
+        radius: 512,
         extent: 2048,
         nodeSize: 32,
         points: _mediaPool.values.toList(),

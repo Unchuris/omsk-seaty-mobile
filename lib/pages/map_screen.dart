@@ -47,43 +47,37 @@ class _MapScreenState extends State<MapScreen> {
             }
           }),
         ],
-        child: BlocBuilder<MapBloc, MapState>(builder: (context, mapState) {
-          if (mapState is MarkersInitialed) {
-            if (_markers == null) {
-              BlocProvider.of<MapBloc>(context).markers.listen((event) {
-                _markers = event;
-              });
-            }
-          }
-
-          return Stack(children: <Widget>[
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(54.991351, 73.364528), zoom: 16),
-              zoomControlsEnabled: false,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: false,
-              mapToolbarEnabled: false,
-              onMapCreated: _onMapCreated,
-              onCameraMove: _onCameraMove,
-              onCameraIdle: _onCameraIdle,
-              markers: (_markers != null)
-                  ? Set<Marker>.from(_markers.values)
-                  : Set(),
-            ),
-            Positioned(
-              bottom: 30,
-              left: 5,
-              child: _buildMyLocation(),
-            ),
-            Positioned(
-              top: 20,
-              left: 5,
-              child: _buildHamburger(),
-            ),
-          ]);
-        }),
+        child: StreamBuilder(
+            stream: BlocProvider.of<MapBloc>(context).markers,
+            builder: (context, snapshot) {
+              return Stack(children: <Widget>[
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(54.991351, 73.364528), zoom: 12),
+                  zoomControlsEnabled: false,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  compassEnabled: false,
+                  mapToolbarEnabled: false,
+                  onMapCreated: _onMapCreated,
+                  onCameraMove: _onCameraMove,
+                  onCameraIdle: _onCameraIdle,
+                  markers: (snapshot.data != null)
+                      ? Set<Marker>.from(snapshot.data.values)
+                      : Set(),
+                ),
+                Positioned(
+                  bottom: 30,
+                  left: 5,
+                  child: _buildMyLocation(),
+                ),
+                Positioned(
+                  top: 20,
+                  left: 5,
+                  child: _buildHamburger(),
+                ),
+              ]);
+            }),
       ),
       drawer: CustomDrawer(
         currentPage: "Карта",
@@ -136,7 +130,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onCameraIdle() {
     BlocProvider.of<MapBloc>(context).setCameraZoom(_currentZoom);
-    BlocProvider.of<MapBloc>(context).add(MapMarkerInitialing());
+
     print("камера остановилась");
   }
 
