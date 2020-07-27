@@ -15,7 +15,7 @@ class ProfilePage extends StatelessWidget {
           return <Widget>[
             SliverAppBar(
               title: SliverAppBarTitle(
-                child: Text(profile.firstName + ' ' + profile.middleName),
+                child: Text("${profile.firstName} ${profile.middleName}"),
               ),
               primary: true,
               pinned: true,
