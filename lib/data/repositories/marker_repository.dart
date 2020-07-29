@@ -1,27 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:omsk_seaty_mobile/data/models/benches.dart';
 
 /* Преобразую json в объекты лабочек затем в словарь с маркерами */
 class MarkerRepository {
   Future<List<Benches>> getMarkers() async {
-    var data =
-        await rootBundle.loadString("assets/127_0_0_1.json").then((data) {
-      var file = jsonDecode(data);
-      List<Benches> benches =
-          List<Benches>.from(file["Benches"].map((i) => Benches.fromJson(i)));
+    var url = "https://omsk-seaty-backend.herokuapp.com/api/benches/json/";
+    final response =
+        await http.get(url, headers: {'Content-Type': 'application/json'});
 
-      /*    markers = Map.fromIterable(benches,
-          key: (e) => MarkerId(e.location),
-          value: (e) => Marker(
-              markerId: MarkerId(e.location),
-              position: LatLng(e.latitude, e.longitude),
-              infoWindow: InfoWindow(title: e.location)));
-      return markers; */
-      return benches;
-    });
-    return data;
+    if (response.statusCode == 200) {
+      var b = Bench.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return b.benches;
+    } else {
+      throw Exception('Ошибка загрузки данных');
+    }
   }
 }

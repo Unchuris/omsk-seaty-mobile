@@ -138,7 +138,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
               markerId: i.toString(),
               latitude: value[i].latitude,
               longitude: value[i].longitude,
-              locationName: value[i].location,
+              locationName: value[i].title,
               thumbnailSrc: "park.png")
       };
       return result;
