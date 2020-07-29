@@ -112,7 +112,6 @@ doc/api/
 # Flutter/Dart/Pub related
 **/doc/api/
 .flutter-plugins
-
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
@@ -174,3 +173,4 @@ doc/api/
 .history
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter,dart,visualstudiocode
+
