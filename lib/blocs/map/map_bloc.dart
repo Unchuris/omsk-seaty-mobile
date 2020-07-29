@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:omsk_seaty_mobile/models/map_marker.dart';
-import 'package:omsk_seaty_mobile/repositories/geolocation_repository.dart';
-import 'package:omsk_seaty_mobile/repositories/marker_repository.dart';
+import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:image/image.dart' as images;
+import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 
 part 'map_event.dart';
 part 'map_state.dart';
@@ -26,8 +26,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final MarkerRepository _repository;
 
   Position _currentPosition;
+  Map<MarkerId, Marker> _markers;
   StreamSubscription<Position> _currentPositionSubcription;
   StreamSubscription _cameraZoomSubscription;
+  StreamSubscription _visibleReginSubscription;
 
   Map<String, MapMarker> _mediaPool = {};
 
@@ -35,14 +37,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   final _cameraZoomController = StreamController<double>.broadcast();
 
+  final _cameraVisibleRegion = StreamController<LatLngBounds>.broadcast();
+  LatLngBounds _currentVisibleRegion;
   Function(Map<MarkerId, Marker>) get addMarkers => _markerController.sink.add;
   Function(double) get setCameraZoom => _cameraZoomController.sink.add;
+  Function(LatLngBounds) get setVisibleRegion => _cameraVisibleRegion.sink.add;
 
-  var _currentZoom = 12;
+  var _currentZoom = 11;
   Fluster<MapMarker> _fluster;
 
   Stream<Map<MarkerId, Marker>> get markers => _markerController.stream;
   Stream<double> get cameraZoom => _cameraZoomController.stream;
+  Stream<LatLngBounds> get visibleRegion => _cameraVisibleRegion.stream;
 
   MapBloc(
       {@required GeolocationRepository geolocationRepository,
@@ -73,16 +79,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         });
       }
       _buildMediaPool();
+      _visibleReginSubscription = visibleRegion.listen((event) {
+        _currentVisibleRegion = event;
+        _displayMarkers(_mediaPool);
+      });
       _cameraZoomSubscription = cameraZoom.listen((zoom) {
         if (_currentZoom != zoom.toInt()) {
           _currentZoom = zoom.toInt();
 
           _displayMarkers(_mediaPool);
-          add(MapMarkerInitialedStop());
         }
       });
+      add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
-      yield MarkersInitialed();
+      yield MarkersInitialed(markers: _markers);
     }
   }
 
@@ -90,8 +100,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<void> close() {
     _currentPositionSubcription?.cancel();
     _cameraZoomSubscription.cancel();
+    _visibleReginSubscription.cancel();
     _markerController.close();
     _cameraZoomController.close();
+    _cameraVisibleRegion.close();
+
     return super.close();
   }
 
@@ -120,12 +133,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   void _buildMediaPool() async {
     var result = await _repository.getMarkers().then((value) {
       var result = {
-        for (var v in value)
-          v.location: MapMarker(
-              markerId: v.location,
-              latitude: v.latitude,
-              longitude: v.longitude,
-              locationName: v.location,
+        for (var i = 0; i < value.length; i++)
+          i.toString(): MapMarker(
+              markerId: i.toString(),
+              latitude: value[i].latitude,
+              longitude: value[i].longitude,
+              locationName: value[i].location,
               thumbnailSrc: "park.png")
       };
       return result;
@@ -133,9 +146,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _mediaPool.addAll(result);
 
     _fluster = Fluster<MapMarker>(
-        minZoom: 0,
+        minZoom: 10,
         maxZoom: maxZoom,
-        radius: 512,
+        radius: 250,
         extent: 2048,
         nodeSize: 32,
         points: _mediaPool.values.toList(),
@@ -158,9 +171,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     if (_fluster == null) {
       return;
     }
-
-    List<MapMarker> clusters =
-        _fluster.clusters([-180, -85, 180, 85], _currentZoom);
+    List<MapMarker> clusters;
+    if (_currentVisibleRegion != null) {
+      clusters = _fluster.clusters([
+        _currentVisibleRegion.southwest.longitude,
+        _currentVisibleRegion.southwest.latitude,
+        _currentVisibleRegion.northeast.longitude,
+        _currentVisibleRegion.northeast.latitude
+      ], _currentZoom);
+    } else {
+      clusters = _fluster.clusters([-180, -85, 180, 85], _currentZoom);
+    }
 
     Map<MarkerId, Marker> markers = Map();
 
@@ -184,6 +205,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
 
     addMarkers(markers);
+    _markers = markers;
   }
 
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(

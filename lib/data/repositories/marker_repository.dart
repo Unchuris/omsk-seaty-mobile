@@ -2,15 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:omsk_seaty_mobile/models/benches.dart';
-import 'package:flutter/services.dart';
-import 'package:fluster/fluster.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:omsk_seaty_mobile/models/map_marker.dart';
-import 'dart:typed_data';
-import 'package:image/image.dart' as images;
+import 'package:omsk_seaty_mobile/data/models/benches.dart';
 
 /* Преобразую json в объекты лабочек затем в словарь с маркерами */
 class MarkerRepository {

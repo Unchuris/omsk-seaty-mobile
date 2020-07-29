@@ -20,12 +20,14 @@ class MarkersInitial extends MapState {
 }
 
 class MarkersInitialed extends MapState {
-  const MarkersInitialed();
-  @override
-  List<Object> get props => [];
+  final Map<MarkerId, Marker> markers;
+  const MarkersInitialed({this.markers});
 
   @override
-  String toString() => "MarkersInitialed markers: {}";
+  List<Object> get props => [markers];
+
+  @override
+  String toString() => "MarkersInitialed markers: {$markers}";
 }
 
 class MapCurrentLocationUpdatingState extends MapState {

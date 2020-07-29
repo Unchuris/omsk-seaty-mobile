@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/widgets/custom_drawer.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/custom_drawer.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -15,7 +15,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> _markers;
-  double _currentZoom = 12.0;
+  double _currentZoom = 10.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -35,25 +35,23 @@ class _MapScreenState extends State<MapScreen> {
             if (state is MapInitial) {
               print(state.toString());
             }
-            if (state is MarkersInitial) {
-              print(state.toString());
-            }
 
             if (state is MapCurrentLocationUpdatingState) {
               print(state.toString());
             }
             if (state is MapErrorState) {
-              //print(state.toString());
+              print(state.toString());
             }
           }),
         ],
-        child: StreamBuilder(
-            stream: BlocProvider.of<MapBloc>(context).markers,
-            builder: (context, snapshot) {
-              return Stack(children: <Widget>[
-                GoogleMap(
+        child: Stack(
+          children: <Widget>[
+            StreamBuilder(
+              stream: BlocProvider.of<MapBloc>(context).markers,
+              builder: (context, snapshot) {
+                return GoogleMap(
                   initialCameraPosition: CameraPosition(
-                      target: LatLng(54.991351, 73.364528), zoom: 12),
+                      target: LatLng(54.991351, 73.364528), zoom: 10),
                   zoomControlsEnabled: false,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
@@ -65,19 +63,22 @@ class _MapScreenState extends State<MapScreen> {
                   markers: (snapshot.data != null)
                       ? Set<Marker>.from(snapshot.data.values)
                       : Set(),
-                ),
-                Positioned(
-                  bottom: 30,
-                  left: 5,
-                  child: _buildMyLocation(),
-                ),
-                Positioned(
-                  top: 20,
-                  left: 5,
-                  child: _buildHamburger(),
-                ),
-              ]);
-            }),
+                  minMaxZoomPreference: const MinMaxZoomPreference(10, 21),
+                );
+              },
+            ),
+            Positioned(
+              bottom: 30,
+              left: 5,
+              child: _buildMyLocation(),
+            ),
+            Positioned(
+              top: 20,
+              left: 5,
+              child: _buildHamburger(),
+            ),
+          ],
+        ),
       ),
       drawer: CustomDrawer(
         currentPage: "Карта",
@@ -125,12 +126,16 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onCameraMove(CameraPosition cameraPosition) {
     _currentZoom = cameraPosition.zoom;
+
     print("зум поменялся");
   }
 
   void _onCameraIdle() {
     BlocProvider.of<MapBloc>(context).setCameraZoom(_currentZoom);
-
+    _controller.future.then((value) async {
+      var l = await value.getVisibleRegion();
+      BlocProvider.of<MapBloc>(context).setVisibleRegion(l);
+    });
     print("камера остановилась");
   }
 

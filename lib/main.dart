@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/pages/map_screen.dart';
-import 'package:omsk_seaty_mobile/repositories/geolocation_repository.dart';
-import 'package:omsk_seaty_mobile/repositories/marker_repository.dart';
+import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
+import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
+import 'package:omsk_seaty_mobile/ui/pages/map_screen.dart';
 
 void main() {
   runApp(MyApp());
