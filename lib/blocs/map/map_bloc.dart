@@ -110,24 +110,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Stream<MapState> _mapCurrentLocationUpdatingToState(
       ButtonGetCurrentLocationPassedEvent event) async* {
-    if (_currentPositionSubcription == null) {
-      yield MapCurrentLocationUpdatingState();
-      _currentPositionSubcription =
-          _geolocationRepository.getCurrentPositionStream().listen((position) {
-        _currentPosition = position;
-        add(MapGetCurrentLocationUpdatingEvent());
-      });
-    } else {
-      yield MapCurrentLocationUpdatingState();
-      _currentPositionSubcription.resume();
-      add(MapGetCurrentLocationUpdatingEvent());
-    }
+    yield MapCurrentLocationUpdatingState();
+    add(MapGetCurrentLocationUpdatingEvent());
   }
 
   Stream<MapState> _mapMapGetCurrentLocationToState(
       MapGetCurrentLocationUpdatingEvent event) async* {
     yield MapCurrentLocationUpdatedState(position: _currentPosition);
-    _currentPositionSubcription.pause();
   }
 
   void _buildMediaPool() async {

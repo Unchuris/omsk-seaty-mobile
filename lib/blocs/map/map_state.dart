@@ -47,7 +47,7 @@ class MapCurrentLocationUpdatedState extends MapState {
 
   @override
   String toString() =>
-      "MapCurrentLocationUpdatedState {position: ${position.toJson()}";
+      "MapCurrentLocationUpdatedState {position: ${position.toString()}";
 }
 
 class MapErrorState extends MapState {
