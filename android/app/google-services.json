@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "953709135359",
+    "firebase_url": "https://omsk-seaty.firebaseio.com",
+    "project_id": "omsk-seaty",
+    "storage_bucket": "omsk-seaty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953709135359:android:c668660ec30a9a0408d3ca",
+        "android_client_info": {
+          "package_name": "com.omsk_seaty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953709135359-nbussfkpvae38vnr62075ulkbapar2su.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omsk_seaty",
+            "certificate_hash": "32e2481b80c85a6b022124464597cc8a8e72ed63"
+          }
+        },
+        {
+          "client_id": "953709135359-34q43vsk07ls0fcodlvteugtsvs2rcb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVf6NlIws400XYrUErYgZbfwr-XDZ1JtE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953709135359-34q43vsk07ls0fcodlvteugtsvs2rcb2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
