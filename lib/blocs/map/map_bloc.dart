@@ -93,6 +93,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
       yield MarkersInitialed(markers: _markers);
+    } else if (event is MapMarkerPressedEvent) {
+      yield MapMarkerPressedState(
+          markerId: event.markerId, marker: event.marker);
+    } else if (event is MapTapEvent) {
+      yield MapTapState();
     }
   }
 
@@ -128,6 +133,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
               latitude: value[i].latitude,
               longitude: value[i].longitude,
               locationName: value[i].title,
+              description: value[i].description,
               thumbnailSrc: "park.png")
       };
       return result;
@@ -148,6 +154,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     latitude: latitude,
                     longitude: longitude,
                     isCluster: true,
+                    description: null,
                     clusterId: cluster.id,
                     pointsSize: cluster.pointsSize,
                     markerId: cluster.id.toString(),
@@ -187,8 +194,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       var marker = Marker(
           markerId: MarkerId(feature.markerId),
           position: LatLng(feature.latitude, feature.longitude),
-          infoWindow: InfoWindow(title: feature.locationName),
-          icon: bitmapDescriptor);
+          infoWindow: null,
+          icon: bitmapDescriptor,
+          onTap: () {
+            if (feature.isCluster) {
+            } else {
+              add(MapMarkerPressedEvent(
+                  markerId: feature.markerId, marker: feature));
+            }
+          });
 
       markers.putIfAbsent(MarkerId(feature.markerId), () => marker);
     }

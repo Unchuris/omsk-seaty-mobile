@@ -47,12 +47,21 @@ class MapMarkerInitialedStop extends MapEvent {
 
 class MapMarkerPressedEvent extends MapEvent {
   final String markerId;
-  final int index;
-  const MapMarkerPressedEvent(this.markerId, this.index);
+  final MapMarker marker;
+  const MapMarkerPressedEvent({this.markerId, this.marker});
 
-  List<Object> get props => [markerId, index];
+  List<Object> get props => [markerId, marker];
 
   @override
   String toString() =>
-      "MapMarkerPressedEvent {markerId: $markerId, index: $index}";
+      "MapMarkerPressedEvent {markerId: $markerId, marker: $marker}";
+}
+
+class MapTapEvent extends MapEvent {
+  const MapTapEvent();
+
+  @override
+  List<Object> get props => [];
+  @override
+  String toString() => "MapTapEvent {}";
 }
