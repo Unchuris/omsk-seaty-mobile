@@ -113,7 +113,7 @@ class _MapScreenState extends State<MapScreen> {
   void _onCameraMove(CameraPosition cameraPosition) {
     _currentZoom = cameraPosition.zoom;
 
-    print("зум поменялся");
+//    print("зум поменялся");
   }
 
   void _onCameraIdle() {
