@@ -17,17 +17,18 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> _markers;
+  Map<PolylineId, Polyline> _lines;
   PanelController _pc = PanelController();
   double _currentZoom = 10.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double _panelHeightOpen;
   double _panelHeightClosed = 95.0;
-  double _fabHeight = 240.0;
-  double _initFabHeight = 240.0;
+  double _fabHeight = 20;
+  double _initFabHeight = 20;
   @override
   Widget build(BuildContext context) {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
-    _panelHeightClosed = MediaQuery.of(context).size.height * .35;
+    _panelHeightClosed = 0;
     return Scaffold(
         key: _scaffoldKey,
         body: MultiBlocListener(
@@ -46,7 +47,8 @@ class _MapScreenState extends State<MapScreen> {
               }
               if (state is MapMarkerPressedState) {
                 setState(() {
-                  _pc.show();
+                  _pc.animatePanelToPosition(0.5,
+                      duration: Duration(milliseconds: 200));
                 });
               }
               if (state is MapCurrentLocationUpdatingState) {
@@ -74,9 +76,22 @@ class _MapScreenState extends State<MapScreen> {
                 }),
                 body: Stack(
                   children: [
-                    StreamBuilder(
-                      stream: BlocProvider.of<MapBloc>(context).markers,
-                      builder: (context, snapshot) {
+                    BlocBuilder<MapBloc, MapState>(
+                      buildWhen: (previous, current) {
+                        if (current is MarkersInitialed ||
+                            current is GetRoadButtonPressState) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is MarkersInitialed) {
+                          _markers = state.markers;
+                        }
+                        if (state is GetRoadButtonPressState) {
+                          _lines = state.line;
+                        }
                         return GoogleMap(
                           initialCameraPosition: CameraPosition(
                               target: LatLng(54.991351, 73.364528), zoom: 10),
@@ -89,8 +104,11 @@ class _MapScreenState extends State<MapScreen> {
                           onCameraMove: _onCameraMove,
                           onCameraIdle: _onCameraIdle,
                           onTap: _onTap,
-                          markers: (snapshot.data != null)
-                              ? Set<Marker>.from(snapshot.data.values)
+                          markers: (_markers != null)
+                              ? Set<Marker>.from(_markers.values)
+                              : Set(),
+                          polylines: (_lines != null)
+                              ? Set<Polyline>.from(_lines.values)
                               : Set(),
                           minMaxZoomPreference:
                               const MinMaxZoomPreference(10, 21),
@@ -155,11 +173,22 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _onTap(LatLng point) {
+    setState(() {
+      _pc.animatePanelToPosition(0, duration: Duration(milliseconds: 200));
+    });
     BlocProvider.of<MapBloc>(context).add(MapTapEvent());
   }
 
   Widget _panel(ScrollController sc) {
-    return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
+    return BlocBuilder<MapBloc, MapState>(buildWhen: (previous, current) {
+      if (current is MapCurrentLocationUpdatingState ||
+          current is MapCurrentLocationUpdatedState ||
+          current is MarkersInitialed) {
+        return false;
+      } else {
+        return true;
+      }
+    }, builder: (context, state) {
       if (state is MapMarkerPressedState) {
         return MediaQuery.removePadding(
             context: context,
@@ -197,8 +226,8 @@ class _MapScreenState extends State<MapScreen> {
                               fit: BoxFit.cover),
                           borderRadius:
                               BorderRadius.all(Radius.circular(12.0))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomEnd,
                         children: <Widget>[
                           Row(
                             children: <Widget>[
@@ -212,24 +241,46 @@ class _MapScreenState extends State<MapScreen> {
                                         bottomLeft: Radius.circular(12.0),
                                         bottomRight: Radius.circular(12.0)),
                                     color: Color.fromRGBO(0, 0, 0, 0.5)),
-                                child: Text(
-                                  state.marker.locationName,
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(255, 255, 255, 1),
-                                      fontSize: 18.5,
-                                      fontFamily: "Roboto"),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      state.marker.locationName,
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 1),
+                                          fontSize: 18.5,
+                                          fontFamily: "Roboto"),
+                                    ),
+                                  ],
                                 ),
                               )
                             ],
-                          )
+                          ),
+                          Positioned(
+                            top: MediaQuery.of(context).size.height * .14,
+                            child: MaterialButton(
+                              onPressed: () {
+                                BlocProvider.of<MapBloc>(context).add(
+                                    GetRoadButtonPressEvent(
+                                        marker: state.marker));
+                              },
+                              color: Colors.white,
+                              child: Image.asset(
+                                "assets/road.png",
+                                width: 30,
+                                fit: BoxFit.contain,
+                              ),
+                              padding: EdgeInsets.all(5),
+                              shape: CircleBorder(),
+                            ),
+                          ),
                         ],
                       )),
                 )
               ],
             ));
       } else {
-        _pc.hide();
-
         return Center();
       }
     });

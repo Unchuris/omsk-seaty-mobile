@@ -80,3 +80,13 @@ class MapTapState extends MapState {
   List<Object> get props => [];
   String toString() => "MapTapState {}";
 }
+
+class GetRoadButtonPressState extends MapState {
+  final MapMarker currentMarker;
+  final Map<PolylineId, Polyline> line;
+  const GetRoadButtonPressState({this.currentMarker, this.line});
+
+  @override
+  List<Object> get props => [currentMarker, line];
+  String toString() => "GetRoadButtonPressState {}";
+}

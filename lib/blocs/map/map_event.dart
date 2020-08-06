@@ -65,3 +65,12 @@ class MapTapEvent extends MapEvent {
   @override
   String toString() => "MapTapEvent {}";
 }
+
+class GetRoadButtonPressEvent extends MapEvent {
+  final MapMarker marker;
+  const GetRoadButtonPressEvent({this.marker});
+
+  @override
+  List<Object> get props => [marker];
+  String toString() => "GetRoadButtonPressEvent {$marker}";
+}

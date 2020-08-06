@@ -7,6 +7,7 @@ import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
@@ -21,15 +22,28 @@ part 'map_state.dart';
 class MapBloc extends Bloc<MapEvent, MapState> {
   static const maxZoom = 21;
   static const thumbnailWidth = 250;
+  var _currentZoom = 11;
 
   final GeolocationRepository _geolocationRepository;
   final MarkerRepository _repository;
 
+  GoogleMapPolyline googleMapPolyline =
+      GoogleMapPolyline(apiKey: "AIzaSyDNNAEqIIEzup-TDwIfuHo0L5Sxp3zRhMs");
+  List<LatLng> routeCoords;
+
   Position _currentPosition;
+
   Map<MarkerId, Marker> _markers;
+
   StreamSubscription<Position> _currentPositionSubcription;
+
   StreamSubscription _cameraZoomSubscription;
+
   StreamSubscription _visibleReginSubscription;
+
+  Map<String, images.Image> _benchesPinImage = {};
+  Map<String, images.Image> _imagesAssetsData = {};
+  Map<String, BitmapDescriptor> _imagesBitmapDescriptor = {};
 
   Map<String, MapMarker> _mediaPool = {};
 
@@ -43,7 +57,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Function(double) get setCameraZoom => _cameraZoomController.sink.add;
   Function(LatLngBounds) get setVisibleRegion => _cameraVisibleRegion.sink.add;
 
-  var _currentZoom = 11;
   Fluster<MapMarker> _fluster;
 
   Stream<Map<MarkerId, Marker>> get markers => _markerController.stream;
@@ -90,14 +103,26 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           _displayMarkers(_mediaPool);
         }
       });
-      add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
-      yield MarkersInitialed(markers: _markers);
+      yield MarkersInitialed(markers: event.markers);
     } else if (event is MapMarkerPressedEvent) {
       yield MapMarkerPressedState(
           markerId: event.markerId, marker: event.marker);
     } else if (event is MapTapEvent) {
       yield MapTapState();
+    } else if (event is GetRoadButtonPressEvent) {
+      await getRoutePoints(
+          LatLng(event.marker.latitude, event.marker.longitude));
+      yield GetRoadButtonPressState(currentMarker: event.marker, line: {
+        PolylineId("way"): Polyline(
+            visible: true,
+            polylineId: PolylineId("way"),
+            points: routeCoords,
+            color: Color(0xFFF2994A),
+            width: 4,
+            startCap: Cap.roundCap,
+            endCap: Cap.buttCap)
+      });
     }
   }
 
@@ -188,7 +213,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         bitmapDescriptor = await _createClusterBitmapDescriptor(feature);
       } else {
         bitmapDescriptor =
-            await _createImageBitmapDescriptor(feature.thumbnailSrc);
+            await _getImageBitmapDescriptor(feature.thumbnailSrc);
       }
 
       var marker = Marker(
@@ -208,14 +233,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
 
     addMarkers(markers);
-    _markers = markers;
+    add(MapMarkerInitialedStop(markers: markers));
   }
 
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(
       MapMarker feature) async {
     MapMarker childMarker = _mediaPool[feature.childMarkerId];
 
-    var child = await _createImage(
+    var child = await _getImage(
         childMarker.thumbnailSrc, thumbnailWidth, thumbnailWidth);
 
     if (child == null) {
@@ -233,9 +258,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     return BitmapDescriptor.fromBytes(png);
   }
 
-  Future<BitmapDescriptor> _createImageBitmapDescriptor(
+  Future<BitmapDescriptor> _getImageBitmapDescriptor(
       String thumbnailSrc) async {
-    var resized = await _createImage(thumbnailSrc, 120, 120);
+    if (_imagesBitmapDescriptor.containsKey(thumbnailSrc))
+      return _imagesBitmapDescriptor[thumbnailSrc];
+
+    var resized = await _getImage(thumbnailSrc, 120, 120);
 
     if (resized == null) {
       return null;
@@ -243,11 +271,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     var png = images.encodePng(resized);
 
-    return BitmapDescriptor.fromBytes(png);
+    var bitmapDescriptor = BitmapDescriptor.fromBytes(png);
+    _imagesBitmapDescriptor[thumbnailSrc] = bitmapDescriptor;
+    return bitmapDescriptor;
   }
 
-  Future<images.Image> _createImage(
+  Future<images.Image> _getImage(
       String imageFile, int width, int height) async {
+    String key = imageFile + width.toString() + height.toString();
+    if (_benchesPinImage.containsKey(key)) return _benchesPinImage[key].clone();
+    var image = await _getAssetsImage(imageFile);
+
+    var pinImage = images.copyResize(image, width: width, height: height);
+    _benchesPinImage[key] = pinImage.clone();
+    return pinImage;
+  }
+
+  Future<images.Image> _getAssetsImage(String imageFile) async {
+    if (_imagesAssetsData.containsKey(imageFile))
+      return _imagesAssetsData[imageFile].clone();
     ByteData imageData;
     try {
       imageData = await rootBundle.load('assets/$imageFile');
@@ -256,13 +298,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return null;
     }
 
-    if (imageData == null) {
-      return null;
-    }
+    if (imageData == null) return null;
+    images.Image image = images.decodeImage(Uint8List.view(imageData.buffer));
+    _imagesAssetsData[imageFile] = image.clone();
+    return image;
+  }
 
-    List<int> bytes = Uint8List.view(imageData.buffer);
-    var image = images.decodeImage(bytes);
-
-    return images.copyResize(image, width: width, height: height);
+  getRoutePoints(LatLng markerPoint) async {
+    routeCoords = await googleMapPolyline.getCoordinatesWithLocation(
+        origin: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+        destination: markerPoint,
+        mode: RouteMode.walking);
   }
 }
