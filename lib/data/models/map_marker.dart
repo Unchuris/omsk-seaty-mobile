@@ -3,12 +3,14 @@ import 'package:fluster/fluster.dart';
 class MapMarker extends Clusterable {
   String locationName;
   String thumbnailSrc;
+  String imageUrl;
 
   MapMarker({
     this.locationName,
     latitude,
     longitude,
     this.thumbnailSrc,
+    this.imageUrl,
     isCluster = false,
     clusterId,
     pointsSize,
