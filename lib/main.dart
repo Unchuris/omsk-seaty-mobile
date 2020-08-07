@@ -12,9 +12,6 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final MapBloc mapBloc = MapBloc(
-      repository: MarkerRepository(),
-      geolocationRepository: GeolocationRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +42,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => BlocProvider<MapBloc>(
               // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
-              create: (context) => mapBloc,
+              create: (context) => MapBloc(
+                  repository: MarkerRepository(),
+                  geolocationRepository: GeolocationRepository()),
 
               child: MapScreen(),
             ),
         '/profile': (context) => ProfilePage()
       },
     );
-  }
-
-  void dispose() {
-    mapBloc.close();
   }
 }
