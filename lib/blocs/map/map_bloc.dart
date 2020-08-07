@@ -16,6 +16,17 @@ import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 part 'map_event.dart';
 part 'map_state.dart';
 
+//TODO remove test data
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+
+
 /* основной файл логики, здесь обрабатываются события и переключаются состояния экрана карты*/
 
 class MapBloc extends Bloc<MapEvent, MapState> {
@@ -26,7 +37,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final MarkerRepository _repository;
 
   Position _currentPosition;
-  Map<MarkerId, Marker> _markers;
+  List<MapMarker> _benches;
   StreamSubscription<Position> _currentPositionSubcription;
   StreamSubscription _cameraZoomSubscription;
   StreamSubscription _visibleReginSubscription;
@@ -36,20 +47,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Map<String, MapMarker> _mediaPool = {};
 
-  final _markerController = StreamController<Map<MarkerId, Marker>>.broadcast();
-
   final _cameraZoomController = StreamController<double>.broadcast();
 
   final _cameraVisibleRegion = StreamController<LatLngBounds>.broadcast();
   LatLngBounds _currentVisibleRegion;
-  Function(Map<MarkerId, Marker>) get addMarkers => _markerController.sink.add;
   Function(double) get setCameraZoom => _cameraZoomController.sink.add;
   Function(LatLngBounds) get setVisibleRegion => _cameraVisibleRegion.sink.add;
 
   var _currentZoom = 11;
   Fluster<MapMarker> _fluster;
 
-  Stream<Map<MarkerId, Marker>> get markers => _markerController.stream;
   Stream<double> get cameraZoom => _cameraZoomController.stream;
   Stream<LatLngBounds> get visibleRegion => _cameraVisibleRegion.stream;
 
@@ -69,7 +76,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     MapEvent event,
   ) async* {
     if (event is ButtonGetCurrentLocationPassedEvent) {
-      yield* _mapCurrentLocationUpdatingToState(event);
+      //TODO remove
+      yield* _onBenchesChangeToState();
+      //yield* _mapCurrentLocationUpdatingToState(event);
     } else if (event is MapGetCurrentLocationUpdatingEvent) {
       yield* _mapMapGetCurrentLocationToState(event);
     } else if (event is MapMarkerInitialing) {
@@ -93,9 +102,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           _displayMarkers(_mediaPool);
         }
       });
-      add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
-      yield MarkersInitialed(markers: _markers);
+      yield MarkersInitialed(markers: event.markers);
     }
   }
 
@@ -104,7 +112,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _currentPositionSubcription?.cancel();
     _cameraZoomSubscription.cancel();
     _visibleReginSubscription.cancel();
-    _markerController.close();
     _cameraZoomController.close();
     _cameraVisibleRegion.close();
 
@@ -122,6 +129,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     yield MapCurrentLocationUpdatedState(position: _currentPosition);
   }
 
+  //TODO
+  Stream<MapState> _onBenchesChangeToState() async* {
+    yield BenchesState(benches: _benches);
+  }
+
   void _buildMediaPool() async {
     var result = await _repository.getMarkers().then((value) {
       var result = {
@@ -131,7 +143,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
               latitude: value[i].latitude,
               longitude: value[i].longitude,
               locationName: value[i].title,
-              thumbnailSrc: "park.png")
+              thumbnailSrc: "park.png",
+              imageUrl: imgList[i % imgList.length])
       };
       return result;
     });
@@ -156,6 +169,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     markerId: cluster.id.toString(),
                     childMarkerId: cluster.childMarkerId));
 
+    _benches = _mediaPool.values.toList();
     _displayMarkers(_mediaPool);
   }
 
@@ -196,8 +210,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       markers.putIfAbsent(MarkerId(feature.markerId), () => marker);
     }
 
-    addMarkers(markers);
-    _markers = markers;
+    add(MapMarkerInitialedStop(markers: markers));
   }
 
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(

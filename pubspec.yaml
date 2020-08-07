@@ -29,6 +29,7 @@ dependencies:
   bloc: ^6.0.1
   equatable: ^1.2.2
   fluster: ^1.1.2
+  carousel_slider: ^2.2.1
   image: ^2.1.12
   http: ^0.12.2
 
