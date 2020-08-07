@@ -58,7 +58,8 @@ flutter:
   assets:
     - lang/en.json
     - lang/ru.json
-    - assets/park.png
+    - assets/clusterpin.png
+    - assets/pin.png
     - assets/map-style.json
 
   #   - images/a_dot_ham.jpeg

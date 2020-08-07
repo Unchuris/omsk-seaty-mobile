@@ -131,7 +131,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
               latitude: value[i].latitude,
               longitude: value[i].longitude,
               locationName: value[i].title,
-              thumbnailSrc: "park.png")
+              thumbnailSrc: "pin.png")
       };
       return result;
     });
@@ -204,27 +204,30 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       MapMarker feature) async {
     MapMarker childMarker = _mediaPool[feature.childMarkerId];
 
-    var child = await _getImage(
-        childMarker.thumbnailSrc, thumbnailWidth, thumbnailWidth);
+    var child = await _getImage("clusterpin.png", 120, 120);
 
     if (child == null) {
       return null;
     }
+    if (feature.pointsSize ~/ 10 != 0) {
+      images.drawString(
+          child, images.arial_24, 47, 12, '${feature.pointsSize}');
+    } else {
+      images.drawString(
+          child, images.arial_24, 54, 12, '${feature.pointsSize}');
+    }
 
-    images.brightness(child, -50);
-    images.drawString(
-        child, images.arial_48, 100, 20, '+${feature.pointsSize}');
+    // var resized = images.copyResize(child, width: 120, height: 120);
 
-    var resized = images.copyResize(child, width: 120, height: 120);
-
-    var png = images.encodePng(resized);
+    var png = images.encodePng(child);
 
     return BitmapDescriptor.fromBytes(png);
   }
 
   Future<BitmapDescriptor> _getImageBitmapDescriptor(
       String thumbnailSrc) async {
-    if (_imagesBitmapDescriptor.containsKey(thumbnailSrc)) return _imagesBitmapDescriptor[thumbnailSrc];
+    if (_imagesBitmapDescriptor.containsKey(thumbnailSrc))
+      return _imagesBitmapDescriptor[thumbnailSrc];
 
     var resized = await _getImage(thumbnailSrc, 120, 120);
 
@@ -241,7 +244,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<images.Image> _getImage(
       String imageFile, int width, int height) async {
-    String key = imageFile+width.toString()+height.toString();
+    String key = imageFile + width.toString() + height.toString();
     if (_benchesPinImage.containsKey(key)) return _benchesPinImage[key].clone();
     var image = await _getAssetsImage(imageFile);
 
@@ -251,7 +254,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<images.Image> _getAssetsImage(String imageFile) async {
-    if (_imagesAssetsData.containsKey(imageFile)) return _imagesAssetsData[imageFile].clone();
+    if (_imagesAssetsData.containsKey(imageFile))
+      return _imagesAssetsData[imageFile].clone();
     ByteData imageData;
     try {
       imageData = await rootBundle.load('assets/$imageFile');
