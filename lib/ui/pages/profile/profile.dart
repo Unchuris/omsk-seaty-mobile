@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/sliver_bar_title.dart';
 
@@ -8,14 +9,14 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UiProfile profile = ModalRoute.of(context).settings.arguments;
+    final User user = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
               title: SliverAppBarTitle(
-                child: Text('${profile.firstName} ${profile.middleName}'),
+                child: Text('${user.displayName}'),
               ),
               primary: true,
               pinned: true,
@@ -28,11 +29,11 @@ class ProfilePage extends StatelessWidget {
                         tag: 'avatar',
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(profile.imageUrl),
+                          backgroundImage: NetworkImage(user.photoUrl),
                         )),
                     SizedBox(height: 10),
                     Text(
-                      'Elon Musk',
+                      '${user.displayName}',
                       style: TextStyle(fontSize: 24),
                     ),
                   ],

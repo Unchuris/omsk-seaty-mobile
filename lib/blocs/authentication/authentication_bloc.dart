@@ -44,7 +44,9 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
-    yield AuthenticationSuccess(await _userRepository.getUser());
+    var kek = await _userRepository.getUser();
+    _userRepository.saveUserToPreferences(kek);
+    yield AuthenticationSuccess(kek);
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {

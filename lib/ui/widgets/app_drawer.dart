@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -8,54 +10,51 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  var profile = UiProfile(
-      'Elon', 'Musk', 'elool@gmail.com', 'https://picsum.photos/250?image=9');
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Drawer(
-        child: ListView(
-          children: <Widget>[
-            _createHeader(
-                name: '${profile.firstName} ${profile.middleName}',
-                email: profile.email,
-                imageUrl: profile.imageUrl,
-                onTap: () {
-                  Navigator.pushNamed(context, '/profile', arguments: profile);
-                }),
-            _createDrawerItem(
-                icon: Icons.star,
-                text: AppLocalizations.of(context).translate('string_starred')),
-            Divider(),
-            ListTile(
-              title: Text(
-                  AppLocalizations.of(context).translate('string_settings')),
-            ),
-            ListTile(
-              title:
-                  Text(AppLocalizations.of(context).translate('string_help')),
-            ),
-            ListTile(
-              title:
-                  Text(AppLocalizations.of(context).translate('string_about')),
-            )
-          ],
-        ),
-      ),
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, state) {
+        if (state is AuthenticationSuccess)
+          return _createDrawer(state.user, context);
+      },
     );
   }
 }
 
-Widget _createHeader(
-    {String name, String email, String imageUrl, GestureTapCallback onTap}) {
+Widget _createDrawer(User user, BuildContext context) {
+  return Drawer(
+    child: ListView(
+      children: <Widget>[
+        _createHeader(user, context),
+        _createDrawerItem(
+            icon: Icons.star,
+            text: AppLocalizations.of(context).translate('string_starred')),
+        Divider(),
+        ListTile(
+          title:
+              Text(AppLocalizations.of(context).translate('string_settings')),
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context).translate('string_help')),
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context).translate('string_about')),
+        )
+      ],
+    ),
+  );
+}
+
+Widget _createHeader(User user, BuildContext context) {
   return UserAccountsDrawerHeader(
-      accountName: Text(name),
-      accountEmail: Text(email),
-      onDetailsPressed: onTap,
+      accountName: Text(user.displayName),
+      accountEmail: Text(user.email),
+      onDetailsPressed: () {
+        Navigator.pushNamed(context, '/profile', arguments: user);
+      },
       currentAccountPicture: Hero(
         tag: 'avatar',
-        child: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+        child: CircleAvatar(backgroundImage: NetworkImage(user.photoUrl)),
       ));
 }
 

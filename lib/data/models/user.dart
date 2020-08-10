@@ -12,6 +12,10 @@ class User {
         email = json['email'],
         photoUrl = json['photoUrl'];
 
-  Map<String, dynamic> toJson() =>
-      {'uid': uid, 'name': displayName, 'email': email, 'photoUrl': photoUrl};
+  Map<String, dynamic> toJson() => {
+        'uid': uid,
+        'displayName': displayName,
+        'email': email,
+        'photoUrl': photoUrl
+      };
 }
