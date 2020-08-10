@@ -63,18 +63,27 @@ class MapErrorState extends MapState {
 
 class MapMarkerPressedState extends MapState {
   final String markerId;
-  final int index;
-  const MapMarkerPressedState(this.markerId, this.index);
+  final List<MapMarker> markers;
+  const MapMarkerPressedState({this.markerId, this.markers});
 
-  List<Object> get props => [markerId, index];
+  List<Object> get props => [markerId, markers];
 
   @override
   String toString() =>
-      "MapMarkerPressedState {markerId: $markerId, index: $index}";
+      "MapMarkerPressedState {markerId: $markerId, markers: $markers}";
 }
 
-class ZoomUpdated extends MapState {
-  const ZoomUpdated();
+class LikeButtonPassState extends MapState {
+  final List<MapMarker> favorites;
+  final MapMarker currentmarker;
+  const LikeButtonPassState({this.favorites, this.currentmarker});
+
+  @override
+  List<Object> get props => [favorites, currentmarker];
+}
+
+class LikeUpdatedState extends MapState {
+  const LikeUpdatedState();
 
   @override
   List<Object> get props => [];

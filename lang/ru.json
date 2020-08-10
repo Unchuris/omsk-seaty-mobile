@@ -1,7 +1,8 @@
 {
     "app_name": "Лавочки Омска",
-    "string_settings": "Настройки",
-    "string_help": "Помощь",
-    "string_about": "О приложении",
-    "string_starred": "Избранное"
+    "string_top_benches": "Топ лавочек",
+    "string_top_users": "Топ пользователей",
+    "string_my_benches": "Мои лавочки",
+    "string_favorites": "Избранное"
+    
 }

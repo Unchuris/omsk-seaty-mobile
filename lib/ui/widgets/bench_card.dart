@@ -1,64 +1,112 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
-class BenchCard extends StatelessWidget {
+class BenchCard extends StatefulWidget {
   final MapMarker marker;
   const BenchCard({this.marker}) : super();
 
   @override
+  _BenchCardState createState() => _BenchCardState();
+}
+
+class _BenchCardState extends State<BenchCard> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width * .90,
-        height: MediaQuery.of(context).size.height * .28,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                    "https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg"),
-                fit: BoxFit.cover),
-            borderRadius: BorderRadius.all(Radius.circular(12.0))),
-        child:
-            Stack(alignment: AlignmentDirectional.bottomEnd, children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * .90,
-                height: MediaQuery.of(context).size.height * .10,
-                padding: EdgeInsets.only(top: 20, left: 30),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(12.0),
-                        bottomRight: Radius.circular(12.0)),
-                    color: Color.fromRGBO(0, 0, 0, 0.5)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+    var bench = UIBencCard(widget.marker.locationName, 4.5,
+        widget.marker.imageUrl, widget.marker.isFavorites);
+    return Padding(
+      padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+      child: Container(
+          width: MediaQuery.of(context).size.width * .90,
+          height: MediaQuery.of(context).size.height * .28,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(bench.imageUrl),
+                  fit: BoxFit.cover),
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          child: Stack(
+              alignment: AlignmentDirectional.bottomEnd,
+              children: <Widget>[
+                Row(
                   children: <Widget>[
-                    Text(
-                      marker.locationName,
-                      style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 1),
-                          fontSize: 18.5,
-                          fontFamily: "Roboto"),
-                    ),
+                    Flexible(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * .96,
+                        height: MediaQuery.of(context).size.height * .08,
+                        padding: EdgeInsets.only(left: 30),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(12.0),
+                                bottomRight: Radius.circular(12.0)),
+                            color: Color.fromRGBO(0, 0, 0, 0.6)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              bench.locationName,
+                              style: TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontSize: 18.5,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * .14,
-            child: MaterialButton(
-              onPressed: () {},
-              color: Colors.white,
-              child: Image.asset(
-                "assets/road.png",
-                width: 30,
-                fit: BoxFit.contain,
-              ),
-              padding: EdgeInsets.all(5),
-              shape: CircleBorder(),
-            ),
-          ),
-        ]));
+                Positioned(
+                  top: MediaQuery.of(context).size.height * .165,
+                  right: 50,
+                  child: MaterialButton(
+                    onPressed: () {},
+                    color: Colors.white,
+                    child: Image.asset(
+                      "assets/road.png",
+                      width: 30,
+                      fit: BoxFit.contain,
+                    ),
+                    padding: EdgeInsets.all(5),
+                    shape: CircleBorder(),
+                  ),
+                ),
+                Positioned(
+                  top: MediaQuery.of(context).size.height * .165,
+                  right: 0,
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (bench.isFavorites) {
+                        widget.marker.isFavorites = false;
+                        setState(() {
+                          bench.isFavorites = false;
+                        });
+                        print("убрал лайк ${widget.marker.locationName}");
+                        BlocProvider.of<MapBloc>(context)
+                            .add(LikeButtonPassEvent(marker: widget.marker));
+                      } else {
+                        widget.marker.isFavorites = true;
+                        setState(() {
+                          bench.isFavorites = true;
+                        });
+                        print("поставил лайк ${widget.marker.locationName}");
+                        BlocProvider.of<MapBloc>(context)
+                            .add(LikeButtonPassEvent(marker: widget.marker));
+                      }
+                    },
+                    color: Colors.white,
+                    child: bench.isFavorites
+                        ? SvgPicture.asset("assets/like.svg")
+                        : SvgPicture.asset("assets/unlike.svg"),
+                    padding: EdgeInsets.all(5),
+                    shape: CircleBorder(),
+                  ),
+                ),
+              ])),
+    );
   }
 }

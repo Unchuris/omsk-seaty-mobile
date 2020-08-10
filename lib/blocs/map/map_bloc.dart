@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
@@ -19,12 +20,20 @@ part 'map_state.dart';
 /* основной файл логики, здесь обрабатываются события и переключаются состояния экрана карты*/
 
 class MapBloc extends Bloc<MapEvent, MapState> {
+  final List<String> imgList = [
+    'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg',
+    'https://varlamov.me/2018/omsk/48.jpg',
+    'https://superomsk.ru/images/uploading/b27000d014f07c29554b7b461ee04b4d.jpg',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRurKuj6R4YRCZ6rLbJzKMRaVrLOoPgo6aKqw&usqp=CAU',
+  ];
+
   static const maxZoom = 21;
   static const thumbnailWidth = 250;
 
   final GeolocationRepository _geolocationRepository;
   final MarkerRepository _repository;
-
+  List<MapMarker> _benches;
+  List<MapMarker> _favorites = [];
   Position _currentPosition;
   Map<MarkerId, Marker> _markers;
   StreamSubscription<Position> _currentPositionSubcription;
@@ -96,6 +105,24 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
       yield MarkersInitialed(markers: _markers);
+    } else if (event is MapMarkerPressedEvent) {
+      yield MapMarkerPressedState(
+          markerId: event.markerId, markers: event.markers);
+    } else if (event is LikeButtonPassEvent) {
+      if (event.marker.isFavorites) {
+        _favorites.add(event.marker);
+      } else {
+        for (var v in _favorites) {
+          if (v.markerId.compareTo(event.marker.markerId) == 0) {
+            _favorites.remove(v);
+            break;
+          }
+        }
+      }
+      yield LikeButtonPassState(
+          favorites: _favorites, currentmarker: event.marker);
+    } else if (event is LikeUpdatingEvent) {
+      yield LikeUpdatedState();
     }
   }
 
@@ -107,7 +134,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _markerController.close();
     _cameraZoomController.close();
     _cameraVisibleRegion.close();
-
+    print("закрываю блок");
     return super.close();
   }
 
@@ -123,17 +150,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   void _buildMediaPool() async {
-    var result = await _repository.getMarkers().then((value) {
-      var result = {
-        for (var i = 0; i < value.length; i++)
-          i.toString(): MapMarker(
-              markerId: i.toString(),
-              latitude: value[i].latitude,
-              longitude: value[i].longitude,
-              locationName: value[i].title,
-              thumbnailSrc: "pin.png")
+    var result = await _repository.getMarkers().then((benches) {
+      var random = Random();
+      return {
+        for (var bench in benches)
+          bench.pk.toString(): MapMarker(
+              markerId: bench.pk.toString(),
+              latitude: bench.latitude,
+              longitude: bench.longitude,
+              locationName: bench.title,
+              thumbnailSrc: "pin.png",
+              isFavorites: false,
+              imageUrl: imgList[random.nextInt(imgList.length)]),
       };
-      return result;
     });
     _mediaPool.addAll(result);
 
@@ -190,13 +219,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       var marker = Marker(
           markerId: MarkerId(feature.markerId),
           position: LatLng(feature.latitude, feature.longitude),
-          infoWindow: InfoWindow(title: feature.locationName),
+          infoWindow: null,
+          onTap: () {
+            if (feature.isCluster) {
+              var children = _fluster.points(feature.clusterId);
+              _benches = children;
+              add(MapMarkerPressedEvent(
+                  markers: children, markerId: feature.clusterId.toString()));
+            } else {
+              _benches = [feature];
+              add(MapMarkerPressedEvent(
+                  markers: [feature], markerId: feature.markerId));
+            }
+          },
           icon: bitmapDescriptor);
 
       markers.putIfAbsent(MarkerId(feature.markerId), () => marker);
     }
 
-    addMarkers(markers);
+    add(MapMarkerInitialedStop(markers: markers));
     _markers = markers;
   }
 

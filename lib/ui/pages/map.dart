@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
+import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/bench_card.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
+import 'package:carousel_slider/carousel_controller.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -13,14 +18,25 @@ class MapScreen extends StatefulWidget {
   _MapScreenState createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen>
+    with AutomaticKeepAliveClientMixin {
   final Completer<GoogleMapController> _controller = Completer();
-  String _style;
+  List<MapMarker> _benches;
+  List<MapMarker> _favorites = [];
   Map<MarkerId, Marker> _markers;
+  final CarouselControllerImpl _carouselController = CarouselController();
   double _currentZoom = 10.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         key: _scaffoldKey,
         body: MultiBlocListener(
@@ -45,38 +61,83 @@ class _MapScreenState extends State<MapScreen> {
           ],
           child: Stack(
             children: <Widget>[
-              StreamBuilder(
-                stream: BlocProvider.of<MapBloc>(context).markers,
-                builder: (context, snapshot) {
-                  return GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                        target: LatLng(54.991351, 73.364528), zoom: 10),
-                    zoomControlsEnabled: false,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    compassEnabled: false,
-                    mapToolbarEnabled: false,
-                    onMapCreated: _onMapCreated,
-                    onCameraMove: _onCameraMove,
-                    onCameraIdle: _onCameraIdle,
-                    markers: (snapshot.data != null)
-                        ? Set<Marker>.from(snapshot.data.values)
-                        : Set(),
-                    minMaxZoomPreference: const MinMaxZoomPreference(10, 21),
+              BlocBuilder<MapBloc, MapState>(
+                buildWhen: (previous, current) {
+                  if (current is MarkersInitialed ||
+                      current is MapMarkerPressedState ||
+                      current is LikeButtonPassState) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                },
+                builder: (context, state) {
+                  if (state is MarkersInitialed) {
+                    _markers = state.markers;
+                  }
+                  if (state is MapMarkerPressedState) {
+                    _benches = state.markers;
+                  }
+                  if (state is LikeButtonPassState) {
+                    print(state.toString());
+                    _favorites = state.favorites;
+
+                    BlocProvider.of<MapBloc>(context).add(LikeUpdatingEvent());
+                  }
+                  return Stack(
+                    children: [
+                      GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                            target: LatLng(54.991351, 73.364528), zoom: 10),
+                        zoomControlsEnabled: false,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        compassEnabled: false,
+                        mapToolbarEnabled: false,
+                        onMapCreated: _onMapCreated,
+                        onCameraMove: _onCameraMove,
+                        onCameraIdle: _onCameraIdle,
+                        markers: (_markers != null)
+                            ? Set<Marker>.from(_markers.values)
+                            : Set(),
+                        minMaxZoomPreference:
+                            const MinMaxZoomPreference(10, 21),
+                      ),
+                      (_benches != null)
+                          ? Container(
+                              padding: EdgeInsets.only(bottom: 20.0),
+                              alignment: Alignment.bottomCenter,
+                              child: BenchSlider(
+                                  items: _getData(_benches),
+                                  options: BenchSliderOptions(
+                                    height: 200,
+                                    onPageChanged: _onBenchSliderPageChanged,
+                                    onItemClicked: _onBenchSliderItemClicked,
+                                  ),
+                                  carouselController: _carouselController))
+                          : Container()
+                    ],
                   );
                 },
               ),
               Positioned(
-                bottom: 30,
+                bottom: 220,
                 left: 5,
                 child: _buildMyLocation(),
               ),
               Positioned(
-                top: 30,
-                left: 5,
-                child: SizedBox(
+                top: 51,
+                left: 0,
+                child: Container(
+                  width: 63,
+                  height: 56,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(50.0),
+                          bottomRight: Radius.circular(50.0))),
                   child: IconButton(
-                    icon: Icon(Icons.menu),
+                    icon: SvgPicture.asset("assets/menu.svg"),
                     onPressed: () => _scaffoldKey.currentState.openDrawer(),
                   ),
                 ),
@@ -84,7 +145,12 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ),
-        drawer: AppDrawer());
+        drawer: BlocBuilder<MapBloc, MapState>(builder: (context, state) {
+          if (state is LikeButtonPassState) {
+            return AppDrawer(_favorites);
+          }
+          return AppDrawer(_favorites);
+        }));
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -103,7 +169,6 @@ class _MapScreenState extends State<MapScreen> {
             var state = BlocProvider.of<MapBloc>(context).state;
             print(state.toString());
             if (state is MapCurrentLocationUpdatingState) {
-              print("много нажал");
             } else {
               BlocProvider.of<MapBloc>(context)
                   .add(ButtonGetCurrentLocationPassedEvent());
@@ -124,11 +189,24 @@ class _MapScreenState extends State<MapScreen> {
       var l = await value.getVisibleRegion();
       BlocProvider.of<MapBloc>(context).setVisibleRegion(l);
     });
-    print("камера остановилась");
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _onBenchSliderPageChanged(int index) {
+    //TODO
   }
+
+  void _onBenchSliderItemClicked(int index) {
+    //TODO
+  }
+  List<Widget> _getData(List<MapMarker> markers) => markers
+      .map((item) => BlocProvider(
+            create: (context) => context.bloc(),
+            child: BenchCard(
+              marker: item,
+            ),
+          ))
+      .toList();
+
+  @override
+  bool get wantKeepAlive => true;
 }

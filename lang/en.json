@@ -1,7 +1,7 @@
 {
     "app_name": "Omsk Seaty",
-    "string_settings": "Settings",
-    "string_help": "Help",
-    "string_about": "About",
-    "string_starred": "Favorites"
+    "string_top_benches": "Top benches",
+    "string_top_users": "Top users",
+    "string_my_benches": "My benches",
+    "string_favorites": "Favorites"
 }
