@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
-import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -35,8 +35,9 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
-      final name = await _userRepository.getUser();
-      yield AuthenticationSuccess(name);
+      final user = await _userRepository.getUser();
+      _userRepository.saveUserToPreferences(user);
+      yield AuthenticationSuccess(user);
     } else {
       yield AuthenticationFailure();
     }
