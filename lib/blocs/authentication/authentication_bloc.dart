@@ -36,7 +36,7 @@ class AuthenticationBloc
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       final user = await _userRepository.getUser();
-      _userRepository.saveUserToPreferences(user);
+      //_userRepository.saveUserToPreferences(user);
       yield AuthenticationSuccess(user);
     } else {
       yield AuthenticationFailure();
