@@ -304,7 +304,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(
       MapMarker feature) async {
     var child;
-    if (feature.isSelect) {
+
+    if (_currentMarker != null &&
+        feature.clusterId.toString() == _currentMarker.markerId) {
       child =
           await _getImage("selectedclusterpin.png", 120, 120, feature.isSelect);
     } else {
@@ -314,12 +316,23 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     if (child == null) {
       return null;
     }
-    if (feature.pointsSize ~/ 10 != 0) {
-      images.drawString(
-          child, images.arial_24, 47, 12, '${feature.pointsSize}');
+    if (_currentMarker != null &&
+        feature.clusterId.toString() == _currentMarker.markerId) {
+      if (feature.pointsSize ~/ 10 != 0) {
+        images.drawString(
+            child, images.arial_24, 62, 19, '${feature.pointsSize}');
+      } else {
+        images.drawString(
+            child, images.arial_24, 68, 19, '${feature.pointsSize}');
+      }
     } else {
-      images.drawString(
-          child, images.arial_24, 54, 12, '${feature.pointsSize}');
+      if (feature.pointsSize ~/ 10 != 0) {
+        images.drawString(
+            child, images.arial_24, 47, 12, '${feature.pointsSize}');
+      } else {
+        images.drawString(
+            child, images.arial_24, 54, 12, '${feature.pointsSize}');
+      }
     }
 
     var png = images.encodePng(child);
@@ -360,9 +373,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       if (imageFile == "pin.png") {
         var image = await _getAssetsImage("selectedpin.png");
         _benchesPinImage[key] = image.clone();
-        return image;
-      } else if (imageFile == "clusterpin.png") {
-        var image = await _getAssetsImage("selectedclusterpin.png");
         return image;
       }
     }
