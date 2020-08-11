@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
-import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/sliver_bar_title.dart';
 
 class ProfilePage extends StatelessWidget {
-  final UiProfile profile;
-  ProfilePage({Key key, this.profile}) : super(key: key);
+  ProfilePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
