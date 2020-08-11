@@ -3,5 +3,8 @@
     "string_settings": "Настройки",
     "string_help": "Помощь",
     "string_about": "О приложении",
-    "string_starred": "Избранное"
+    "string_starred": "Избранное",
+    "string_google_sign_in": "Войти с помощью Google",
+    "String_skip": "ПРОПУСТИТЬ",
+    "string_log_out": "Выйти"
 }

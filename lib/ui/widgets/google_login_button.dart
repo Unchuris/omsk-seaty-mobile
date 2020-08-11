@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/login/login_bloc.dart';
 
@@ -37,7 +38,9 @@ class GoogleLoginButton extends StatelessWidget {
                 ),
                 Expanded(
                   child: Center(
-                    child: Text('Sign in with Google',
+                    child: Text(
+                        AppLocalizations.of(context)
+                            .translate('string_google_sign_in'),
                         style: Theme.of(context)
                             .textTheme
                             .button

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
@@ -49,7 +50,9 @@ class ProfilePage extends StatelessWidget {
           minWidth: 270,
           height: 50,
           child: FlatButton(
-            child: Text('Exit', style: TextStyle(color: Color(0xFF828282))),
+            child: Text(
+                AppLocalizations.of(context).translate('string_log_out'),
+                style: TextStyle(color: Color(0xFF828282))),
             onPressed: () => {
               BlocProvider.of<AuthenticationBloc>(context)
                   .add(AuthenticationLoggedOut()),

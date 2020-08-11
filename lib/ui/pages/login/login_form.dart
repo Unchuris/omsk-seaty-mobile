@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/login/login_bloc.dart';
@@ -34,7 +35,8 @@ class LoginForm extends StatelessWidget {
             minWidth: 270,
             height: 50,
             child: FlatButton(
-              child: Text('Skip', style: TextStyle(color: Colors.orange)),
+              child: Text(AppLocalizations.of(context).translate('string_skip'),
+                  style: TextStyle(color: Colors.orange)),
               onPressed: () => {
                 _swithToMapScreen(context),
                 BlocProvider.of<AuthenticationBloc>(context)
