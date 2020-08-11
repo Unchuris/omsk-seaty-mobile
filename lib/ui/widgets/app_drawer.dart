@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
@@ -55,7 +56,11 @@ Widget _createHeaderWithUser(User user, BuildContext context) {
       },
       currentAccountPicture: Hero(
         tag: 'avatar',
-        child: CircleAvatar(backgroundImage: NetworkImage(user.photoUrl)),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: user.photoUrl,
+          ),
+        ),
       ));
 }
 

@@ -38,6 +38,7 @@ dependencies:
   http: ^0.12.2
   shared_preferences: '^0.5.8'
   flutter_svg: ^0.18.0
+  cached_network_image: ^2.2.0+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -63,6 +64,7 @@ flutter:
     - lang/en.json
     - lang/ru.json
     - assets/park.png
+    - assets/google_logo.png
     - assets/seaty_logo.svg
 
   #   - images/a_dot_ham.jpeg

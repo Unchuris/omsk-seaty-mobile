@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
@@ -28,9 +29,9 @@ class ProfilePage extends StatelessWidget {
                   children: <Widget>[
                     Hero(
                         tag: 'avatar',
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(user.photoUrl),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                              width: 80, height: 80, imageUrl: user.photoUrl),
                         )),
                     SizedBox(height: 10),
                     Text(
