@@ -9,4 +9,6 @@ class AuthenticationStarted extends AuthenticationEvent {}
 
 class AuthenticationLoggedIn extends AuthenticationEvent {}
 
+class AuthenticationSkipped extends AuthenticationEvent {}
+
 class AuthenticationLoggedOut extends AuthenticationEvent {}

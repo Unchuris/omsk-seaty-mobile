@@ -24,6 +24,7 @@ Widget _createDrawer(BuildContext context) {
           builder: (context, state) {
             if (state is AuthenticationSuccess)
               return _createHeaderWithUser(state.user, context);
+            return _createHeaderWitoutUser(context);
           },
         ),
         _createDrawerItem(
@@ -56,6 +57,14 @@ Widget _createHeaderWithUser(User user, BuildContext context) {
         tag: 'avatar',
         child: CircleAvatar(backgroundImage: NetworkImage(user.photoUrl)),
       ));
+}
+
+Widget _createHeaderWitoutUser(BuildContext context) {
+  return UserAccountsDrawerHeader(
+    accountName: Text('Not Auth'),
+    accountEmail: Text('Not Auth'),
+    onDetailsPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+  );
 }
 
 Widget _createDrawerItem(

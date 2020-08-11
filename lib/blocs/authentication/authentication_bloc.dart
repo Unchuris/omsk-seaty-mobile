@@ -29,6 +29,8 @@ class AuthenticationBloc
       yield* _mapAuthenticationLoggedInToState();
     } else if (event is AuthenticationLoggedOut) {
       yield* _mapAuthenticationLoggedOutToState();
+    } else if (event is AuthenticationSkipped) {
+      yield* _mapAuthenticationSkippedToState();
     }
   }
 
@@ -43,13 +45,18 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
-    var kek = await _userRepository.getUser();
-    _userRepository.saveUserToPreferences(kek);
-    yield AuthenticationSuccess(kek);
+    var user = await _userRepository.getUser();
+    _userRepository.saveUserToPreferences(user);
+    if (await _userRepository.isSkipped()) _userRepository.removeIsSkipped();
+    yield AuthenticationSuccess(user);
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {
     yield AuthenticationFailure();
     _userRepository.signOut();
+  }
+
+  Stream<AuthenticationState> _mapAuthenticationSkippedToState() async* {
+    _userRepository.saveIsSkipped();
   }
 }

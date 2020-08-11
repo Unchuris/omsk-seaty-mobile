@@ -48,6 +48,25 @@ class UserRepository {
       return _getUserFromFirebase();
   }
 
+  Future<bool> isSkipped() async {
+    final preferences = await SharedPreferences.getInstance();
+    var value = preferences.getBool('isSkipped') ?? '';
+    if (value != '')
+      return true;
+    else
+      return false;
+  }
+
+  void saveIsSkipped() async {
+    final preferences = await SharedPreferences.getInstance();
+    preferences.setBool('isSkipped', true);
+  }
+
+  void removeIsSkipped() async {
+    final preferences = await SharedPreferences.getInstance();
+    preferences.remove('isSkipped');
+  }
+
   void saveUserToPreferences(User user) async {
     final preferences = await SharedPreferences.getInstance();
     preferences.setString('user', json.encode(user));

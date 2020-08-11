@@ -15,25 +15,26 @@ import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final UserRepository _userRepository = UserRepository();
-  final bool isLogged = await _userRepository.isSignedIn();
+  final bool isSigned =
+      await _userRepository.isSignedIn() || await _userRepository.isSkipped();
   runApp(BlocProvider(
     create: (context) => AuthenticationBloc(userRepository: _userRepository)
       ..add(AuthenticationStarted()),
-    child: MyApp(userRepository: _userRepository, isLogged: isLogged),
+    child: MyApp(userRepository: _userRepository, isSigned: isSigned),
   ));
 }
 
 class MyApp extends StatelessWidget {
   final UserRepository _userRepository;
-  final bool _isLogged;
+  final bool _isSigned;
 
   MyApp(
       {Key key,
       @required UserRepository userRepository,
-      @required bool isLogged})
-      : assert(userRepository != null, isLogged != null),
+      @required bool isSigned})
+      : assert(userRepository != null, isSigned != null),
         _userRepository = userRepository,
-        _isLogged = isLogged,
+        _isSigned = isSigned,
         super(key: key);
 
   @override
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
         }
         return supportedLocales.first;
       },
-      initialRoute: _isLogged ? '/map' : '/login',
+      initialRoute: _isSigned ? '/map' : '/login',
       routes: {
         '/login': (context) => LoginScreen(userRepository: _userRepository),
         '/map': (context) => BlocProvider<MapBloc>(

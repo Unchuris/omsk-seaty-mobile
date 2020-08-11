@@ -37,7 +37,11 @@ class LoginForm extends StatelessWidget {
                 height: 50,
                 child: FlatButton(
                   child: Text('Skip', style: TextStyle(color: Colors.orange)),
-                  onPressed: () => _swithToMapScreen(context),
+                  onPressed: () => {
+                    _swithToMapScreen(context),
+                    BlocProvider.of<AuthenticationBloc>(context)
+                        .add(AuthenticationSkipped())
+                  },
                 ),
               )
             ],
