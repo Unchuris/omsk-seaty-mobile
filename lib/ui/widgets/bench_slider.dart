@@ -86,7 +86,7 @@ class BenchSliderOptions {
 
   BenchSliderOptions({
     this.height,
-    this.enableInfiniteScroll: true,
+    this.enableInfiniteScroll: false,
     this.onPageChanged,
     this.onItemClicked,
   });

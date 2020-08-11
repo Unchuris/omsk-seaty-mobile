@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
         FavoritesPage.roateName: (context) => BlocProvider.value(
               // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
               value: mapBloc,
-
               child: FavoritesPage(),
             ),
       },

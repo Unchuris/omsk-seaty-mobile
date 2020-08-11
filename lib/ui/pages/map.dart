@@ -76,6 +76,9 @@ class _MapScreenState extends State<MapScreen>
                     _markers = state.markers;
                   }
                   if (state is MapMarkerPressedState) {
+                    if (_benches != null) {
+                      _carouselController.jumpToPage(0);
+                    }
                     _benches = state.markers;
                   }
                   if (state is LikeButtonPassState) {

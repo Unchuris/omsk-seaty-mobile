@@ -61,6 +61,8 @@ flutter:
     - lang/en.json
     - lang/ru.json
     - assets/clusterpin.png
+    - assets/selectedpin.png
+    - assets/selectedclusterpin.png
     - assets/pin.png
     - assets/road.png
     - assets/menu.svg
