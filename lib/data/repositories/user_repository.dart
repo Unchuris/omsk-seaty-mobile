@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -28,7 +29,10 @@ class UserRepository {
       return true;
     else {
       final currentUser = await _firebaseAuth.currentUser();
-      return currentUser != null;
+      if (currentUser != null)
+        return true;
+      else
+        return false;
     }
   }
 

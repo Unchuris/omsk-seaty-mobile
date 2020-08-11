@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:omsk_seaty_mobile/data/models/user.dart';
 
+import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
 
 part 'authentication_event.dart';
@@ -36,7 +36,6 @@ class AuthenticationBloc
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       final user = await _userRepository.getUser();
-      //_userRepository.saveUserToPreferences(user);
       yield AuthenticationSuccess(user);
     } else {
       yield AuthenticationFailure();

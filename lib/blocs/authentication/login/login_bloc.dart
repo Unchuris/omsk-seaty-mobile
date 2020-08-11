@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
 
 part 'login_event.dart';

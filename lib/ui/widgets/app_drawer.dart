@@ -12,20 +12,20 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      builder: (context, state) {
-        if (state is AuthenticationSuccess)
-          return _createDrawer(state.user, context);
-      },
-    );
+    return _createDrawer(context);
   }
 }
 
-Widget _createDrawer(User user, BuildContext context) {
+Widget _createDrawer(BuildContext context) {
   return Drawer(
     child: ListView(
       children: <Widget>[
-        _createHeader(user, context),
+        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+            if (state is AuthenticationSuccess)
+              return _createHeaderWithUser(state.user, context);
+          },
+        ),
         _createDrawerItem(
             icon: Icons.star,
             text: AppLocalizations.of(context).translate('string_starred')),
@@ -45,7 +45,7 @@ Widget _createDrawer(User user, BuildContext context) {
   );
 }
 
-Widget _createHeader(User user, BuildContext context) {
+Widget _createHeaderWithUser(User user, BuildContext context) {
   return UserAccountsDrawerHeader(
       accountName: Text(user.displayName),
       accountEmail: Text(user.email),
