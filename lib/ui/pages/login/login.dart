@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:omsk_seaty_mobile/blocs/authentication/login/login_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
 import 'package:omsk_seaty_mobile/ui/pages/login/login_form.dart';
@@ -17,7 +19,13 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: BlocProvider<LoginBloc>(
         create: (context) => LoginBloc(userRepository: _userRepository),
-        child: Center(child: LoginForm()),
+        child: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              SvgPicture.asset('assets/seaty_logo.svg'),
+              LoginForm()
+            ])),
       ),
     );
   }
