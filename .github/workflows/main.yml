@@ -23,9 +23,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6 # Not needed with a .ruby-version file
-      - name: Install dependencies
-        run: |
-          apt-get install fastlane
+      - name: Run fastlane setup
+          run: |
+            fastlane setup --verbose
 
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
