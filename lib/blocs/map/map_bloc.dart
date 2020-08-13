@@ -18,11 +18,11 @@ part 'map_event.dart';
 part 'map_state.dart';
 
 /* основной файл логики, здесь обрабатываются события и переключаются состояния экрана карты*/
-enum Type { cluster, one }
+enum PinType { cluster, pin }
 
 class CurrentMarker {
   final String markerId;
-  final Type type;
+  final PinType type;
   const CurrentMarker({this.type, this.markerId});
 }
 
@@ -242,18 +242,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
             if (_currentMarker != null) {
               if (feature.isCluster) {
                 _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(), type: Type.cluster);
+                    markerId: feature.clusterId.toString(),
+                    type: PinType.cluster);
               } else {
-                _currentMarker =
-                    CurrentMarker(markerId: feature.markerId, type: Type.one);
+                _currentMarker = CurrentMarker(
+                    markerId: feature.markerId, type: PinType.pin);
               }
             } else {
               if (feature.isCluster) {
                 _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(), type: Type.cluster);
+                    markerId: feature.clusterId.toString(),
+                    type: PinType.cluster);
               } else {
-                _currentMarker =
-                    CurrentMarker(markerId: feature.markerId, type: Type.one);
+                _currentMarker = CurrentMarker(
+                    markerId: feature.markerId, type: PinType.pin);
               }
             }
 
