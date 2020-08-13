@@ -17,12 +17,22 @@ import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 part 'map_event.dart';
 part 'map_state.dart';
 
+//TODO remove test data
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+
 /* основной файл логики, здесь обрабатываются события и переключаются состояния экрана карты*/
-enum Type { cluster, one }
+enum PinType { cluster, pin }
 
 class CurrentMarker {
   final String markerId;
-  final Type type;
+  final PinType type;
   const CurrentMarker({this.type, this.markerId});
 }
 
@@ -39,12 +49,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   final GeolocationRepository _geolocationRepository;
   final MarkerRepository _repository;
+
   List<MapMarker> _benches;
   List<MapMarker> _favorites = [];
+
   Position _currentPosition;
   CurrentMarker _currentMarker;
 
   Map<MarkerId, Marker> _markers;
+
   StreamSubscription<Position> _currentPositionSubcription;
   StreamSubscription _cameraZoomSubscription;
   StreamSubscription _visibleReginSubscription;
@@ -52,24 +65,24 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Map<String, images.Image> _benchesPinImage = {};
   Map<String, images.Image> _imagesAssetsData = {};
   Map<String, BitmapDescriptor> _imagesBitmapDescriptor = {};
-  BitmapDescriptor selectedPin;
+
+  static const String IMAGE_PIN = "pin.png";
+  static const String IMAGE_CLUSTERPIN = "clusterpin.png";
+  static const String IMAGE_SELECTEDPIN = "selectedpin.png";
+  static const String IMAGE_SELECTEDCLUSTERPIN = "selectedclusterpin.png";
 
   Map<String, MapMarker> _mediaPool = {};
-
-  final _markerController = StreamController<Map<MarkerId, Marker>>.broadcast();
 
   final _cameraZoomController = StreamController<double>.broadcast();
 
   final _cameraVisibleRegion = StreamController<LatLngBounds>.broadcast();
   LatLngBounds _currentVisibleRegion;
-  Function(Map<MarkerId, Marker>) get addMarkers => _markerController.sink.add;
   Function(double) get setCameraZoom => _cameraZoomController.sink.add;
   Function(LatLngBounds) get setVisibleRegion => _cameraVisibleRegion.sink.add;
 
   var _currentZoom = 10;
   Fluster<MapMarker> _fluster;
 
-  Stream<Map<MarkerId, Marker>> get markers => _markerController.stream;
   Stream<double> get cameraZoom => _cameraZoomController.stream;
   Stream<LatLngBounds> get visibleRegion => _cameraVisibleRegion.stream;
 
@@ -113,13 +126,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           _displayMarkers(_mediaPool);
         }
       });
-      add(MapMarkerInitialedStop(markers: _markers));
     } else if (event is MapMarkerInitialedStop) {
       yield MarkersInitialed(markers: _markers);
     } else if (event is MapMarkerPressedEvent) {
       yield MapMarkerPressedState(
           markerId: event.markerId, markers: event.markers);
     } else if (event is LikeButtonPassEvent) {
+      print(event.toString());
       if (event.marker.isFavorites) {
         _favorites.add(event.marker);
       } else {
@@ -142,7 +155,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _currentPositionSubcription?.cancel();
     _cameraZoomSubscription.cancel();
     _visibleReginSubscription.cancel();
-    _markerController.close();
     _cameraZoomController.close();
     _cameraVisibleRegion.close();
     return super.close();
@@ -169,9 +181,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
               latitude: bench.latitude,
               longitude: bench.longitude,
               locationName: bench.title,
-              thumbnailSrc: "pin.png",
               isFavorites: false,
-              isSelect: false,
               imageUrl: imgList[random.nextInt(imgList.length)]),
       };
     });
@@ -196,6 +206,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     markerId: cluster.id.toString(),
                     childMarkerId: cluster.childMarkerId));
 
+    _benches = _mediaPool.values.toList();
     _displayMarkers(_mediaPool);
   }
 
@@ -222,9 +233,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
       if (feature.isCluster) {
         bitmapDescriptor = await _createClusterBitmapDescriptor(feature);
+      } else if (_currentMarker != null &&
+          _currentMarker.markerId == feature.markerId) {
+        bitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
       } else {
-        bitmapDescriptor = await _getImageBitmapDescriptor(
-            feature.thumbnailSrc, feature.isSelect);
+        bitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_PIN);
       }
 
       var marker = Marker(
@@ -234,49 +247,21 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           onTap: () {
             if (_currentMarker != null) {
               if (feature.isCluster) {
-                for (var v in clusters) {
-                  if (_currentMarker.type == Type.cluster) {
-                    if (_currentMarker.markerId == v.clusterId.toString()) {
-                      v.isSelect = false;
-                      break;
-                    }
-                  } else {
-                    if (_currentMarker.markerId == v.markerId) {
-                      v.isSelect = false;
-                      break;
-                    }
-                  }
-                }
                 _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(), type: Type.cluster);
-                feature.isSelect = true;
+                    markerId: feature.clusterId.toString(),
+                    type: PinType.cluster);
               } else {
-                for (var v in clusters) {
-                  if (_currentMarker.type == Type.cluster) {
-                    if (_currentMarker.markerId == v.clusterId.toString()) {
-                      v.isSelect = false;
-                      break;
-                    }
-                  } else {
-                    if (_currentMarker.markerId == v.markerId) {
-                      v.isSelect = false;
-                      break;
-                    }
-                  }
-                }
-                _currentMarker =
-                    CurrentMarker(markerId: feature.markerId, type: Type.one);
-                feature.isSelect = true;
+                _currentMarker = CurrentMarker(
+                    markerId: feature.markerId, type: PinType.pin);
               }
             } else {
               if (feature.isCluster) {
                 _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(), type: Type.cluster);
-                feature.isSelect = true;
+                    markerId: feature.clusterId.toString(),
+                    type: PinType.cluster);
               } else {
-                _currentMarker =
-                    CurrentMarker(markerId: feature.markerId, type: Type.one);
-                feature.isSelect = true;
+                _currentMarker = CurrentMarker(
+                    markerId: feature.markerId, type: PinType.pin);
               }
             }
 
@@ -304,12 +289,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(
       MapMarker feature) async {
     var child;
+
     if (_currentMarker != null &&
         feature.clusterId.toString() == _currentMarker.markerId) {
-      child =
-          await _getImage("selectedclusterpin.png", 120, 120, feature.isSelect);
+      child = await _getImage(IMAGE_SELECTEDCLUSTERPIN, 200, 200);
     } else {
-      child = await _getImage("clusterpin.png", 200, 200, feature.isSelect);
+      child = await _getImage(IMAGE_CLUSTERPIN, 150, 150);
     }
 
     if (child == null) {
@@ -340,14 +325,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<BitmapDescriptor> _getImageBitmapDescriptor(
-      String thumbnailSrc, bool isSelected) async {
-    if (_imagesBitmapDescriptor.containsKey(thumbnailSrc) && !isSelected) {
+      String thumbnailSrc) async {
+    if (_imagesBitmapDescriptor.containsKey(thumbnailSrc)) {
       return _imagesBitmapDescriptor[thumbnailSrc];
-    } else if (_imagesBitmapDescriptor.containsKey("selectedpin.png")) {
-      return _imagesBitmapDescriptor["selectedpin.png"];
     }
 
-    var resized = await _getImage(thumbnailSrc, 120, 120, isSelected);
+    var resized = await _getImage(thumbnailSrc, 120, 120);
 
     if (resized == null) {
       return null;
@@ -356,25 +339,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     var png = images.encodePng(resized);
 
     var bitmapDescriptor = BitmapDescriptor.fromBytes(png);
-    if (isSelected) {
-      _imagesBitmapDescriptor["selectedpin.png"] = bitmapDescriptor;
-    } else {
-      _imagesBitmapDescriptor[thumbnailSrc] = bitmapDescriptor;
-    }
+
+    _imagesBitmapDescriptor[thumbnailSrc] = bitmapDescriptor;
 
     return bitmapDescriptor;
   }
 
   Future<images.Image> _getImage(
-      String imageFile, int width, int height, bool isSelected) async {
+      String imageFile, int width, int height) async {
     String key = imageFile + width.toString() + height.toString();
-    if (isSelected) {
-      if (imageFile == "pin.png") {
-        var image = await _getAssetsImage("selectedpin.png");
-        _benchesPinImage[key] = image.clone();
-        return image;
-      }
-    }
     if (_benchesPinImage.containsKey(key)) return _benchesPinImage[key].clone();
     var image = await _getAssetsImage(imageFile);
 

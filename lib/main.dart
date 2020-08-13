@@ -1,22 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
+
+import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
+import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
+
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final UserRepository _userRepository = UserRepository();
+
+  final bool isSigned =
+      await _userRepository.isSignedIn() || await _userRepository.isSkipped();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+            create: (context) =>
+                AuthenticationBloc(userRepository: _userRepository)
+                  ..add(AuthenticationStarted())),
+        BlocProvider<MapBloc>(
+            create: (context) => MapBloc(
+                repository: MarkerRepository(),
+                geolocationRepository: GeolocationRepository()))
+      ],
+      child: MyApp(userRepository: _userRepository, isSigned: isSigned),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
+  final UserRepository _userRepository;
+  final bool _isSigned;
+
+  MyApp(
+      {Key key,
+      @required UserRepository userRepository,
+      @required bool isSigned})
+      : assert(userRepository != null, isSigned != null),
+        _userRepository = userRepository,
+        _isSigned = isSigned,
+        super(key: key);
+
   // This widget is the root of your application.
-  MapBloc mapBloc = MapBloc(
-      repository: MarkerRepository(),
-      geolocationRepository: GeolocationRepository());
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,21 +79,12 @@ class MyApp extends StatelessWidget {
         }
         return supportedLocales.first;
       },
-      initialRoute: BenchPage.routeName,
+      initialRoute: _isSigned ? '/map' : '/login',
       routes: {
-        '/': (context) => BlocProvider<MapBloc>(
-              // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
-              create: (context) => mapBloc,
-
-              child: MapScreen(),
-            ),
+        '/login': (context) => LoginScreen(userRepository: _userRepository),
+        '/map': (context) => MapScreen(),
         '/profile': (context) => ProfilePage(),
-        FavoritesPage.roateName: (context) => BlocProvider.value(
-              // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
-              value: mapBloc,
-              child: FavoritesPage(),
-            ),
-        BenchPage.routeName: (context) => BenchPage(),
+        FavoritesPage.roateName: (context) => FavoritesPage(),
       },
     );
   }

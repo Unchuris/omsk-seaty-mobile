@@ -88,7 +88,7 @@ class BenchSliderOptions {
   BenchSliderOptions({
     this.enlargeCenterPage: true,
     this.height,
-    this.enableInfiniteScroll: false,
+    this.enableInfiniteScroll: true,
     this.onPageChanged,
     this.onItemClicked,
   });

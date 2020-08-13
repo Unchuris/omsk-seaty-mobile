@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,12 +9,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
-import 'package:omsk_seaty_mobile/ui/widgets/bench_card.dart';
+
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
-import 'package:carousel_slider/carousel_controller.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/bench_card.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
+
   @override
   _MapScreenState createState() => _MapScreenState();
 }
@@ -181,8 +183,6 @@ class _MapScreenState extends State<MapScreen>
 
   void _onCameraMove(CameraPosition cameraPosition) {
     _currentZoom = cameraPosition.zoom;
-
-//    print("зум поменялся");
   }
 
   void _onCameraIdle() {

@@ -1,5 +1,12 @@
 {
     "app_name": "Omsk Seaty",
+    "string_settings": "Settings",
+    "string_help": "Help",
+    "string_about": "About",
+    "string_starred": "Favorites",
+    "string_google_sign_in": "Sign in with Google",
+    "string_skip": "SKIP",
+    "string_log_out": "Log out",
     "string_top_benches": "Top benches",
     "string_top_users": "Top users",
     "string_my_benches": "My benches",

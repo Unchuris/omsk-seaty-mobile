@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/data/models/user.dart';
+
+import 'package:flutter_svg/svg.dart';
+
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
-import 'package:omsk_seaty_mobile/ui/pages/profile/model/ui_profile.dart';
 
 class AppDrawer extends StatefulWidget {
   final List<MapMarker> markers;
@@ -13,22 +19,19 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  var profile = UiProfile(
-      'Elon', 'Musk', 'elool@gmail.com', 'https://picsum.photos/250?image=9');
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Drawer(
         child: ListView(
           children: <Widget>[
-            _createHeader(
-                name: '${profile.firstName} ${profile.middleName}',
-                email: profile.email,
-                imageUrl: profile.imageUrl,
-                onTap: () {
-                  Navigator.pushNamed(context, '/profile', arguments: profile);
-                }),
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                if (state is AuthenticationSuccess)
+                  return _createHeaderWithUser(state.user, context);
+                return _createHeaderWitoutUser(context);
+              },
+            ),
             _createDrawerItem(
                 icon: SvgPicture.asset("assets/myBench.svg"),
                 text: AppLocalizations.of(context)
@@ -56,16 +59,29 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 }
 
-Widget _createHeader(
-    {String name, String email, String imageUrl, GestureTapCallback onTap}) {
+Widget _createHeaderWithUser(User user, BuildContext context) {
   return UserAccountsDrawerHeader(
-      accountName: Text(name),
-      accountEmail: Text(email),
-      onDetailsPressed: onTap,
+      accountName: Text(user.displayName),
+      accountEmail: Text(user.email),
+      onDetailsPressed: () {
+        Navigator.pushNamed(context, '/profile', arguments: user);
+      },
       currentAccountPicture: Hero(
         tag: 'avatar',
-        child: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: user.photoUrl,
+          ),
+        ),
       ));
+}
+
+Widget _createHeaderWitoutUser(BuildContext context) {
+  return UserAccountsDrawerHeader(
+    accountName: Text('Not Auth'),
+    accountEmail: Text('Not Auth'),
+    onDetailsPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+  );
 }
 
 Widget _createDrawerItem({Widget icon, String text, GestureTapCallback onTap}) {
