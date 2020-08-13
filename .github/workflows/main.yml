@@ -30,7 +30,7 @@ jobs:
           java-version: 1.8
       - name: Install fastlane
         run: |
-          brew install fastlane
+          gem install fastlane
       - name: android build release
         run: |
           cd android && bundle exec fastlane android_beta_app
