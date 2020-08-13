@@ -32,3 +32,4 @@ jobs:
         with:
          lane: 'android_beta_app'
          subdirectory: 'android'
+         bundle-install-path: 'vendor/bundle'
