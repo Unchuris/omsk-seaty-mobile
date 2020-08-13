@@ -65,6 +65,9 @@ flutter:
     - assets/selectedclusterpin.png
     - assets/pin.png
     - assets/road.png
+    - assets/pin.svg
+    - assets/rate.svg
+    - assets/trashсan.svg
     - assets/menu.svg
     - assets/like.svg
     - assets/unlike.svg
@@ -74,6 +77,7 @@ flutter:
     - assets/topBenches.svg
     - assets/star.svg
     - assets/leftArrow.svg
+    - assets/leftarrowwhite.svg
     - assets/map-style.json
 
   #   - images/a_dot_ham.jpeg

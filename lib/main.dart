@@ -5,6 +5,7 @@ import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         }
         return supportedLocales.first;
       },
-      initialRoute: '/',
+      initialRoute: BenchPage.routeName,
       routes: {
         '/': (context) => BlocProvider<MapBloc>(
               // добавляю в контекст BLoC с картой дабы в mapScreen можно было ссылаться на него
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
               value: mapBloc,
               child: FavoritesPage(),
             ),
+        BenchPage.routeName: (context) => BenchPage(),
       },
     );
   }

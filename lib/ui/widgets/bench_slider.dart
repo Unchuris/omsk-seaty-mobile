@@ -63,7 +63,7 @@ class _BenchSlider extends State<BenchSlider> {
         }
       }),
       options: CarouselOptions(
-          enlargeCenterPage: true,
+          enlargeCenterPage: options.enlargeCenterPage,
           enableInfiniteScroll: options.enableInfiniteScroll,
           onPageChanged: onPageChanged,
           height: options.height),
@@ -80,11 +80,13 @@ class BenchSliderOptions {
   final double height;
 
   final bool enableInfiniteScroll;
+  final bool enlargeCenterPage;
 
   final Function(int index) onPageChanged;
   final Function(int index) onItemClicked;
 
   BenchSliderOptions({
+    this.enlargeCenterPage: true,
     this.height,
     this.enableInfiniteScroll: false,
     this.onPageChanged,
