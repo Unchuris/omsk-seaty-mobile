@@ -30,9 +30,14 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: 5.6.2
-      - name: android build release
-        uses: maierj/fastlane-action@v1.4.0
+      - uses: subosito/flutter-action@v1
         with:
-         lane: 'android_beta_app'
-         subdirectory: 'android'
-         bundle-install-path: 'vendor/bundle'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter test
+        - name: android build release
+          uses: maierj/fastlane-action@v1.4.0
+          with:
+           lane: 'android_beta_app'
+           subdirectory: 'android'
+           bundle-install-path: 'vendor/bundle'
