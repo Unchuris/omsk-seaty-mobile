@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6'
+          ruby-version: 2.6 # Not needed with a .ruby-version file
       - name: Install dependencies
         run: |
           npm install
