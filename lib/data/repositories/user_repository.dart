@@ -10,6 +10,9 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
+  static const String _isSkippedPreferencesValue = 'isSkipped';
+  static const String _userPreferencesValue = 'user';
+
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignIn})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn();
@@ -50,7 +53,7 @@ class UserRepository {
 
   Future<bool> isSkipped() async {
     final preferences = await SharedPreferences.getInstance();
-    var value = preferences.getBool('isSkipped') ?? '';
+    var value = preferences.getBool(_isSkippedPreferencesValue) ?? '';
     if (value != '')
       return true;
     else
@@ -59,27 +62,27 @@ class UserRepository {
 
   void saveIsSkipped() async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.setBool('isSkipped', true);
+    preferences.setBool(_isSkippedPreferencesValue, true);
   }
 
   void removeIsSkipped() async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.remove('isSkipped');
+    preferences.remove(_isSkippedPreferencesValue);
   }
 
   void saveUserToPreferences(User user) async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.setString('user', json.encode(user));
+    preferences.setString(_userPreferencesValue, json.encode(user));
   }
 
   void _removeUserFromPreferences() async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.remove('user');
+    preferences.remove(_userPreferencesValue);
   }
 
   Future<bool> _checkUserInPreferences() async {
     final preferences = await SharedPreferences.getInstance();
-    var user = preferences.getString('user') ?? '';
+    var user = preferences.getString(_userPreferencesValue) ?? '';
     if (user != '')
       return true;
     else
@@ -94,7 +97,7 @@ class UserRepository {
 
   Future<User> _getUserFromPrefs() async {
     final preferences = await SharedPreferences.getInstance();
-    var user = json.decode(preferences.getString('user'));
+    var user = json.decode(preferences.getString(_userPreferencesValue));
     return User.fromJson(user);
   }
 }
