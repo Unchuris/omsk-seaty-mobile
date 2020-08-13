@@ -28,11 +28,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter test
       - name: android build release
         run: |
           cd android && bundle exec fastlane android_beta_app
