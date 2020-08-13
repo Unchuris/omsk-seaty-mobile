@@ -28,9 +28,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Install Gems
+      - name: Install fastlane
         run: |
-          bundle install --jobs 4 --retry 3
+          brew install fastlane
       - name: android build release
         run: |
           cd android && bundle exec fastlane android_beta_app
