@@ -15,11 +15,12 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6.3
@@ -27,17 +28,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: 5.6.2
       - uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter test
-        - name: android build release
-          uses: maierj/fastlane-action@v1.4.0
-          with:
-           lane: 'android_beta_app'
-           subdirectory: 'android'
-           bundle-install-path: 'vendor/bundle'
+      - name: android build release
+        run: |
+          bundle exec fastlane android_beta_app
