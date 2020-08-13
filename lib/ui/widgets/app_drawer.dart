@@ -1,11 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 
+import 'package:flutter_svg/svg.dart';
+
+import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+
 class AppDrawer extends StatefulWidget {
+  final List<MapMarker> markers;
+  AppDrawer(this.markers);
   @override
   _AppDrawerState createState() => _AppDrawerState();
 }
@@ -13,38 +21,42 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
-    return _createDrawer(context);
+    return SizedBox(
+      child: Drawer(
+        child: ListView(
+          children: <Widget>[
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                if (state is AuthenticationSuccess)
+                  return _createHeaderWithUser(state.user, context);
+                return _createHeaderWitoutUser(context);
+              },
+            ),
+            _createDrawerItem(
+                icon: SvgPicture.asset("assets/myBench.svg"),
+                text: AppLocalizations.of(context)
+                    .translate('string_my_benches')),
+            _createDrawerItem(
+                icon: SvgPicture.asset("assets/favorites.svg"),
+                text:
+                    AppLocalizations.of(context).translate('string_favorites'),
+                onTap: () {
+                  Navigator.pushNamed(context, FavoritesPage.roateName,
+                      arguments: widget.markers);
+                }),
+            _createDrawerItem(
+                icon: SvgPicture.asset("assets/topBenches.svg"),
+                text: AppLocalizations.of(context)
+                    .translate('string_top_benches')),
+            _createDrawerItem(
+                icon: SvgPicture.asset("assets/topUsers.svg"),
+                text:
+                    AppLocalizations.of(context).translate('string_top_users')),
+          ],
+        ),
+      ),
+    );
   }
-}
-
-Widget _createDrawer(BuildContext context) {
-  return Drawer(
-    child: ListView(
-      children: <Widget>[
-        BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            if (state is AuthenticationSuccess)
-              return _createHeaderWithUser(state.user, context);
-            return _createHeaderWitoutUser(context);
-          },
-        ),
-        _createDrawerItem(
-            icon: Icons.star,
-            text: AppLocalizations.of(context).translate('string_starred')),
-        Divider(),
-        ListTile(
-          title:
-              Text(AppLocalizations.of(context).translate('string_settings')),
-        ),
-        ListTile(
-          title: Text(AppLocalizations.of(context).translate('string_help')),
-        ),
-        ListTile(
-          title: Text(AppLocalizations.of(context).translate('string_about')),
-        )
-      ],
-    ),
-  );
 }
 
 Widget _createHeaderWithUser(User user, BuildContext context) {
@@ -72,11 +84,11 @@ Widget _createHeaderWitoutUser(BuildContext context) {
   );
 }
 
-Widget _createDrawerItem(
-    {IconData icon, String text, GestureTapCallback onTap}) {
+Widget _createDrawerItem({Widget icon, String text, GestureTapCallback onTap}) {
   return ListTile(
-    title: Text(text),
-    leading: Icon(icon),
+    contentPadding: EdgeInsets.only(left: 8),
+    title: Align(alignment: Alignment(-1.2, 0), child: Text(text)),
+    leading: icon,
     onTap: onTap,
   );
 }

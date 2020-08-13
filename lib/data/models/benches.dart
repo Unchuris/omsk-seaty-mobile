@@ -22,6 +22,7 @@ class Bench {
 }
 
 class Benches {
+  int pk;
   int authorId;
   bool isPending;
   double latitude;
@@ -39,7 +40,8 @@ class Benches {
   bool hasTrashcan;
 
   Benches(
-      {this.authorId,
+      {this.pk,
+      this.authorId,
       this.isPending,
       this.latitude,
       this.longitude,
@@ -56,6 +58,7 @@ class Benches {
       this.hasTrashcan});
 
   Benches.fromJson(Map<String, dynamic> json) {
+    pk = json['pk'];
     authorId = json['author_id'];
     isPending = json['is_pending'];
     latitude = json['latitude'];
@@ -75,6 +78,7 @@ class Benches {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['pk'] = this.pk;
     data['author_id'] = this.authorId;
     data['is_pending'] = this.isPending;
     data['latitude'] = this.latitude;

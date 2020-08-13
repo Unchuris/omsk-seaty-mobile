@@ -47,12 +47,27 @@ class MapMarkerInitialedStop extends MapEvent {
 
 class MapMarkerPressedEvent extends MapEvent {
   final String markerId;
-  final int index;
-  const MapMarkerPressedEvent(this.markerId, this.index);
+  final List<MapMarker> markers;
+  const MapMarkerPressedEvent({this.markerId, this.markers});
 
-  List<Object> get props => [markerId, index];
+  List<Object> get props => [markerId, markers];
 
   @override
   String toString() =>
-      "MapMarkerPressedEvent {markerId: $markerId, index: $index}";
+      "MapMarkerPressedEvent {markerId: $markerId, markers: $markers}";
+}
+
+class LikeButtonPassEvent extends MapEvent {
+  final MapMarker marker;
+  const LikeButtonPassEvent({this.marker});
+
+  @override
+  List<Object> get props => [marker];
+}
+
+class LikeUpdatingEvent extends MapEvent {
+  const LikeUpdatingEvent();
+
+  @override
+  List<Object> get props => [];
 }

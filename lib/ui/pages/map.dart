@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
+
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/bench_card.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -16,16 +20,25 @@ class MapScreen extends StatefulWidget {
   _MapScreenState createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen>
+    with AutomaticKeepAliveClientMixin {
   final Completer<GoogleMapController> _controller = Completer();
-  Map<MarkerId, Marker> _markers;
   List<MapMarker> _benches;
+  List<MapMarker> _favorites = [];
+  Map<MarkerId, Marker> _markers;
+  final CarouselControllerImpl _carouselController = CarouselController();
   double _currentZoom = 10.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final CarouselControllerImpl _carouselController = CarouselController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         key: _scaffoldKey,
         body: MultiBlocListener(
@@ -46,16 +59,15 @@ class _MapScreenState extends State<MapScreen> {
               if (state is MapCurrentLocationUpdatingState) {
                 print(state.toString());
               }
-              if (state is MapErrorState) {
-                print(state.toString());
-              }
             }),
           ],
           child: Stack(
-            children: [
+            children: <Widget>[
               BlocBuilder<MapBloc, MapState>(
                 buildWhen: (previous, current) {
-                  if (current is MarkersInitialed || current is BenchesState) {
+                  if (current is MarkersInitialed ||
+                      current is MapMarkerPressedState ||
+                      current is LikeButtonPassState) {
                     return true;
                   } else {
                     return false;
@@ -65,8 +77,17 @@ class _MapScreenState extends State<MapScreen> {
                   if (state is MarkersInitialed) {
                     _markers = state.markers;
                   }
-                  if (state is BenchesState) {
-                    _benches = state.benches;
+                  if (state is MapMarkerPressedState) {
+                    if (_benches != null) {
+                      _carouselController.jumpToPage(0);
+                    }
+                    _benches = state.markers;
+                  }
+                  if (state is LikeButtonPassState) {
+                    print(state.toString());
+                    _favorites = state.favorites;
+
+                    BlocProvider.of<MapBloc>(context).add(LikeUpdatingEvent());
                   }
                   return Stack(
                     children: [
@@ -105,16 +126,23 @@ class _MapScreenState extends State<MapScreen> {
                 },
               ),
               Positioned(
-                bottom: 30,
+                bottom: 220,
                 left: 5,
                 child: _buildMyLocation(),
               ),
               Positioned(
-                top: 30,
-                left: 5,
-                child: SizedBox(
+                top: 51,
+                left: 0,
+                child: Container(
+                  width: 63,
+                  height: 56,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(50.0),
+                          bottomRight: Radius.circular(50.0))),
                   child: IconButton(
-                    icon: Icon(Icons.menu),
+                    icon: SvgPicture.asset("assets/menu.svg"),
                     onPressed: () => _scaffoldKey.currentState.openDrawer(),
                   ),
                 ),
@@ -122,11 +150,19 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ),
-        drawer: AppDrawer());
+        drawer: BlocBuilder<MapBloc, MapState>(builder: (context, state) {
+          if (state is LikeButtonPassState) {
+            return AppDrawer(_favorites);
+          }
+          return AppDrawer(_favorites);
+        }));
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    rootBundle.loadString("assets/map-style.json").then((style) {
+      controller.setMapStyle(style);
+      _controller.complete(controller);
+    });
   }
 
   //создаю кнопку мое местоположение
@@ -138,7 +174,6 @@ class _MapScreenState extends State<MapScreen> {
             var state = BlocProvider.of<MapBloc>(context).state;
             print(state.toString());
             if (state is MapCurrentLocationUpdatingState) {
-              print("много нажал");
             } else {
               BlocProvider.of<MapBloc>(context)
                   .add(ButtonGetCurrentLocationPassedEvent());
@@ -149,8 +184,6 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onCameraMove(CameraPosition cameraPosition) {
     _currentZoom = cameraPosition.zoom;
-
-//    print("зум поменялся");
   }
 
   void _onCameraIdle() {
@@ -159,7 +192,6 @@ class _MapScreenState extends State<MapScreen> {
       var l = await value.getVisibleRegion();
       BlocProvider.of<MapBloc>(context).setVisibleRegion(l);
     });
-    print("камера остановилась");
   }
 
   void _onBenchSliderPageChanged(int index) {
@@ -169,51 +201,15 @@ class _MapScreenState extends State<MapScreen> {
   void _onBenchSliderItemClicked(int index) {
     //TODO
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  //TODO test widgets
   List<Widget> _getData(List<MapMarker> markers) => markers
-      .map((item) => Container(
-            margin: EdgeInsets.only(top: 5.0),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    Image.network(item.imageUrl,
-                        fit: BoxFit.cover, width: 1000.0),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(200, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20.0),
-                        child: Text(
-                          item.locationName,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+      .map((item) => BlocProvider(
+            create: (context) => context.bloc(),
+            child: BenchCard(
+              marker: item,
+            ),
           ))
       .toList();
+
+  @override
+  bool get wantKeepAlive => true;
 }

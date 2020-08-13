@@ -37,8 +37,8 @@ dependencies:
   image: ^2.1.14
   http: ^0.12.2
   shared_preferences: '^0.5.8'
-  flutter_svg: ^0.18.0
   cached_network_image: ^2.2.0+1
+  flutter_svg: ^0.18.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -63,9 +63,27 @@ flutter:
   assets:
     - lang/en.json
     - lang/ru.json
-    - assets/park.png
+
+
     - assets/google_logo.png
     - assets/seaty_logo.svg
+
+    - assets/clusterpin.png
+    - assets/selectedpin.png
+    - assets/selectedclusterpin.png
+    - assets/pin.png
+    - assets/road.png
+    - assets/menu.svg
+    - assets/like.svg
+    - assets/unlike.svg
+    - assets/topUsers.svg
+    - assets/favorites.svg
+    - assets/myBench.svg
+    - assets/topBenches.svg
+    - assets/star.svg
+    - assets/leftArrow.svg
+    - assets/map-style.json
+
 
   #   - images/a_dot_ham.jpeg
 

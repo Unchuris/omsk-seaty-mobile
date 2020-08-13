@@ -6,5 +6,10 @@
     "string_starred": "Избранное",
     "string_google_sign_in": "Войти с помощью Google",
     "string_skip": "ПРОПУСТИТЬ",
-    "string_log_out": "Выйти"
+    "string_log_out": "Выйти",
+    "string_top_benches": "Топ лавочек",
+    "string_top_users": "Топ пользователей",
+    "string_my_benches": "Мои лавочки",
+    "string_favorites": "Избранное"
+    
 }
