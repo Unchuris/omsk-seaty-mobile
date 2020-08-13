@@ -25,8 +25,6 @@ jobs:
           ruby-version: 2.6 # Not needed with a .ruby-version file
       - name: Install dependencies
         run: |
-          npm install
-          bundle install
           apt-get install fastlane
 
       - name: set up JDK 1.8
