@@ -32,10 +32,7 @@ class UserRepository {
       return true;
     else {
       final currentUser = await _firebaseAuth.currentUser();
-      if (currentUser != null)
-        return true;
-      else
-        return false;
+      return currentUser != null;
     }
   }
 
@@ -53,11 +50,7 @@ class UserRepository {
 
   Future<bool> isSkipped() async {
     final preferences = await SharedPreferences.getInstance();
-    var value = preferences.getBool(_isSkippedPreferencesValue) ?? '';
-    if (value != '')
-      return true;
-    else
-      return false;
+    return preferences.getBool(_isSkippedPreferencesValue) != null;
   }
 
   void saveIsSkipped() async {
@@ -82,11 +75,7 @@ class UserRepository {
 
   Future<bool> _checkUserInPreferences() async {
     final preferences = await SharedPreferences.getInstance();
-    var user = preferences.getString(_userPreferencesValue) ?? '';
-    if (user != '')
-      return true;
-    else
-      return false;
+    return preferences.getString(_userPreferencesValue) != null;
   }
 
   Future<User> _getUserFromFirebase() async {
