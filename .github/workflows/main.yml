@@ -35,4 +35,4 @@ jobs:
       - run: flutter test
       - name: android build release
         run: |
-          bundle exec fastlane android_beta_app
+          cd android && bundle exec fastlane android_beta_app
