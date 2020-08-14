@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
@@ -74,15 +75,15 @@ class _MapScreenState extends State<MapScreen>
                 },
                 builder: (context, state) {
                   if (state is MarkersInitialed) {
+                    print(state.toString());
                     _markers = state.markers;
-                  }
-                  if (state is MapMarkerPressedState) {
+                  } else if (state is MapMarkerPressedState) {
+                    print(state.toString());
                     if (_benches != null) {
                       _carouselController.jumpToPage(0);
                     }
                     _benches = state.markers;
-                  }
-                  if (state is LikeButtonPassState) {
+                  } else if (state is LikeButtonPassState) {
                     print(state.toString());
                     _favorites = state.favorites;
 
@@ -186,26 +187,21 @@ class _MapScreenState extends State<MapScreen>
   }
 
   void _onCameraIdle() {
-    BlocProvider.of<MapBloc>(context).setCameraZoom(_currentZoom);
     _controller.future.then((value) async {
       var l = await value.getVisibleRegion();
-      BlocProvider.of<MapBloc>(context).setVisibleRegion(l);
+      var cameraPosition =
+          CameraCurrentPosition(currentZoom: _currentZoom, visibleRegion: l);
+      BlocProvider.of<MapBloc>(context).setCameraPosition(cameraPosition);
     });
   }
 
-  void _onBenchSliderPageChanged(int index) {
-    //TODO
-  }
+  void _onBenchSliderPageChanged(int index) {}
 
-  void _onBenchSliderItemClicked(int index) {
-    //TODO
-  }
+  void _onBenchSliderItemClicked(int index) {}
+
   List<Widget> _getData(List<MapMarker> markers) => markers
-      .map((item) => BlocProvider(
-            create: (context) => context.bloc(),
-            child: BenchCard(
-              marker: item,
-            ),
+      .map((item) => BenchCard(
+            marker: item,
           ))
       .toList();
 
