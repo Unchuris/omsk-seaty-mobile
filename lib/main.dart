@@ -9,12 +9,14 @@ import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
+import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,12 +60,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Omsk Seaty',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.white,
-        accentColor: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: lightTheme(),
       supportedLocales: [Locale('en', 'US'), Locale('ru', 'RU')],
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -85,6 +82,7 @@ class MyApp extends StatelessWidget {
         '/map': (context) => MapScreen(),
         '/profile': (context) => ProfilePage(),
         FavoritesPage.roateName: (context) => FavoritesPage(),
+        BenchPage.routeName: (context) => BenchPage(),
       },
     );
   }

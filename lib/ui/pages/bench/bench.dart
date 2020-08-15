@@ -7,12 +7,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
+import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
 
 class BenchPage extends StatefulWidget {
-  final MapMarker marker;
-  BenchPage({Key key, this.marker}) : super(key: key);
+  BenchPage({Key key}) : super(key: key);
   static String routeName = '/bench';
   @override
   _BenchPageState createState() => _BenchPageState();
@@ -21,13 +23,13 @@ class BenchPage extends StatefulWidget {
 class _BenchPageState extends State<BenchPage> {
   @override
   Widget build(BuildContext context) {
+    MapMarker marker = ModalRoute.of(context).settings.arguments;
     var bench = UiBench(
-        imageLink:
-            'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg',
-        locationName: "Парк победы",
+        imageLink: marker.imageUrl,
+        locationName: marker.locationName,
         address: "76 А, Парк победы, Омск",
         rate: 4.5,
-        isFavorites: true,
+        isFavorites: marker.isFavorites,
         filters: [
           FilterType.trashcan,
           FilterType.trashcan,
@@ -52,9 +54,145 @@ class _BenchPageState extends State<BenchPage> {
           FilterType.trashcan,
           FilterType.trashcan,
           FilterType.trashcan,
+        ],
+        comments: [
+          UiComment(
+              photoUrl:
+                  "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/11_avatar-512.png",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
+          UiComment(
+              photoUrl:
+                  "https://media.istockphoto.com/vectors/test-icon-vector-question-mark-with-male-user-person-profile-avatar-vector-id1198413914?s=170x170",
+              displayName: "Петр Петров",
+              comment:
+                  "st sit labore cupidatat tempor ad minim occaecat elit. Fugiat et officia eiusmod anim enim. Ex incididunt reprehenderit quis ad sunt voluptate. Non non eiusmod ea incididunt exercitation. Dolor labore est nisi laborum labore. Pariatur reprehenderit magna amet occaecat sint cupidatat eiusmod officia enim.",
+              rank: "Магистр лавочек",
+              rate: 3),
         ]);
     List<Widget> filters = _getFilters(bench.filters);
+
+    String commentString;
+    switch (bench.comments.length) {
+      case 1:
+        commentString = "комментарий";
+        break;
+      case 2:
+        commentString = "комментария";
+        break;
+      case 3:
+        commentString = "комментария";
+        break;
+      case 5:
+        commentString = "комментариев";
+        break;
+      default:
+        commentString = "комментариев";
+    }
+
     return Scaffold(
+      backgroundColor: (Theme.of(context).brightness == Brightness.light)
+          ? Color(0xFFE5E5E5)
+          : Color(0xFFE5E5E5),
       body: Container(
         color: Color(0xFFE5E5E5),
         child: Column(
@@ -64,17 +202,6 @@ class _BenchPageState extends State<BenchPage> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.31,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.black.withOpacity(0.2),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ]),
                     image: DecorationImage(
                         image: CachedNetworkImageProvider(bench.imageLink),
                         fit: BoxFit.fill)),
@@ -128,59 +255,63 @@ class _BenchPageState extends State<BenchPage> {
                     ],
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.ideographic,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 28.0, left: 16.0),
-                                child: SvgPicture.asset(
-                                  "assets/pin.svg",
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 28.0, left: 16.0),
+                                  child: SvgPicture.asset(
+                                    "assets/pin.svg",
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 28.0, left: 8.0),
-                                child: Text(
-                                  bench.address,
-                                  style: TextStyle(
-                                      fontFamily: "Roboto",
-                                      fontSize: 14.0,
-                                      color: Colors.white),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 28.0, left: 8.0),
+                                  child: Text(
+                                    bench.address,
+                                    style: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 6.0, left: 16.0),
-                                child: SvgPicture.asset(
-                                  "assets/rate.svg",
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 6.0, left: 16.0),
+                                  child: SvgPicture.asset(
+                                    "assets/rate.svg",
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 6.0, left: 8.0),
-                                child: Text(
-                                  bench.rate.toString(),
-                                  style: TextStyle(
-                                      fontFamily: "Roboto",
-                                      fontSize: 14.0,
-                                      color: Colors.white),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 6.0, left: 8.0),
+                                  child: Text(
+                                    bench.rate.toString(),
+                                    style: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 6.0, left: 149.0),
+                        padding: const EdgeInsets.only(top: 32.0, right: 17.0),
                         child: SizedBox(
                           height: 36.0,
                           width: 36.0,
@@ -188,23 +319,19 @@ class _BenchPageState extends State<BenchPage> {
                             padding: EdgeInsets.zero,
                             onPressed: () {
                               if (bench.isFavorites) {
-                                widget.marker.isFavorites = false;
+                                marker.isFavorites = false;
                                 setState(() {
                                   bench.isFavorites = false;
                                 });
-                                print(
-                                    "убрал лайк ${widget.marker.locationName}");
-                                BlocProvider.of<MapBloc>(context).add(
-                                    LikeButtonPassEvent(marker: widget.marker));
+                                BlocProvider.of<MapBloc>(context)
+                                    .add(LikeButtonPassEvent(marker: marker));
                               } else {
-                                widget.marker.isFavorites = true;
+                                marker.isFavorites = true;
                                 setState(() {
                                   bench.isFavorites = true;
                                 });
-                                print(
-                                    "поставил лайк ${widget.marker.locationName}");
-                                BlocProvider.of<MapBloc>(context).add(
-                                    LikeButtonPassEvent(marker: widget.marker));
+                                BlocProvider.of<MapBloc>(context)
+                                    .add(LikeButtonPassEvent(marker: marker));
                               }
                             },
                             color: Colors.white,
@@ -221,6 +348,7 @@ class _BenchPageState extends State<BenchPage> {
               )
             ]),
             Container(
+              padding: EdgeInsets.all(0.0),
               child: Column(
                 children: [
                   Row(
@@ -228,13 +356,11 @@ class _BenchPageState extends State<BenchPage> {
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 8.0, bottom: 4.0, left: 16.0),
-                        child: Text(
-                          "О лавочке",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: "Roboto",
-                              fontSize: 16.0),
-                        ),
+                        child: Text("О лавочке",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(fontSize: 16.0)),
                       ),
                     ],
                   ),
@@ -245,9 +371,86 @@ class _BenchPageState extends State<BenchPage> {
                       scrollDirection: Axis.horizontal,
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.ideographic,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text("Комментарии",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(fontSize: 16.0)),
+                          ),
+                          Column(
+                            children: [
+                              StarWidget(
+                                rate: bench.rate,
+                              ),
+                              Text(
+                                bench.comments.length.toString() +
+                                    " " +
+                                    commentString,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(fontSize: 10.0),
+                              )
+                            ],
+                          ),
+                        ]),
+                  ),
                 ],
               ),
-            )
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.489,
+              child: Stack(children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.41,
+                  child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 11.0),
+                      itemCount: bench.comments.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 2.0),
+                          child: Comment(
+                            comment: bench.comments[index],
+                          ),
+                        );
+                      }),
+                ),
+                Positioned(
+                    right: 15,
+                    bottom: 33,
+                    child: FloatingActionButton(
+                        child: SvgPicture.asset("assets/pencil.svg"),
+                        backgroundColor: Color(0xffF2994A),
+                        onPressed: null)),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: ButtonTheme(
+                          minWidth: 270,
+                          height: 50,
+                          child: FlatButton(
+                            child: Text("ПОЖАЛОВАТЬСЯ",
+                                style: Theme.of(context).textTheme.button),
+                            onPressed: () => {},
+                          ),
+                        ),
+                      )),
+                )
+              ]),
+            ),
           ],
         ),
       ),
@@ -268,6 +471,7 @@ class _BenchPageState extends State<BenchPage> {
                 title: "Урна рядом",
                 icon: SvgPicture.asset("assets/trashсan.svg"),
                 color: 0x219653,
+                type: TypeCheckBox.oneState,
               ));
           break;
         default:

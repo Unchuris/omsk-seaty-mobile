@@ -246,25 +246,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           position: LatLng(feature.latitude, feature.longitude),
           infoWindow: null,
           onTap: () {
-            if (_currentMarker != null) {
-              if (feature.isCluster) {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(),
-                    type: PinType.cluster);
-              } else {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.markerId, type: PinType.pin);
-              }
-            } else {
-              if (feature.isCluster) {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(),
-                    type: PinType.cluster);
-              } else {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.markerId, type: PinType.pin);
-              }
-            }
+            _currentMarker = _getCurrentMarker(feature);
 
             if (feature.isCluster) {
               var children = _fluster.points(feature.clusterId);
@@ -303,21 +285,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
     if (_currentMarker != null &&
         feature.clusterId.toString() == _currentMarker.markerId) {
-      if (feature.pointsSize ~/ 10 != 0) {
-        images.drawString(
-            child, images.arial_24, 62, 19, '${feature.pointsSize}');
-      } else {
-        images.drawString(
-            child, images.arial_24, 68, 19, '${feature.pointsSize}');
-      }
+      images.drawString(
+          child,
+          images.arial_24,
+          (feature.pointsSize ~/ 10 != 0) ? 62 : 68,
+          19,
+          '${feature.pointsSize}');
     } else {
-      if (feature.pointsSize ~/ 10 != 0) {
-        images.drawString(
-            child, images.arial_24, 47, 12, '${feature.pointsSize}');
-      } else {
-        images.drawString(
-            child, images.arial_24, 54, 12, '${feature.pointsSize}');
-      }
+      images.drawString(
+          child,
+          images.arial_24,
+          (feature.pointsSize ~/ 10 != 0) ? 47 : 54,
+          12,
+          '${feature.pointsSize}');
     }
 
     var png = images.encodePng(child);
@@ -371,5 +351,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     images.Image image = images.decodeImage(Uint8List.view(imageData.buffer));
     _imagesAssetsData[imageFile] = image.clone();
     return image;
+  }
+
+  CurrentMarker _getCurrentMarker(MapMarker feature) {
+    if (_currentMarker != null) {
+      if (feature.isCluster) {
+        return _currentMarker = CurrentMarker(
+            markerId: feature.clusterId.toString(), type: PinType.cluster);
+      } else {
+        return _currentMarker =
+            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
+      }
+    } else {
+      if (feature.isCluster) {
+        return _currentMarker = CurrentMarker(
+            markerId: feature.clusterId.toString(), type: PinType.cluster);
+      } else {
+        return _currentMarker =
+            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
+      }
+    }
   }
 }
