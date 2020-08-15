@@ -71,3 +71,10 @@ class LikeUpdatingEvent extends MapEvent {
   @override
   List<Object> get props => [];
 }
+
+class MapTapedEvent extends MapEvent {
+  const MapTapedEvent();
+
+  @override
+  List<Object> get props => [];
+}

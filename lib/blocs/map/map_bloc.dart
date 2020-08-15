@@ -27,7 +27,12 @@ final List<String> imgList = [
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
 ];
 
-/* основной файл логики, здесь обрабатываются события и переключаются состояния экрана карты*/
+class CameraCurrentPosition {
+  double currentZoom;
+  LatLngBounds visibleRegion;
+  CameraCurrentPosition({this.currentZoom, this.visibleRegion});
+}
+
 enum PinType { cluster, pin }
 
 class CurrentMarker {
@@ -59,8 +64,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Map<MarkerId, Marker> _markers;
 
   StreamSubscription<Position> _currentPositionSubcription;
-  StreamSubscription _cameraZoomSubscription;
-  StreamSubscription _visibleReginSubscription;
+  StreamSubscription _cameraPositionSubscription;
 
   Map<String, images.Image> _benchesPinImage = {};
   Map<String, images.Image> _imagesAssetsData = {};
@@ -73,18 +77,21 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Map<String, MapMarker> _mediaPool = {};
 
-  final _cameraZoomController = StreamController<double>.broadcast();
+  final _cameraCameraPosition =
+      StreamController<CameraCurrentPosition>.broadcast();
 
-  final _cameraVisibleRegion = StreamController<LatLngBounds>.broadcast();
-  LatLngBounds _currentVisibleRegion;
-  Function(double) get setCameraZoom => _cameraZoomController.sink.add;
-  Function(LatLngBounds) get setVisibleRegion => _cameraVisibleRegion.sink.add;
+  CameraCurrentPosition _currentCameraPosition = CameraCurrentPosition(
+      currentZoom: 10,
+      visibleRegion: LatLngBounds(
+          southwest: LatLng(-180, -85), northeast: LatLng(180, 85)));
+  Function(CameraCurrentPosition) get setCameraPosition =>
+      _cameraCameraPosition.sink.add;
 
   var _currentZoom = 10;
   Fluster<MapMarker> _fluster;
 
-  Stream<double> get cameraZoom => _cameraZoomController.stream;
-  Stream<LatLngBounds> get visibleRegion => _cameraVisibleRegion.stream;
+  Stream<CameraCurrentPosition> get cameraPosition =>
+      _cameraCameraPosition.stream;
 
   MapBloc(
       {@required GeolocationRepository geolocationRepository,
@@ -115,16 +122,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         });
       }
       _buildMediaPool();
-      _visibleReginSubscription = visibleRegion.listen((event) {
-        _currentVisibleRegion = event;
+      _cameraPositionSubscription = cameraPosition.listen((event) {
+        _currentCameraPosition.currentZoom = event.currentZoom;
+        _currentCameraPosition.visibleRegion = event.visibleRegion;
         _displayMarkers(_mediaPool);
-      });
-      _cameraZoomSubscription = cameraZoom.listen((zoom) {
-        if (_currentZoom != zoom.toInt()) {
-          _currentZoom = zoom.toInt();
-
-          _displayMarkers(_mediaPool);
-        }
       });
     } else if (event is MapMarkerInitialedStop) {
       yield MarkersInitialed(markers: _markers);
@@ -147,16 +148,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           favorites: _favorites, currentmarker: event.marker);
     } else if (event is LikeUpdatingEvent) {
       yield LikeUpdatedState();
+    } else if (event is MapTapedEvent) {
+      yield MapTapedState();
     }
   }
 
   @override
   Future<void> close() {
     _currentPositionSubcription?.cancel();
-    _cameraZoomSubscription.cancel();
-    _visibleReginSubscription.cancel();
-    _cameraZoomController.close();
-    _cameraVisibleRegion.close();
+    _cameraPositionSubscription?.cancel();
+    _cameraCameraPosition?.close();
     return super.close();
   }
 
@@ -192,7 +193,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         maxZoom: maxZoom,
         radius: 250,
         extent: 2048,
-        nodeSize: 32,
+        nodeSize: 256,
         points: _mediaPool.values.toList(),
         createCluster:
             (BaseCluster cluster, double longitude, double latitude) =>
@@ -206,7 +207,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     markerId: cluster.id.toString(),
                     childMarkerId: cluster.childMarkerId));
 
-    _benches = _mediaPool.values.toList();
     _displayMarkers(_mediaPool);
   }
 
@@ -215,15 +215,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     List<MapMarker> clusters;
-    if (_currentVisibleRegion != null) {
+    if (_currentCameraPosition != null) {
       clusters = _fluster.clusters([
-        _currentVisibleRegion.southwest.longitude,
-        _currentVisibleRegion.southwest.latitude,
-        _currentVisibleRegion.northeast.longitude,
-        _currentVisibleRegion.northeast.latitude
-      ], _currentZoom);
+        _currentCameraPosition.visibleRegion.southwest.longitude,
+        _currentCameraPosition.visibleRegion.southwest.latitude,
+        _currentCameraPosition.visibleRegion.northeast.longitude,
+        _currentCameraPosition.visibleRegion.northeast.latitude
+      ], _currentCameraPosition.currentZoom.toInt());
     } else {
-      clusters = _fluster.clusters([-180, -85, 180, 85], _currentZoom);
+      clusters = _fluster.clusters(
+          [-180, -85, 180, 85], _currentCameraPosition.currentZoom.toInt());
     }
 
     Map<MarkerId, Marker> markers = Map();
@@ -245,25 +246,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           position: LatLng(feature.latitude, feature.longitude),
           infoWindow: null,
           onTap: () {
-            if (_currentMarker != null) {
-              if (feature.isCluster) {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(),
-                    type: PinType.cluster);
-              } else {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.markerId, type: PinType.pin);
-              }
-            } else {
-              if (feature.isCluster) {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.clusterId.toString(),
-                    type: PinType.cluster);
-              } else {
-                _currentMarker = CurrentMarker(
-                    markerId: feature.markerId, type: PinType.pin);
-              }
-            }
+            _currentMarker = _getCurrentMarker(feature);
 
             if (feature.isCluster) {
               var children = _fluster.points(feature.clusterId);
@@ -302,21 +285,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
     if (_currentMarker != null &&
         feature.clusterId.toString() == _currentMarker.markerId) {
-      if (feature.pointsSize ~/ 10 != 0) {
-        images.drawString(
-            child, images.arial_24, 62, 19, '${feature.pointsSize}');
-      } else {
-        images.drawString(
-            child, images.arial_24, 68, 19, '${feature.pointsSize}');
-      }
+      images.drawString(
+          child,
+          images.arial_24,
+          (feature.pointsSize ~/ 10 != 0) ? 62 : 68,
+          19,
+          '${feature.pointsSize}');
     } else {
-      if (feature.pointsSize ~/ 10 != 0) {
-        images.drawString(
-            child, images.arial_24, 47, 12, '${feature.pointsSize}');
-      } else {
-        images.drawString(
-            child, images.arial_24, 54, 12, '${feature.pointsSize}');
-      }
+      images.drawString(
+          child,
+          images.arial_24,
+          (feature.pointsSize ~/ 10 != 0) ? 47 : 54,
+          12,
+          '${feature.pointsSize}');
     }
 
     var png = images.encodePng(child);
@@ -348,7 +329,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<images.Image> _getImage(
       String imageFile, int width, int height) async {
     String key = imageFile + width.toString() + height.toString();
-
     if (_benchesPinImage.containsKey(key)) return _benchesPinImage[key].clone();
     var image = await _getAssetsImage(imageFile);
 
@@ -371,5 +351,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     images.Image image = images.decodeImage(Uint8List.view(imageData.buffer));
     _imagesAssetsData[imageFile] = image.clone();
     return image;
+  }
+
+  CurrentMarker _getCurrentMarker(MapMarker feature) {
+    if (_currentMarker != null) {
+      if (feature.isCluster) {
+        return _currentMarker = CurrentMarker(
+            markerId: feature.clusterId.toString(), type: PinType.cluster);
+      } else {
+        return _currentMarker =
+            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
+      }
+    } else {
+      if (feature.isCluster) {
+        return _currentMarker = CurrentMarker(
+            markerId: feature.clusterId.toString(), type: PinType.cluster);
+      } else {
+        return _currentMarker =
+            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
+      }
+    }
   }
 }

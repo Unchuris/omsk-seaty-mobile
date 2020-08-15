@@ -99,3 +99,10 @@ class LikeUpdatedState extends MapState {
   @override
   List<Object> get props => [];
 }
+
+class MapTapedState extends MapState {
+  const MapTapedState();
+
+  @override
+  List<Object> get props => [];
+}
