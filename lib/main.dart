@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:async';
+
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
@@ -21,24 +24,28 @@ import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final UserRepository _userRepository = UserRepository();
+  Crashlytics.instance.enableInDevMode = true;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthenticationBloc>(
-            create: (context) =>
-                AuthenticationBloc(userRepository: _userRepository)
-                  ..add(AuthenticationStarted())),
-        BlocProvider<MapBloc>(
-            create: (context) => MapBloc(
-                repository: MarkerRepository(),
-                geolocationRepository: GeolocationRepository()))
-      ],
-      child: MyApp(userRepository: _userRepository, isSigned: isSigned),
-    ),
-  );
+  runZoned(() {
+    runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthenticationBloc>(
+              create: (context) =>
+              AuthenticationBloc(userRepository: _userRepository)
+                ..add(AuthenticationStarted())),
+          BlocProvider<MapBloc>(
+              create: (context) => MapBloc(
+                  repository: MarkerRepository(),
+                  geolocationRepository: GeolocationRepository()))
+        ],
+        child: MyApp(userRepository: _userRepository, isSigned: isSigned),
+      ),
+    );
+  }, onError: Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
