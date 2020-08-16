@@ -7,7 +7,7 @@ import 'package:omsk_seaty_mobile/data/models/benches.dart';
 /* Преобразую json в объекты лабочек затем в словарь с маркерами */
 class MarkerRepository {
   Future<List<Benches>> getMarkers() async {
-    var url = "https://omsk-seaty-backend.herokuapp.com/api/benches/json/";
+    var url = "https://omsk-seaty-backend.herokuapp.com/api/benches/";
     final response =
         await http.get(url, headers: {'Content-Type': 'application/json'});
 

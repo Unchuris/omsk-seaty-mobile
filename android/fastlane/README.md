@@ -21,11 +21,6 @@ or alternatively using `brew install fastlane`
 fastlane android android_beta_app
 ```
 Build APK
-### android android_debug_app
-```
-fastlane android android_debug_app
-```
-Build Debug APK
 
 ----
 

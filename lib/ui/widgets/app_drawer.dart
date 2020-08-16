@@ -61,8 +61,12 @@ class _AppDrawerState extends State<AppDrawer> {
 
 Widget _createHeaderWithUser(User user, BuildContext context) {
   return UserAccountsDrawerHeader(
-      accountName: Text(user.displayName),
-      accountEmail: Text(user.email),
+      accountName:
+          Text(user.displayName, style: Theme.of(context).textTheme.bodyText1),
+      accountEmail: Text(
+        user.email,
+        style: Theme.of(context).textTheme.bodyText1,
+      ),
       onDetailsPressed: () {
         Navigator.pushNamed(context, '/profile', arguments: user);
       },
