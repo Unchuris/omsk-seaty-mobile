@@ -54,21 +54,14 @@ class _MapScreenState extends State<MapScreen>
       key: _scaffoldKey,
       body: MultiBlocListener(
         listeners: [
-          BlocListener<MapBloc, MapState>(listener: (context, state) async {
+          BlocListener<MapBloc, MapState>(listener: (context, state) {
             if (state is MapCurrentLocationUpdatedState) {
               print(state.toString());
-              await _controller.future.then((controller) {
+              _controller.future.then((controller) {
                 controller.animateCamera(CameraUpdate.newLatLngZoom(
                     LatLng(state.position.latitude, state.position.longitude),
                     16));
               });
-            }
-            if (state is MapInitial) {
-              print(state.toString());
-            }
-
-            if (state is MapCurrentLocationUpdatingState) {
-              print(state.toString());
             }
           }),
         ],
@@ -157,22 +150,33 @@ class _MapScreenState extends State<MapScreen>
                 ),
               ),
             ),
-            Positioned(
-              top: 51,
-              right: 0,
-              child: Container(
-                width: 63,
-                height: 56,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50.0),
-                        bottomLeft: Radius.circular(50.0))),
-                child: IconButton(
-                  icon: SvgPicture.asset("assets/fulter.svg"),
-                  onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
-                ),
-              ),
+            BlocBuilder<MapBloc, MapState>(
+              builder: (context, state) {
+                if (state is FindButtonPressingState) {
+                  _checkBox = state.checkBox;
+                }
+                return Positioned(
+                  top: 51,
+                  right: 0,
+                  child: Container(
+                    width: 63,
+                    height: 56,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50.0),
+                            bottomLeft: Radius.circular(50.0))),
+                    child: IconButton(
+                      icon: SvgPicture.asset("assets/fulter.svg",
+                          color: (_checkBox.containsValue(true))
+                              ? Color(0xff000000)
+                              : Color(0xff828282)),
+                      onPressed: () =>
+                          _scaffoldKey.currentState.openEndDrawer(),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -184,7 +188,7 @@ class _MapScreenState extends State<MapScreen>
         return AppDrawer(_favorites);
       }),
       endDrawer: BlocProvider(
-        create: (context) => _rightDraverBloc,
+        create: (context) => RightDraverBloc(),
         child: FilterDrawer(
           checkBoxs: _checkBox,
         ),

@@ -58,6 +58,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   List<MapMarker> _benches;
   List<MapMarker> _favorites = [];
 
+  Map<String, bool> _checkBox;
+
   Position _currentPosition;
   CurrentMarker _currentMarker;
 
@@ -150,6 +152,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       yield LikeUpdatedState();
     } else if (event is MapTapedEvent) {
       yield MapTapedState();
+    } else if (event is FindButtonPressingEvent) {
+      _checkBox = event.checkBox;
+      yield FindButtonPressingState(checkBox: _checkBox);
+      add(FindButtonPressedEvent());
+    } else if (event is FindButtonPressedEvent) {
+      yield FindButtonPressedState();
     }
   }
 

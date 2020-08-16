@@ -1,56 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/rightdrawer/right_draver_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
 
 class FilterDrawer extends StatefulWidget {
   final Map<String, bool> checkBoxs;
-
-  FilterDrawer({Key key, this.checkBoxs}) : super(key: key);
+  const FilterDrawer({Key key, this.checkBoxs}) : super(key: key);
 
   @override
   _FilterDrawerState createState() => _FilterDrawerState();
 }
 
 class _FilterDrawerState extends State<FilterDrawer> {
-  Map<String, bool> _checkBoxs = {
-    "Высокий комфорт": false,
-    "Урна рядом": false,
-    "Стол рядом": false,
-    "Крытая лавочка": false,
-    "Для большой компании": false,
-    "Живописный вид": false,
-    "Остановка": false
-  };
-  @override
+  Map<String, bool> _checkBoxs;
   Widget build(BuildContext context) {
-    //checkBoxs = widget.checkBoxs;
-    return Drawer(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 75.0, left: 16.0),
-                  child: Text(
-                    "Фильтр лавочек",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 75.0, right: 16.0),
-                  child: IconButton(
-                      icon: SvgPicture.asset("assets/union.svg"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                ),
-              ],
+    _checkBoxs = widget.checkBoxs;
+    BlocProvider.of<RightDraverBloc>(context)
+        .add(RightDraverInitialingEvent(checkBox: _checkBoxs));
+    return Container(
+      width: 241,
+      child: Drawer(
+        child: Container(
+          child: BlocListener<RightDraverBloc, RightDraverState>(
+            listener: (context, state) {
+              if (state is RightDraverInitial) {
+                _checkBoxs = state.checkBox;
+              }
+            },
+            child: BlocBuilder<RightDraverBloc, RightDraverState>(
+              builder: (context, state) {
+                if (state is OnFilterTapingState) {
+                  print(state.toString());
+                  _checkBoxs = state.checkBox;
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 75.0, left: 16.0),
+                            child: Text(
+                              "Фильтр лавочек",
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 75.0, right: 16.0),
+                            child: IconButton(
+                                icon: SvgPicture.asset("assets/union.svg"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ..._getFilters(_checkBoxs),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 90.0),
+                      child: Center(
+                        child: ButtonTheme(
+                          minWidth: 209,
+                          height: 50,
+                          child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10.0)),
+                            color: Color(0xffF2994A),
+                            child: Text("Найти",
+                                style: Theme.of(context).textTheme.headline6),
+                            onPressed: () {
+                              BlocProvider.of<MapBloc>(context).add(
+                                  FindButtonPressingEvent(
+                                      checkBox: _checkBoxs));
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            ..._getFilters(_checkBoxs)
-          ],
+          ),
         ),
       ),
     );
