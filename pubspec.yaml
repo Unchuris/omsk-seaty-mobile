@@ -72,6 +72,7 @@ flutter:
     - assets/selectedpin.png
     - assets/selectedclusterpin.png
     - assets/pin.png
+    - assets/start.svg
     - assets/road.png
     - assets/pin.svg
     - assets/fulter.svg

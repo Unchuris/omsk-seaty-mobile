@@ -72,7 +72,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           height: 50,
                           child: FlatButton(
                             shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0)),
+                                borderRadius: BorderRadius.circular(10.0)),
                             color: Color(0xffF2994A),
                             child: Text("Найти",
                                 style: Theme.of(context).textTheme.headline6),
