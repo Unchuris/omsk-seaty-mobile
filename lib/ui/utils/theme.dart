@@ -9,6 +9,18 @@ ThemeData lightTheme() {
         fontSize: 17.0,
         color: Color(0xFF4F4F4F),
       ),
+      headline5: base.headline5.copyWith(
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+        fontSize: 14.0,
+        color: Color(0xff8E8E93),
+      ),
+      headline4: base.headline4.copyWith(
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+        fontSize: 14.0,
+        color: Color(0xffC7C7CC),
+      ),
       headline6: base.headline6.copyWith(
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w400,
@@ -51,7 +63,7 @@ ThemeData lightTheme() {
         color: Colors.white,
       ),
       canvasColor: Colors.white,
-      primaryColor: Colors.white,
+      primaryColor: Color(0xffE0E0E0),
       buttonColor: Colors.white,
       backgroundColor: Colors.white,
       visualDensity: VisualDensity.adaptivePlatformDensity);
