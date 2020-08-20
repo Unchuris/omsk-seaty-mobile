@@ -7,74 +7,78 @@ abstract class MapEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ButtonGetCurrentLocationPassedEvent extends MapEvent {
-  const ButtonGetCurrentLocationPassedEvent();
+class MarkersLoading extends MapEvent {
+  const MarkersLoading();
   @override
   List<Object> get props => [];
-
-  @override
-  String toString() => "ButtonGetCurrentLocationPass {}";
 }
 
-class MapGetCurrentLocationUpdatingEvent extends MapEvent {
-  const MapGetCurrentLocationUpdatingEvent();
+class OnMapLocationButtonClickedEvent extends MapEvent {
+  const OnMapLocationButtonClickedEvent();
 
   @override
   List<Object> get props => [];
-
-  @override
-  String toString() => "MapGetCurrentLocationEvent ";
 }
 
-class MapMarkerInitialing extends MapEvent {
-  const MapMarkerInitialing();
+class OnMapCreatedEvent extends MapEvent {
+  const OnMapCreatedEvent();
 
+  @override
   List<Object> get props => [];
-
-  @override
-  String toString() => "MapMarkerInitialing {}";
 }
 
-class MapMarkerInitialedStop extends MapEvent {
-  final Map<MarkerId, Marker> markers;
-
-  const MapMarkerInitialedStop({this.markers});
-  List<Object> get props => [markers];
+class OnFilterChangedEvent extends MapEvent {
+  final List<BenchType> benchTypes;
+  const OnFilterChangedEvent({this.benchTypes});
 
   @override
-  String toString() => "MapMarkerInitialing {$markers}";
+  List<Object> get props => [benchTypes];
 }
 
-class MapMarkerPressedEvent extends MapEvent {
+class OnBenchClickedEvent extends MapEvent {
+  final String benchId;
+  const OnBenchClickedEvent({this.benchId});
+
+  @override
+  List<Object> get props => [benchId];
+}
+
+class OnBenchSliderPageChanged extends MapEvent {
+  final BenchLight bench;
+  const OnBenchSliderPageChanged({this.bench});
+
+  @override
+  List<Object> get props => [bench];
+}
+
+class OnLikeClickedEvent extends MapEvent {
   final String markerId;
-  final List<MapMarker> markers;
-  const MapMarkerPressedEvent({this.markerId, this.markers});
-
-  List<Object> get props => [markerId, markers];
+  final bool liked;
+  const OnLikeClickedEvent({this.markerId, this.liked});
 
   @override
-  String toString() =>
-      "MapMarkerPressedEvent {markerId: $markerId, markers: $markers}";
+  List<Object> get props => [markerId];
 }
 
-class LikeButtonPassEvent extends MapEvent {
+class OnMarkerTapEvent extends MapEvent {
   final MapMarker marker;
-  const LikeButtonPassEvent({this.marker});
+  const OnMarkerTapEvent({this.marker});
 
   @override
   List<Object> get props => [marker];
 }
 
-class LikeUpdatingEvent extends MapEvent {
-  const LikeUpdatingEvent();
+class OnCameraMoveStartedEvent extends MapEvent {
+  const OnCameraMoveStartedEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class MapTapedEvent extends MapEvent {
-  const MapTapedEvent();
+class OnCameraIdleEvent extends MapEvent {
+  final CameraCurrentPosition cameraPosition;
+  const OnCameraIdleEvent({this.cameraPosition});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [cameraPosition];
 }

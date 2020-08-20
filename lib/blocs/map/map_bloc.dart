@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
@@ -9,27 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:image/image.dart' as images;
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 
-part 'map_event.dart';
-part 'map_state.dart';
+import 'map_effect.dart';
 
-//TODO remove test data
-final List<String> imgList = [
-  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-];
+part 'map_event.dart';
+
+part 'map_state.dart';
 
 class CameraCurrentPosition {
   double currentZoom;
   LatLngBounds visibleRegion;
+
   CameraCurrentPosition({this.currentZoom, this.visibleRegion});
 }
 
@@ -38,60 +33,50 @@ enum PinType { cluster, pin }
 class CurrentMarker {
   final String markerId;
   final PinType type;
+
   const CurrentMarker({this.type, this.markerId});
 }
 
 class MapBloc extends Bloc<MapEvent, MapState> {
-  final List<String> imgList = [
-    'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg',
-    'https://varlamov.me/2018/omsk/48.jpg',
-    'https://superomsk.ru/images/uploading/b27000d014f07c29554b7b461ee04b4d.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRurKuj6R4YRCZ6rLbJzKMRaVrLOoPgo6aKqw&usqp=CAU',
-  ];
-
   static const maxZoom = 21;
   static const thumbnailWidth = 250;
-
-  final GeolocationRepository _geolocationRepository;
-  final MarkerRepository _repository;
-
-  List<MapMarker> _benches;
-  List<MapMarker> _favorites = [];
-
-  Position _currentPosition;
-  CurrentMarker _currentMarker;
-
-  Map<MarkerId, Marker> _markers;
-
-  StreamSubscription<Position> _currentPositionSubcription;
-  StreamSubscription _cameraPositionSubscription;
-
-  Map<String, images.Image> _benchesPinImage = {};
-  Map<String, images.Image> _imagesAssetsData = {};
-  Map<String, BitmapDescriptor> _imagesBitmapDescriptor = {};
-
   static const String IMAGE_PIN = "pin.png";
   static const String IMAGE_CLUSTERPIN = "clusterpin.png";
   static const String IMAGE_SELECTEDPIN = "selectedpin.png";
   static const String IMAGE_SELECTEDCLUSTERPIN = "selectedclusterpin.png";
 
-  Map<String, MapMarker> _mediaPool = {};
+  Map<String, images.Image> _benchesPinImage = {};
+  Map<String, images.Image> _imagesAssetsData = {};
+  Map<String, BitmapDescriptor> _imagesBitmapDescriptor = {};
 
-  final _cameraCameraPosition =
-      StreamController<CameraCurrentPosition>.broadcast();
+  final GeolocationRepository _geolocationRepository;
+  final MarkerRepository _repository;
+
+  Position _userPosition;
+  MapMarker _currentMarker;
+  //Map<benchId, clusterId>
+  Map<String, MapMarker> _clusters = Map();
+
+  final _filterController = StreamController<Set<FilterType>>.broadcast();
+  Stream<Set<FilterType>> get filters => _filterController.stream;
+  Function(Set<FilterType>) get _addFilters => _filterController.sink.add;
+
+  List<BenchLight> _benches;
+  final _benchesController = StreamController<List<BenchLight>>.broadcast();
+  Stream<List<BenchLight>> get benches => _benchesController.stream;
+  Function(List<BenchLight>) get _addBenches => _benchesController.sink.add;
+
+  Map<String, Marker> _markers;
+  final _markerController = StreamController<Map<String, Marker>>.broadcast();
+  Stream<Map<String, Marker>> get markers => _markerController.stream;
+  Function(Map<String, Marker>) get _addMarkers => _markerController.sink.add;
+
+  Fluster<MapMarker> _fluster;
 
   CameraCurrentPosition _currentCameraPosition = CameraCurrentPosition(
       currentZoom: 10,
       visibleRegion: LatLngBounds(
           southwest: LatLng(-180, -85), northeast: LatLng(180, 85)));
-  Function(CameraCurrentPosition) get setCameraPosition =>
-      _cameraCameraPosition.sink.add;
-
-  var _currentZoom = 10;
-  Fluster<MapMarker> _fluster;
-
-  Stream<CameraCurrentPosition> get cameraPosition =>
-      _cameraCameraPosition.stream;
 
   MapBloc(
       {@required GeolocationRepository geolocationRepository,
@@ -101,92 +86,164 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         _geolocationRepository = geolocationRepository,
         _repository = repository,
         super(MapInitial()) {
-    add(MapMarkerInitialing());
+    add(MarkersLoading());
   }
 
   @override
-  Stream<MapState> mapEventToState(
-    MapEvent event,
-  ) async* {
-    if (event is ButtonGetCurrentLocationPassedEvent) {
-      yield* _mapCurrentLocationUpdatingToState(event);
-    } else if (event is MapGetCurrentLocationUpdatingEvent) {
-      yield* _mapMapGetCurrentLocationToState(event);
-    } else if (event is MapMarkerInitialing) {
-      yield MarkersInitial();
-      if (_currentPositionSubcription == null) {
-        _currentPositionSubcription = _geolocationRepository
-            .getCurrentPositionStream()
-            .listen((position) {
-          _currentPosition = position;
-        });
-      }
-      _buildMediaPool();
-      _cameraPositionSubscription = cameraPosition.listen((event) {
-        _currentCameraPosition.currentZoom = event.currentZoom;
-        _currentCameraPosition.visibleRegion = event.visibleRegion;
-        _displayMarkers(_mediaPool);
-      });
-    } else if (event is MapMarkerInitialedStop) {
-      yield MarkersInitialed(markers: _markers);
-    } else if (event is MapMarkerPressedEvent) {
-      yield MapMarkerPressedState(
-          markerId: event.markerId, markers: event.markers);
-    } else if (event is LikeButtonPassEvent) {
-      print(event.toString());
-      if (event.marker.isFavorites) {
-        _favorites.add(event.marker);
-      } else {
-        for (var v in _favorites) {
-          if (v.markerId.compareTo(event.marker.markerId) == 0) {
-            _favorites.remove(v);
-            break;
-          }
-        }
-      }
-      yield LikeButtonPassState(
-          favorites: _favorites, currentmarker: event.marker);
-    } else if (event is LikeUpdatingEvent) {
-      yield LikeUpdatedState();
-    } else if (event is MapTapedEvent) {
-      yield MapTapedState();
+  Stream<MapState> mapEventToState(MapEvent event) async* {
+    if (event is OnMapLocationButtonClickedEvent) {
+      yield* _mapOnMapLocationButtonClickedToEffect();
+      return;
     }
+    if (event is MarkersLoading) {
+        _geolocationRepository
+          .getCurrentPositionStream()
+          .listen((position) {
+            _userPosition = position;
+          });
+        _addFilters(_repository.filters);
+      _buildMediaPool();
+      return;
+    }
+    if (event is OnMapCreatedEvent) {
+      _updateBenchesByVisibleRegion();
+      yield* _mapOnMapLocationButtonClickedToEffect();
+      return;
+    }
+    if (event is OnBenchClickedEvent) {
+      yield* _mapOnBenchClickedToEffect(event);
+      return;
+    }
+    if (event is OnBenchSliderPageChanged) {
+      var bench = event.bench;
+      var cluster = _clusters[bench.id];
+      bool constrainCluster = cluster != null;
+      if (constrainCluster && _currentMarker.clusterId == cluster.clusterId) {
+        return;
+      }
+
+      if (constrainCluster) {
+        var selectedBitmapDescriptor = await _createSelectedClusterBitmapDescriptor(cluster);
+        _markers[cluster.clusterId.toString()] = _markerUpdateIcon(_markers[cluster.clusterId.toString()], selectedBitmapDescriptor);
+      } else {
+        var selectedBitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
+        _markers[bench.id] = _markerUpdateIcon(_markers[bench.id], selectedBitmapDescriptor);
+      }
+
+      await _selectedMarkerToBaseMarker();
+
+      _currentMarker = constrainCluster ? cluster : MapMarker(
+          markerId: bench.id,
+          latitude: bench.latitude,
+          longitude: bench.longitude
+      );
+      _addMarkers(_markers);
+      return;
+    }
+    if (event is OnFilterChangedEvent) {
+      //TODO
+      _buildMediaPool();
+      return;
+    }
+    if (event is OnLikeClickedEvent) {
+      //TODO
+      return;
+    }
+    if (event is OnMarkerTapEvent) {
+      if (identical(event.marker,_currentMarker)) {
+        return;
+      }
+      if (event.marker.isCluster) {
+        List<String> children = _fluster.points(event.marker.clusterId).map((it) => it.markerId).toList();
+        var selectedBitmapDescriptor = await _createSelectedClusterBitmapDescriptor(event.marker);
+        _markers[event.marker.clusterId.toString()] = _markerUpdateIcon(_markers[event.marker.clusterId.toString()], selectedBitmapDescriptor);
+        _benches = await _repository.getClusterBenches(children);
+        _addBenches(_benches);
+      } else {
+        var selectedBitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
+        _markers[event.marker.markerId] = _markerUpdateIcon(_markers[event.marker.markerId], selectedBitmapDescriptor);
+      }
+      await _selectedMarkerToBaseMarker();
+      _currentMarker = event.marker;
+      _addMarkers(_markers);
+      return;
+    }
+    if (event is OnCameraMoveStartedEvent) {
+      yield* _mapOnCameraMoveToEffect(event);
+      return;
+    }
+    if (event is OnCameraIdleEvent) {
+      _currentCameraPosition = event.cameraPosition;
+      _displayMarkers();
+      await _updateBenchesByVisibleRegion();
+      if (_currentMarker != null
+          && !_currentMarker.isCluster
+          && _currentCameraPosition.visibleRegion.contains(LatLng(_currentMarker.latitude, _currentMarker.longitude))) {
+        _addBenches(_benches);
+      }
+      yield* _mapOnCameraIdleToEffect(event);
+      return;
+    }
+    return;
+  }
+
+  Stream<MapState> _mapOnMapLocationButtonClickedToEffect() async* {
+    if (_userPosition != null) {
+      yield UpdateUserLocationEffect(position: _userPosition);
+    }
+  }
+
+  Stream<MapState> _mapOnBenchClickedToEffect(
+      OnBenchClickedEvent event) async* {
+    yield OpenDetailsScreenEffect(benchId: event.benchId);
+  }
+
+  Stream<MapState> _mapOnCameraMoveToEffect(
+      OnCameraMoveStartedEvent event) async* {
+    yield CameraMoveEffect();
+  }
+
+  Stream<MapState> _mapOnCameraIdleToEffect(
+      OnCameraIdleEvent event) async* {
+    yield CameraIdleEffect();
   }
 
   @override
   Future<void> close() {
-    _currentPositionSubcription?.cancel();
-    _cameraPositionSubscription?.cancel();
-    _cameraCameraPosition?.close();
+    _markerController?.close();
+    _benchesController?.close();
+    _filterController?.close();
     return super.close();
   }
 
-  Stream<MapState> _mapCurrentLocationUpdatingToState(
-      ButtonGetCurrentLocationPassedEvent event) async* {
-    yield MapCurrentLocationUpdatingState();
-    add(MapGetCurrentLocationUpdatingEvent());
+  Marker _markerUpdateIcon(Marker marker, BitmapDescriptor bitmapDescriptor) {
+    return Marker(
+        markerId: marker.markerId,
+        position: marker.position,
+        infoWindow: marker.infoWindow,
+        onTap: marker.onTap,
+        icon: bitmapDescriptor);
   }
 
-  Stream<MapState> _mapMapGetCurrentLocationToState(
-      MapGetCurrentLocationUpdatingEvent event) async* {
-    yield MapCurrentLocationUpdatedState(position: _currentPosition);
+  Future<void> _selectedMarkerToBaseMarker() async {
+    if (_currentMarker != null) {
+      var bitmapDescriptor = _currentMarker.isCluster ? await _createClusterBitmapDescriptor(_currentMarker) : await _getImageBitmapDescriptor(IMAGE_PIN);
+      var id = _currentMarker.isCluster ? _currentMarker.clusterId.toString() : _currentMarker.markerId;
+      if (_markers[id] != null) _markers[id] = _markerUpdateIcon(_markers[id], bitmapDescriptor);
+    }
   }
 
   void _buildMediaPool() async {
     var result = await _repository.getMarkers().then((benches) {
-      var random = Random();
       return {
         for (var bench in benches)
-          bench.pk.toString(): MapMarker(
-              markerId: bench.pk.toString(),
+          bench.id: MapMarker(
+              markerId: bench.id,
               latitude: bench.latitude,
-              longitude: bench.longitude,
-              locationName: bench.title,
-              isFavorites: false,
-              imageUrl: imgList[random.nextInt(imgList.length)]),
+              longitude: bench.longitude
+          )
       };
     });
-    _mediaPool.addAll(result);
 
     _fluster = Fluster<MapMarker>(
         minZoom: 10,
@@ -194,11 +251,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         radius: 250,
         extent: 2048,
         nodeSize: 256,
-        points: _mediaPool.values.toList(),
+        points: result.values.toList(),
         createCluster:
             (BaseCluster cluster, double longitude, double latitude) =>
                 MapMarker(
-                    locationName: null,
                     latitude: latitude,
                     longitude: longitude,
                     isCluster: true,
@@ -207,10 +263,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     markerId: cluster.id.toString(),
                     childMarkerId: cluster.childMarkerId));
 
-    _displayMarkers(_mediaPool);
+    _displayMarkers();
   }
 
-  void _displayMarkers(Map pool) async {
+  void _displayMarkers() async {
     if (_fluster == null) {
       return;
     }
@@ -227,13 +283,22 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           [-180, -85, 180, 85], _currentCameraPosition.currentZoom.toInt());
     }
 
-    Map<MarkerId, Marker> markers = Map();
+    Map<String, Marker> markers = Map();
 
+    _clusters.clear();
     for (MapMarker feature in clusters) {
+      if (feature.isCluster) {
+        for (MapMarker mapMarker in _fluster.points(feature.clusterId)) {
+          _clusters.putIfAbsent(mapMarker.markerId, () => feature);
+        }
+      }
       BitmapDescriptor bitmapDescriptor;
 
       if (feature.isCluster) {
-        bitmapDescriptor = await _createClusterBitmapDescriptor(feature);
+        bitmapDescriptor = (_currentMarker != null &&
+            _currentMarker.markerId == feature.markerId
+        ) ? await _createSelectedClusterBitmapDescriptor(feature) :
+          await _createClusterBitmapDescriptor(feature);
       } else if (_currentMarker != null &&
           _currentMarker.markerId == feature.markerId) {
         bitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
@@ -242,63 +307,48 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
 
       var marker = Marker(
-          markerId: MarkerId(feature.markerId),
+          markerId: feature.isCluster ? MarkerId(feature.clusterId.toString()) : MarkerId(feature.markerId),
           position: LatLng(feature.latitude, feature.longitude),
           infoWindow: null,
           onTap: () {
-            _currentMarker = _getCurrentMarker(feature);
-
-            if (feature.isCluster) {
-              var children = _fluster.points(feature.clusterId);
-              _benches = children;
-
-              add(MapMarkerPressedEvent(
-                  markers: children, markerId: feature.clusterId.toString()));
-            } else {
-              _benches = [feature];
-              add(MapMarkerPressedEvent(
-                  markers: [feature], markerId: feature.markerId));
-            }
+            add(OnMarkerTapEvent(marker: feature));
           },
-          icon: bitmapDescriptor);
-
-      markers.putIfAbsent(MarkerId(feature.markerId), () => marker);
+          icon: bitmapDescriptor
+      );
+      markers.putIfAbsent(feature.isCluster ? feature.clusterId.toString() : feature.markerId, () => marker);
     }
-
-    add(MapMarkerInitialedStop(markers: markers));
     _markers = markers;
+    _addMarkers(_markers);
+  }
+
+  _updateBenchesByVisibleRegion() async {
+    _benches = await _repository.getBenchesByVisibleRegion(_currentCameraPosition.visibleRegion);
+  }
+
+  Future<BitmapDescriptor> _createSelectedClusterBitmapDescriptor(MapMarker feature) async {
+    var child = await _getImage(IMAGE_SELECTEDCLUSTERPIN, 200, 200);
+    images.drawString(
+        child,
+        images.arial_24,
+        (feature.pointsSize ~/ 10 != 0) ? 62 : 68,
+        19,
+        '${feature.pointsSize}');
+
+    var png = images.encodePng(child);
+
+    return BitmapDescriptor.fromBytes(png);
   }
 
   Future<BitmapDescriptor> _createClusterBitmapDescriptor(
       MapMarker feature) async {
-    var child;
+    var child = await _getImage(IMAGE_CLUSTERPIN, 150, 150);
 
-    if (_currentMarker != null &&
-        feature.clusterId.toString() == _currentMarker.markerId) {
-      child = await _getImage(IMAGE_SELECTEDCLUSTERPIN, 200, 200);
-    } else {
-      child = await _getImage(IMAGE_CLUSTERPIN, 150, 150);
-    }
-
-    if (child == null) {
-      return null;
-    }
-    if (_currentMarker != null &&
-        feature.clusterId.toString() == _currentMarker.markerId) {
-      images.drawString(
-          child,
-          images.arial_24,
-          (feature.pointsSize ~/ 10 != 0) ? 62 : 68,
-          19,
-          '${feature.pointsSize}');
-    } else {
-      images.drawString(
-          child,
-          images.arial_24,
-          (feature.pointsSize ~/ 10 != 0) ? 47 : 54,
-          12,
-          '${feature.pointsSize}');
-    }
+    images.drawString(
+        child,
+        images.arial_24,
+        (feature.pointsSize ~/ 10 != 0) ? 47 : 54,
+        12,
+        '${feature.pointsSize}');
 
     var png = images.encodePng(child);
 
@@ -331,8 +381,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     String key = imageFile + width.toString() + height.toString();
     if (_benchesPinImage.containsKey(key)) return _benchesPinImage[key].clone();
     var image = await _getAssetsImage(imageFile);
-
-    // var pinImage = images.copyResize(image, width: width, height: height);
     _benchesPinImage[key] = image.clone();
     return image;
   }
@@ -351,25 +399,5 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     images.Image image = images.decodeImage(Uint8List.view(imageData.buffer));
     _imagesAssetsData[imageFile] = image.clone();
     return image;
-  }
-
-  CurrentMarker _getCurrentMarker(MapMarker feature) {
-    if (_currentMarker != null) {
-      if (feature.isCluster) {
-        return _currentMarker = CurrentMarker(
-            markerId: feature.clusterId.toString(), type: PinType.cluster);
-      } else {
-        return _currentMarker =
-            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
-      }
-    } else {
-      if (feature.isCluster) {
-        return _currentMarker = CurrentMarker(
-            markerId: feature.clusterId.toString(), type: PinType.cluster);
-      } else {
-        return _currentMarker =
-            CurrentMarker(markerId: feature.markerId, type: PinType.pin);
-      }
-    }
   }
 }

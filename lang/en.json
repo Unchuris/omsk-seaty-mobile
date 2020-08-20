@@ -10,5 +10,15 @@
     "string_top_benches": "Top benches",
     "string_top_users": "Top users",
     "string_my_benches": "My benches",
-    "string_favorites": "Favorites"
+    "string_favorites": "Favorites",
+
+    "high_comfort": "High comfort",
+    "urn_nearby": "Urn nearby",
+    "table_nearby": "Table nearby",
+    "covered_bench": "Covered bench",
+    "for_a_large_company": "For a large company",
+    "scenic_view": "Scenic view",
+    "bus_stop": "Остановка",
+
+    "bench_filter": "Bench filter"
 }

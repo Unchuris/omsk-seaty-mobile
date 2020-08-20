@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
-import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
 class BenchCard extends StatefulWidget {
-  final MapMarker marker;
-  const BenchCard({this.marker}) : super();
+  final BenchLight bench;
+  const BenchCard({this.bench}) : super();
 
   @override
   _BenchCardState createState() => _BenchCardState();
@@ -18,16 +17,11 @@ class BenchCard extends StatefulWidget {
 class _BenchCardState extends State<BenchCard> {
   @override
   Widget build(BuildContext context) {
-    var bench = UIBencCard(widget.marker.locationName, 4.5,
-        widget.marker.imageUrl, widget.marker.isFavorites);
+    var bench = UIBencCard(widget.bench.address, 4.5,
+        widget.bench.imageUrl, widget.bench.like);
     return Padding(
       padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-      child: GestureDetector(
-        onDoubleTap: () {
-          Navigator.pushNamed(context, BenchPage.routeName,
-              arguments: widget.marker);
-        },
-        child: Container(
+      child: Container(
             width: MediaQuery.of(context).size.width * .90,
             height: MediaQuery.of(context).size.height * .28,
             decoration: BoxDecoration(
@@ -90,20 +84,20 @@ class _BenchCardState extends State<BenchCard> {
                           setState(() {
                             bench.isFavorites = false;
                           });
-                          widget.marker.isFavorites = false;
+                          widget.bench.like = false;
 
-                          print("убрал лайк ${widget.marker.locationName}");
+                          print("убрал лайк ${widget.bench.address}");
                           BlocProvider.of<MapBloc>(context)
-                              .add(LikeButtonPassEvent(marker: widget.marker));
+                              .add(OnLikeClickedEvent(markerId: widget.bench.id, liked: !widget.bench.like));
                         } else {
                           setState(() {
                             bench.isFavorites = true;
                           });
-                          widget.marker.isFavorites = true;
+                          widget.bench.like = true;
 
-                          print("поставил лайк ${widget.marker.locationName}");
+                          print("поставил лайк ${widget.bench.address}");
                           BlocProvider.of<MapBloc>(context)
-                              .add(LikeButtonPassEvent(marker: widget.marker));
+                              .add(OnLikeClickedEvent(markerId: widget.bench.id, liked: !widget.bench.like));
                         }
                       },
                       color: Colors.white,
@@ -115,7 +109,6 @@ class _BenchCardState extends State<BenchCard> {
                     ),
                   ),
                 ])),
-      ),
     );
   }
 }

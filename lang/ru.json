@@ -10,6 +10,15 @@
     "string_top_benches": "Топ лавочек",
     "string_top_users": "Топ пользователей",
     "string_my_benches": "Мои лавочки",
-    "string_favorites": "Избранное"
-    
+    "string_favorites": "Избранное",
+
+    "high_comfort": "Высокий комфорт",
+    "urn_nearby": "Урна рядом",
+    "table_nearby": "Стол рядом",
+    "covered_bench": "Крытая лавочка",
+    "for_a_large_company": "Для большой компании",
+    "scenic_view": "Живописный вид",
+    "bus_stop": "Остановка",
+
+    "bench_filter": "Фильтр лавочек"
 }

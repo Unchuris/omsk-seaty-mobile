@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -12,7 +13,7 @@ import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 
 class AppDrawer extends StatefulWidget {
-  final List<MapMarker> markers;
+  final List<BenchLight> markers;
   AppDrawer(this.markers);
   @override
   _AppDrawerState createState() => _AppDrawerState();

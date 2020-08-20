@@ -29,7 +29,7 @@ void main() async {
 
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
-  runZoned(() {
+  //runZoned(() {
     runApp(
       MultiBlocProvider(
         providers: [
@@ -45,7 +45,7 @@ void main() async {
         child: MyApp(userRepository: _userRepository, isSigned: isSigned),
       ),
     );
-  }, onError: Crashlytics.instance.recordError);
+  //}, onError: Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
