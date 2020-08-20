@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
@@ -24,38 +22,39 @@ class BenchPage extends StatefulWidget {
 class _BenchPageState extends State<BenchPage> {
   @override
   Widget build(BuildContext context) {
-    MapMarker marker = ModalRoute.of(context).settings.arguments;
+    String markerId = ModalRoute.of(context).settings.arguments;
     var bench = UiBench(
-        imageLink: marker.imageUrl,
-        locationName: marker.locationName,
+        imageLink: "",
+        locationName: "Тестовая",
         address: "76 А, Парк победы, Омск",
         rate: 4.5,
-        isFavorites: marker.isFavorites,
-        filters: [
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-          FilterType.trashcan,
-        ],
+        isFavorites: true,
+        filters: Set.from([
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY,
+          BenchType.URN_NEARBY
+        ]),
         comments: [
           UiComment(
               photoUrl:
@@ -319,21 +318,21 @@ class _BenchPageState extends State<BenchPage> {
                           child: MaterialButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              if (bench.isFavorites) {
-                                marker.isFavorites = false;
-                                setState(() {
-                                  bench.isFavorites = false;
-                                });
-                                BlocProvider.of<MapBloc>(context)
-                                    .add(LikeButtonPassEvent(marker: marker));
-                              } else {
-                                marker.isFavorites = true;
-                                setState(() {
-                                  bench.isFavorites = true;
-                                });
-                                BlocProvider.of<MapBloc>(context)
-                                    .add(LikeButtonPassEvent(marker: marker));
-                              }
+//                              if (bench.isFavorites) {
+//                                marker.isFavorites = false;
+//                                setState(() {
+//                                  bench.isFavorites = false;
+//                                });
+//                                BlocProvider.of<MapBloc>(context)
+//                                    .add(LikeButtonPassEvent(marker: marker));
+//                              } else {
+//                                marker.isFavorites = true;
+//                                setState(() {
+//                                  bench.isFavorites = true;
+//                                });
+//                                BlocProvider.of<MapBloc>(context)
+//                                    .add(LikeButtonPassEvent(marker: marker));
+//                              }
                             },
                             color: Colors.white,
                             child: bench.isFavorites
@@ -461,12 +460,12 @@ class _BenchPageState extends State<BenchPage> {
     );
   }
 
-  _getFilters(List<FilterType> filters) {
+  _getFilters(Set<BenchType> filters) {
     final List fixedList = Iterable<int>.generate(filters.length).toList();
     List<Widget> items = fixedList.map((index) {
-      var filter = filters[index];
+      var filter = filters.first;
       switch (filter) {
-        case FilterType.trashcan:
+        case BenchType.URN_NEARBY:
           var leftPadding = (index == 0 || index == 1) ? 11.0 : 2.0;
           return Padding(
               padding: EdgeInsets.only(

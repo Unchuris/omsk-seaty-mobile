@@ -1,14 +1,5 @@
+import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
-
-enum FilterType {
-  trashcan,
-  covered,
-  beautifulView,
-  busstop,
-  bigGroup,
-  luxury,
-  withTable
-}
 
 class UiBench {
   String imageLink;
@@ -16,7 +7,7 @@ class UiBench {
   String address;
   double rate;
   bool isFavorites;
-  List<FilterType> filters;
+  Set<BenchType> filters;
   List<UiComment> comments;
   UiBench(
       {this.imageLink,

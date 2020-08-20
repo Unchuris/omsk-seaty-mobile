@@ -7,14 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/blocs/rightdrawer/right_draver_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
-import 'package:omsk_seaty_mobile/ui/widgets/bench_card.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
+
+import 'bench/bench.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -25,223 +27,213 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen>
     with AutomaticKeepAliveClientMixin {
+  static const DEFAULT_ZOOM_SIZE = 16.0;
   final Completer<GoogleMapController> _controller = Completer();
-  List<MapMarker> _benches;
-  List<MapMarker> _favorites = [];
-  Map<MarkerId, Marker> _markers;
   final CarouselControllerImpl _carouselController = CarouselController();
-  double _currentZoom = 10.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final RightDraverBloc _rightDraverBloc = RightDraverBloc();
-  Map<String, bool> _checkBox = {
-    "Высокий комфорт": false,
-    "Урна рядом": false,
-    "Стол рядом": false,
-    "Крытая лавочка": false,
-    "Для большой компании": false,
-    "Живописный вид": false,
-    "Остановка": false
-  };
-  @override
-  void initState() {
-    super.initState();
-  }
+
+  bool _isVisible = true;
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<MapBloc, MapState>(listener: (context, state) {
-            if (state is MapCurrentLocationUpdatedState) {
-              print(state.toString());
-              _controller.future.then((controller) {
-                controller.animateCamera(CameraUpdate.newLatLngZoom(
-                    LatLng(state.position.latitude, state.position.longitude),
-                    16));
-              });
-            }
-          }),
-        ],
-        child: Stack(
-          children: <Widget>[
-            BlocBuilder<MapBloc, MapState>(
-              buildWhen: (previous, current) {
-                if (current is MarkersInitialed ||
-                    current is MapMarkerPressedState ||
-                    current is LikeButtonPassState) {
-                  return true;
-                } else {
-                  return false;
-                }
-              },
-              builder: (context, state) {
-                if (state is MarkersInitialed) {
-                  print(state.toString());
-                  _markers = state.markers;
-                } else if (state is MapMarkerPressedState) {
-                  print(state.toString());
-                  if (_benches != null) {
-                    _carouselController.jumpToPage(0);
-                  }
-                  _benches = state.markers;
-                } else if (state is LikeButtonPassState) {
-                  print(state.toString());
-                  _favorites = state.favorites;
+    // ignore: close_sinks
+    final blocMap = BlocProvider.of<MapBloc>(context);
 
-                  BlocProvider.of<MapBloc>(context).add(LikeUpdatingEvent());
-                }
-                return Stack(
-                  children: [
-                    GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                          target: LatLng(54.991351, 73.364528), zoom: 10),
-                      zoomControlsEnabled: false,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      compassEnabled: false,
-                      mapToolbarEnabled: false,
-                      onMapCreated: _onMapCreated,
-                      onCameraMove: _onCameraMove,
-                      onCameraIdle: _onCameraIdle,
-                      markers: (_markers != null)
-                          ? Set<Marker>.from(_markers.values)
-                          : Set(),
-                      minMaxZoomPreference: const MinMaxZoomPreference(10, 21),
-                    ),
-                    (_benches != null)
-                        ? Container(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            alignment: Alignment.bottomCenter,
-                            child: BenchSlider(
-                                items: _getData(_benches),
-                                options: BenchSliderOptions(
-                                  height: 200,
-                                  onPageChanged: _onBenchSliderPageChanged,
-                                  onItemClicked: _onBenchSliderItemClicked,
-                                ),
-                                carouselController: _carouselController))
-                        : Container()
-                  ],
-                );
-              },
-            ),
-            Positioned(
-              bottom: 220,
-              left: 5,
-              child: _buildMyLocation(),
-            ),
-            Positioned(
-              top: 51,
-              left: 0,
-              child: Container(
-                width: 63,
-                height: 56,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(50.0),
-                        bottomRight: Radius.circular(50.0))),
-                child: IconButton(
-                  icon: SvgPicture.asset("assets/menu.svg"),
-                  onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                ),
-              ),
-            ),
-            BlocBuilder<MapBloc, MapState>(
-              builder: (context, state) {
-                if (state is FindButtonPressingState) {
-                  _checkBox = state.checkBox;
-                }
-                return Positioned(
-                  top: 51,
-                  right: 0,
-                  child: Container(
-                    width: 63,
-                    height: 56,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50.0),
-                            bottomLeft: Radius.circular(50.0))),
-                    child: IconButton(
-                      icon: SvgPicture.asset("assets/fulter.svg",
-                          color: (_checkBox.containsValue(true))
-                              ? Color(0xff000000)
-                              : Color(0xff828282)),
-                      onPressed: () =>
-                          _scaffoldKey.currentState.openEndDrawer(),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+    return Material(
+        child: MultiBlocListener(
+      listeners: [
+        BlocListener<MapBloc, MapState>(listener: (context, effect) async {
+          if (effect is UpdateUserLocationEffect) {
+            await _controller.future.then((controller) {
+              controller.animateCamera(CameraUpdate.newLatLngZoom(
+                  LatLng(effect.position.latitude, effect.position.longitude),
+                  DEFAULT_ZOOM_SIZE));
+            });
+            return;
+          }
+          if (effect is OpenDetailsScreenEffect) {
+            Navigator.pushNamed(context, BenchPage.routeName,
+                arguments: effect.benchId);
+            return;
+          }
+          if (effect is OpenAddBenchScreenEffect) {
+            //Navigator.pushNamed(context, BenchPage.routeName);
+            return;
+          }
+          if (effect is CameraMoveEffect) {
+//              setState(() {
+//                _isVisible = false;
+//              });
+          }
+          if (effect is CameraIdleEffect) {
+//              setState(() {
+//                _isVisible = true;
+//              });
+          }
+        }),
+      ],
+      child: Stack(
+        children: <Widget>[
+          StreamBuilder<Set<FilterType>>(
+              stream: blocMap.filters,
+              builder: (context, snapshotFilter) =>
+                  StreamBuilder<Map<String, Marker>>(
+                      stream: blocMap.markers,
+                      builder: (context, snapshotMarkers) =>
+                          StreamBuilder<List<BenchLight>>(
+                              stream: blocMap.benches,
+                              builder: (context, snapshotBenches) {
+                                return Scaffold(
+                                  key: _scaffoldKey,
+                                  body: Stack(children: [
+                                    _getGoogleMap(snapshotMarkers.data),
+                                    _getBenchSlider(snapshotBenches.data),
+                                    _getMenuButton(),
+                                    _getFilterButton(),
+                                  ]),
+                                  //TODO remove mock favorites
+                                  drawer: AppDrawer([]),
+                                  endDrawer: FilterDrawer(
+                                      filters: snapshotFilter.data != null
+                                          ? snapshotFilter.data
+                                          : Set()),
+                                  drawerEnableOpenDragGesture: false,
+                                  endDrawerEnableOpenDragGesture: false,
+                                );
+                              }))),
+          Positioned(
+            bottom: 220,
+            left: 5,
+            child: _buildMyLocation(),
+          )
+        ],
       ),
-      drawer: BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-        if (state is LikeButtonPassState) {
-          return AppDrawer(_favorites);
-        }
-        return AppDrawer(_favorites);
-      }),
-      endDrawer: BlocProvider(
-        create: (context) => RightDraverBloc(),
-        child: FilterDrawer(
-          checkBoxs: _checkBox,
-        ),
-      ),
-    );
+    ));
   }
 
+  //TODO add dark style
   void _onMapCreated(GoogleMapController controller) {
     rootBundle.loadString("assets/map-style.json").then((style) {
       controller.setMapStyle(style);
       _controller.complete(controller);
+      BlocProvider.of<MapBloc>(context).add(OnMapCreatedEvent());
     });
   }
 
-  //создаю кнопку мое местоположение
   Widget _buildMyLocation() {
     return SizedBox(
+        child: Visibility(
+      visible: _isVisible,
       child: IconButton(
           icon: Icon(Icons.my_location),
-          onPressed: () {
-            var state = BlocProvider.of<MapBloc>(context).state;
-            print(state.toString());
-            if (state is MapCurrentLocationUpdatingState) {
-            } else {
-              BlocProvider.of<MapBloc>(context)
-                  .add(ButtonGetCurrentLocationPassedEvent());
-            }
-          }),
+          onPressed: () => BlocProvider.of<MapBloc>(context)
+              .add(OnMapLocationButtonClickedEvent())),
+    ));
+  }
+
+  Widget _getGoogleMap(Map<String, Marker> data) {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+          //TODO move to const
+          target: LatLng(54.991351, 73.364528),
+          zoom: 10),
+      zoomControlsEnabled: false,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      compassEnabled: false,
+      mapToolbarEnabled: false,
+      onMapCreated: _onMapCreated,
+      onCameraMoveStarted: _onCameraMoveStarted,
+      onCameraIdle: _onCameraIdle,
+      markers: (data != null) ? Set<Marker>.from(data.values) : Set(),
+      //TODO move to const
+      minMaxZoomPreference: const MinMaxZoomPreference(10, 21),
     );
   }
 
-  void _onCameraMove(CameraPosition cameraPosition) {
-    _currentZoom = cameraPosition.zoom;
+  Widget _getBenchSlider(List<BenchLight> benches) {
+    return Visibility(
+        visible: _isVisible,
+        child: (benches != null && benches.isNotEmpty)
+            ? Container(
+                padding: EdgeInsets.only(bottom: 20.0),
+                alignment: Alignment.bottomCenter,
+                child: BenchSlider(
+                    items: benches,
+                    options: BenchSliderOptions(
+                      // добавить бесконечную прокрутки, если выбран не кластер
+                      height: 200,
+                      onPageChanged: _onBenchSliderPageChanged,
+                      onItemClicked: _onBenchSliderItemClicked,
+                    ),
+                    carouselController: _carouselController))
+            : Container());
+  }
+
+  Widget _getMenuButton() {
+    return Positioned(
+      top: 51,
+      left: 0,
+      child: Container(
+        width: 63,
+        height: 56,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(50.0),
+                bottomRight: Radius.circular(50.0))),
+        child: IconButton(
+          icon: SvgPicture.asset("assets/menu.svg"),
+          onPressed: () => _scaffoldKey.currentState.openDrawer(),
+        ),
+      ),
+    );
+  }
+
+  Widget _getFilterButton() {
+    return Positioned(
+      top: 51,
+      right: 0,
+      child: Container(
+        width: 63,
+        height: 56,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50.0),
+                bottomLeft: Radius.circular(50.0))),
+        child: IconButton(
+          icon: SvgPicture.asset("assets/fulter.svg"),
+          onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
+        ),
+      ),
+    );
+  }
+
+  void _onCameraMoveStarted() {
+    BlocProvider.of<MapBloc>(context).add(OnCameraMoveStartedEvent());
   }
 
   void _onCameraIdle() {
     _controller.future.then((value) async {
-      var l = await value.getVisibleRegion();
-      var cameraPosition =
-          CameraCurrentPosition(currentZoom: _currentZoom, visibleRegion: l);
-      BlocProvider.of<MapBloc>(context).setCameraPosition(cameraPosition);
+      LatLngBounds latLngBounds = await value.getVisibleRegion();
+      double zoom = await value.getZoomLevel();
+      CameraCurrentPosition cameraPosition =
+          CameraCurrentPosition(currentZoom: zoom, visibleRegion: latLngBounds);
+      BlocProvider.of<MapBloc>(context)
+          .add(OnCameraIdleEvent(cameraPosition: cameraPosition));
     });
   }
 
-  void _onBenchSliderPageChanged(int index) {}
+  void _onBenchSliderPageChanged(BenchLight benchLight) {
+    BlocProvider.of<MapBloc>(context)
+        .add(OnBenchSliderPageChanged(bench: benchLight));
+  }
 
-  void _onBenchSliderItemClicked(int index) {}
-
-  List<Widget> _getData(List<MapMarker> markers) => markers
-      .map((item) => BenchCard(
-            marker: item,
-          ))
-      .toList();
+  void _onBenchSliderItemClicked(BenchLight benchLight) {
+    BlocProvider.of<MapBloc>(context)
+        .add(OnBenchClickedEvent(benchId: benchLight.id));
+  }
 
   @override
   bool get wantKeepAlive => true;
