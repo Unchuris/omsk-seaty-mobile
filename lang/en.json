@@ -14,7 +14,7 @@
     "string_add_comment": "Add comment",
     "string_add_comment_label_text": "Have you visited this bench? Write review",
     "string_add_comment_helper_text": "Tell us what have you like?",
-    "string_add": "Done"
+    "string_add": "Done",
     "string_favorites": "Favorites",
 
     "high_comfort": "High comfort",
@@ -25,5 +25,6 @@
     "scenic_view": "Scenic view",
     "bus_stop": "Bus stop",
 
-    "bench_filter": "Bench filter"
+    "bench_filter": "Bench filter",
+    "find": "Find"
 }

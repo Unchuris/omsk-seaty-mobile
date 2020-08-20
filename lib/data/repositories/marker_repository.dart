@@ -35,9 +35,11 @@ class MarkerRepository {
   ];
 
   Future<List<BenchLight>> getMarkers() async {
-    if (filteredBenches.isNotEmpty) {
+    if (benches.isNotEmpty) {
+      filteredBenches = _getFilteredBenches();
       return filteredBenches;
     }
+    //TODO add https://pub.dev/packages/dio
     var url = "https://omsk-seaty-backend.herokuapp.com/api/benches/";
     final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
@@ -67,7 +69,7 @@ class MarkerRepository {
   }
 
   List<BenchLight> _getFilteredBenches() {
-    Set<FilterType> currentFilter =  filters.where((it) => it.enable).toSet();
+    Set<BenchType> currentFilter = filters.where((it) => it.enable).map((it) => it.benchType).toSet();
     return benches.where((it) => it.feature.containsAll(currentFilter)).toList();
   }
 
@@ -96,10 +98,10 @@ class MarkerRepository {
   }
 
   Future<List<BenchLight>> getClusterBenches(List<String> markersId) async {
-    return benches.where((it) => markersId.contains(it.id)).toList();
+    return filteredBenches.where((it) => markersId.contains(it.id)).toList();
   }
 
   Future<List<BenchLight>> getBenchesByVisibleRegion(LatLngBounds latLngBounds) async {
-    return benches.where((it) => latLngBounds.contains(LatLng(it.latitude, it.longitude))).toList();
+    return filteredBenches.where((it) => latLngBounds.contains(LatLng(it.latitude, it.longitude))).toList();
   }
 }

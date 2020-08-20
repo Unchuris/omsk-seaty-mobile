@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
-import 'package:omsk_seaty_mobile/blocs/rightdrawer/right_draver_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 
@@ -33,8 +32,6 @@ class _MapScreenState extends State<MapScreen>
   final CarouselControllerImpl _carouselController = CarouselController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ignore: close_sinks
-  final RightDraverBloc _rightDrawerBloc = RightDraverBloc();
   bool _isVisible = true;
 
   @override

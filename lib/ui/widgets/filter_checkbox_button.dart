@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:omsk_seaty_mobile/blocs/rightdrawer/right_draver_bloc.dart';
 
 enum TypeCheckBox { withButton, oneState, checkBox }
 
 class FilterCheckBox extends StatefulWidget {
-  TypeCheckBox type;
-  String title;
-  Widget icon;
-  int color;
+  final TypeCheckBox type;
+  final String title;
+  final Widget icon;
+  final int color;
   bool isSelected;
+
+  Function(bool isSelected) onCheckChanged;
+
   FilterCheckBox(
-      {Key key, this.type, this.color, this.icon, this.title, this.isSelected})
+      {Key key, this.type, this.color, this.icon, this.title, this.isSelected, this.onCheckChanged})
       : super(key: key);
 
   @override
@@ -70,20 +71,11 @@ class _FilterCheckBoxState extends State<FilterCheckBox> {
       case TypeCheckBox.checkBox:
         filter = GestureDetector(
           onTap: () {
-            if (_isSelected) {
-              setState(() {
-                _isSelected = false;
-              });
-              widget.isSelected = false;
-            } else {
-              setState(() {
-                _isSelected = true;
-              });
-              widget.isSelected = true;
-            }
-
-            BlocProvider.of<RightDraverBloc>(context).add(OnFilterTapingEvent(
-                title: widget.title, isTaped: widget.isSelected));
+            setState(() {
+              _isSelected = !_isSelected;
+            });
+            widget.isSelected = _isSelected;
+            widget.onCheckChanged(_isSelected);
           },
           child: Opacity(
             opacity: (_isSelected) ? 1 : 0.6,

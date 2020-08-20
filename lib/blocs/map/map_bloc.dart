@@ -36,7 +36,8 @@ class CurrentMarker {
 
   const CurrentMarker({this.type, this.markerId});
 }
-
+//TODO исправить баг, если слайдер открыт, то при нажатии на пин показывается не он
+//TODO открытие нового экрана иногда не происходит
 class MapBloc extends Bloc<MapEvent, MapState> {
   static const maxZoom = 21;
   static const thumbnailWidth = 250;
@@ -101,11 +102,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           .listen((position) {
             _userPosition = position;
           });
-        _addFilters(_repository.filters);
       _buildMediaPool();
       return;
     }
     if (event is OnMapCreatedEvent) {
+      _addFilters(_repository.filters);
       _updateBenchesByVisibleRegion();
       yield* _mapOnMapLocationButtonClickedToEffect();
       return;
@@ -141,8 +142,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     if (event is OnFilterChangedEvent) {
-      //TODO
+      _repository.filters = Set.of(event.filterTypes);
+      _addFilters(_repository.filters);
+      if (_benches != null) {
+        _benches.clear();
+        _addBenches(_benches);
+      }
+      _currentMarker = null;
+      _clusters = Map();
       _buildMediaPool();
+      _updateBenchesByVisibleRegion();
       return;
     }
     if (event is OnLikeClickedEvent) {

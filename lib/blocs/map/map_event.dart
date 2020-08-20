@@ -28,11 +28,11 @@ class OnMapCreatedEvent extends MapEvent {
 }
 
 class OnFilterChangedEvent extends MapEvent {
-  final List<BenchType> benchTypes;
-  const OnFilterChangedEvent({this.benchTypes});
+  final Set<FilterType> filterTypes;
+  const OnFilterChangedEvent({this.filterTypes});
 
   @override
-  List<Object> get props => [benchTypes];
+  List<Object> get props => [filterTypes];
 }
 
 class OnBenchClickedEvent extends MapEvent {
