@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
@@ -7,8 +8,7 @@ import '../../app_localizations.dart';
 
 class FilterDrawer extends StatefulWidget {
   final Set<FilterType> filters;
-
-  FilterDrawer({Key key, this.filters}) : super(key: key);
+  const FilterDrawer({Key key, this.filters}) : super(key: key);
 
   @override
   _FilterDrawerState createState() => _FilterDrawerState();
@@ -45,6 +45,27 @@ class _FilterDrawerState extends State<FilterDrawer> {
               ],
             ),
             ..._getFilters(widget.filters, context)
+        Padding(
+    padding: const EdgeInsets.only(top: 90.0),
+    child: Center(
+    child: ButtonTheme(
+    minWidth: 209,
+    height: 50,
+    child: FlatButton(
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0)),
+    color: Color(0xffF2994A),
+    child: Text("Найти",
+    style: Theme.of(context).textTheme.headline6),
+    onPressed: () {
+    BlocProvider.of<MapBloc>(context).add(
+    FindButtonPressingEvent(
+    checkBox: _checkBoxs));
+    Navigator.pop(context);
+    },
+    ),
+    ),
+    ),
           ],
         ),
       ),

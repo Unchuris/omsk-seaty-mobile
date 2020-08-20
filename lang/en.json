@@ -10,6 +10,11 @@
     "string_top_benches": "Top benches",
     "string_top_users": "Top users",
     "string_my_benches": "My benches",
+
+    "string_add_comment": "Add comment",
+    "string_add_comment_label_text": "Have you visited this bench? Write review",
+    "string_add_comment_helper_text": "Tell us what have you like?",
+    "string_add": "Done"
     "string_favorites": "Favorites",
 
     "high_comfort": "High comfort",
@@ -18,7 +23,7 @@
     "covered_bench": "Covered bench",
     "for_a_large_company": "For a large company",
     "scenic_view": "Scenic view",
-    "bus_stop": "Остановка",
+    "bus_stop": "Bus stop",
 
     "bench_filter": "Bench filter"
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
@@ -431,7 +432,10 @@ class _BenchPageState extends State<BenchPage> {
                     child: FloatingActionButton(
                         child: SvgPicture.asset("assets/pencil.svg"),
                         backgroundColor: Color(0xffF2994A),
-                        onPressed: null)),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, AddCommentPage.routeName);
+                        })),
                 Positioned(
                   bottom: 0,
                   child: Container(

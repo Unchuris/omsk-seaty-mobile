@@ -12,6 +12,11 @@
     "string_my_benches": "Мои лавочки",
     "string_favorites": "Избранное",
 
+    "string_add_comment": "Оценить",
+    "string_add_comment_label_text": "Отдыхали на этой лавке? Напишите отзыв",
+    "string_add_comment_helper_text": "Расскажите, что вам понравилось?",
+    "string_add": "Добавить",
+
     "high_comfort": "Высокий комфорт",
     "urn_nearby": "Урна рядом",
     "table_nearby": "Стол рядом",

@@ -7,10 +7,25 @@ abstract class RightDraverEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class OnFilterTapEvent extends RightDraverEvent {
+class RightDraverInitialingEvent extends RightDraverEvent {
+  final Map<String, bool> checkBox;
+  const RightDraverInitialingEvent({this.checkBox});
+
+  @override
+  List<Object> get props => [checkBox];
+}
+
+class OnFilterTapedEvent extends RightDraverEvent {
+  const OnFilterTapedEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class OnFilterTapingEvent extends RightDraverEvent {
   final String title;
   final bool isTaped;
-  const OnFilterTapEvent({this.title, this.isTaped});
+  const OnFilterTapingEvent({this.title, this.isTaped});
 
   @override
   List<Object> get props => [title, isTaped];

@@ -23,9 +23,16 @@ class RightDraverBloc extends Bloc<RightDraverEvent, RightDraverState> {
   Stream<RightDraverState> mapEventToState(
     RightDraverEvent event,
   ) async* {
-    if (event is OnFilterTapEvent) {
+    if (event is RightDraverInitialingEvent) {
+      _checkBox = event.checkBox;
+      yield RightDraverInitial(checkBox: _checkBox);
+    } else if (event is OnFilterTapingEvent) {
       _checkBox.update(event.title, (value) => event.isTaped);
-      yield OnFilterTapState(checkBox: _checkBox);
+      yield OnFilterTapingState(checkBox: _checkBox);
+      add(OnFilterTapedEvent());
+    }
+    if (event is OnFilterTapedEvent) {
+      yield OnFilterTapedState();
     }
   }
 }

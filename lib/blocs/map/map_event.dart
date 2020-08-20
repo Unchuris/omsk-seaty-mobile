@@ -82,3 +82,22 @@ class OnCameraIdleEvent extends MapEvent {
   @override
   List<Object> get props => [cameraPosition];
 }
+
+class FindButtonPressingEvent extends MapEvent {
+  final Map<String, bool> checkBox;
+  const FindButtonPressingEvent({this.checkBox});
+
+  List<Object> get props => [checkBox];
+
+  @override
+  String toString() => "FindButtonPassEvent {checkBox: ${checkBox}}";
+}
+
+class FindButtonPressedEvent extends MapEvent {
+  const FindButtonPressedEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => "FindButtonPressedEvent {}";
+}
