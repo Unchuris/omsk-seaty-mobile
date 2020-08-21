@@ -7,7 +7,7 @@ import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({Key key}) : super(key: key);
-  static String roateName = "/favorites";
+  static String routeName = "/favorites";
   @override
   Widget build(BuildContext context) {
     final List<BenchLight> mapMarkers = ModalRoute.of(context).settings.arguments;
