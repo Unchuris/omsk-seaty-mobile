@@ -36,17 +36,6 @@ class _CheckBoxListState extends State<CheckBoxList> {
   }
 
   String _getNameOfObject(Object object) {
-    /*switch (object) {
-      case BenchType:
-        {
-          return benchTypeToString(object, context);
-        }
-        break;
-      default:
-        {
-          return '';
-        }
-    }*/
     if (object is BenchType) return benchTypeToString(object, context);
   }
 }

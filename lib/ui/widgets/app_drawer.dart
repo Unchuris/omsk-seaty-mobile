@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
 
 import 'dialog/childs/checkbox_list.dart';
 import 'dialog/dialog_with_child.dart';
@@ -67,9 +68,16 @@ class _AppDrawerState extends State<AppDrawer> {
                     AppLocalizations.of(context).translate('string_top_users')),
             _createDrawerItem(
               icon: Icon(Icons.settings),
-              text: 'Dialog test',
+              text: 'Dialog test list',
               onTap: () {
-                _createDialog(context, benches);
+                _createDialogWithList(benches);
+              },
+            ),
+            _createDrawerItem(
+              icon: Icon(Icons.settings),
+              text: 'Dialog test thanks',
+              onTap: () {
+                _createDialogThanks();
               },
             )
           ],
@@ -77,18 +85,28 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
     );
   }
-}
 
-void _createDialog(BuildContext context, Map<BenchType, bool> benches) {
-  showDialog(
-      context: context,
-      builder: (context) => ListProvider(
-          benches,
-          DialogWithChild(
-              title: 'Lorem ipsum',
-              buttonText: 'Button Text',
-              child: CheckBoxList(),
-              buttonType: DialogButtonType.list)));
+  void _createDialogWithList(Map<BenchType, bool> benches) {
+    showDialog(
+        context: context,
+        builder: (context) => ListProvider(
+            benches,
+            DialogWithChild(
+                title: 'Lorem ipsum',
+                buttonText: 'Button Text',
+                child: CheckBoxList(),
+                buttonType: DialogButtonType.list)));
+  }
+
+  void _createDialogThanks() {
+    showDialog(
+        context: context,
+        builder: (context) => DialogWithChild(
+            title: 'Lorem ipsum',
+            buttonText: 'Button Text',
+            child: ThanksChild(),
+            buttonType: DialogButtonType.close));
+  }
 }
 
 Widget _createHeaderWithUser(User user, BuildContext context) {

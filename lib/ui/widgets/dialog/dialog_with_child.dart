@@ -84,7 +84,7 @@ class DialogWithChild extends StatelessWidget {
                               break;
                             case DialogButtonType.close:
                               {
-                                print('close');
+                                Navigator.pop(context);
                               }
                               break;
                             default:
