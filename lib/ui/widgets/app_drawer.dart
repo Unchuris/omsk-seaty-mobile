@@ -9,12 +9,16 @@ import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 import 'package:flutter_svg/svg.dart';
 
-import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_event.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 
 class AppDrawer extends StatefulWidget {
   final List<BenchLight> markers;
+
   AppDrawer(this.markers);
+
   @override
   _AppDrawerState createState() => _AppDrawerState();
 }
@@ -42,7 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 text:
                     AppLocalizations.of(context).translate('string_favorites'),
                 onTap: () {
-                  Navigator.pushNamed(context, FavoritesPage.roateName,
+                  Navigator.pushNamed(context, FavoritesPage.routeName,
                       arguments: widget.markers);
                 }),
             _createDrawerItem(
@@ -53,6 +57,15 @@ class _AppDrawerState extends State<AppDrawer> {
                 icon: SvgPicture.asset("assets/topUsers.svg"),
                 text:
                     AppLocalizations.of(context).translate('string_top_users')),
+            BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
+              builder: (context, state) {
+                return Switch(
+                      value: state.themeState.isLightMode,
+                      onChanged: (value) =>
+                          BlocProvider.of<ThemeChangeBloc>(context)
+                              .add(OnThemeChangedEvent(value)));
+              },
+            )
           ],
         ),
       ),

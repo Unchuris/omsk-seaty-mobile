@@ -1,70 +1,92 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-ThemeData lightTheme() {
-  TextTheme _basicTextTheme(TextTheme base) {
-    return base.copyWith(
-      headline1: base.headline1.copyWith(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w500,
-        fontSize: 17.0,
-        color: Color(0xFF4F4F4F),
-      ),
-      headline5: base.headline5.copyWith(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w400,
-        fontSize: 14.0,
-        color: Color(0xff8E8E93),
-      ),
-      headline4: base.headline4.copyWith(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w400,
-        fontSize: 14.0,
-        color: Color(0xffC7C7CC),
-      ),
-      headline6: base.headline6.copyWith(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w400,
-        fontSize: 14.0,
-        color: Colors.white,
-      ),
-      subtitle1: base.subtitle1.copyWith(
-          fontFamily: 'Rotobo',
-          fontWeight: FontWeight.w400,
-          fontSize: 12.0,
-          color: Color(0xff828282)),
-      subtitle2: base.subtitle2.copyWith(
-          fontFamily: 'Rotobo',
-          fontWeight: FontWeight.w400,
-          fontSize: 12.0,
-          color: Color(0xffBDBDBD)),
-      bodyText1: base.bodyText1.copyWith(
-          fontFamily: 'Rotobo',
-          fontWeight: FontWeight.w400,
-          fontSize: 14.0,
-          color: Colors.black),
-      bodyText2: base.bodyText2.copyWith(
-          fontFamily: 'Rotobo',
-          fontWeight: FontWeight.w400,
-          fontSize: 14.0,
-          color: Color(0x99000000)),
-      button: base.button.copyWith(
-          fontFamily: 'Rotobo',
-          fontWeight: FontWeight.w400,
-          fontSize: 14.0,
-          color: Color(0xffF2994A)),
-    );
-  }
+class AppTheme {
+  AppTheme._();
 
-  final ThemeData base = ThemeData.light();
-  return base.copyWith(
-      textTheme: _basicTextTheme(base.textTheme),
+  static final ThemeData lightTheme = ThemeData(
+      textTheme: _getTextTheme(),
       scaffoldBackgroundColor: Colors.white,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
+      fontFamily: 'Roboto',
       canvasColor: Colors.white,
+      errorColor: Colors.red,
       primaryColor: Color(0xffE0E0E0),
-      buttonColor: Colors.white,
+      accentColor: Color(0xfff2994a),
+      buttonColor: Color(0xfff2994a),
       backgroundColor: Colors.white,
+      buttonTheme: ButtonThemeData(
+          minWidth: 209,
+          height: 50,
+          buttonColor: Color(0xfff2994a),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
       visualDensity: VisualDensity.adaptivePlatformDensity);
+
+  //TODO
+  static final ThemeData darkTheme = ThemeData(
+      textTheme: _getTextTheme(),
+      scaffoldBackgroundColor: Colors.black,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      fontFamily: 'Roboto',
+      canvasColor: Colors.white,
+      errorColor: Colors.red,
+      primaryColor: Colors.black,
+      accentColor: Colors.green,
+      buttonColor: Colors.green,
+      backgroundColor: Colors.black,
+      buttonTheme: ButtonThemeData(
+          minWidth: 50,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
+      visualDensity: VisualDensity.adaptivePlatformDensity);
+
+  static TextTheme _getTextTheme() {
+    return TextTheme(
+        headline1: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 50.0, color: Colors.black),
+        headline2: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 30.0, color: Colors.black),
+        headline3: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
+        headline4: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.0,
+            color: Color(0xFF828282)),
+        headline5: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 24.0,
+            color: Color(0xff8E8E93)),
+        headline6: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 20.0, color: Colors.black87),
+        subtitle1: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0,
+            color: Color(0xff828282)),
+        subtitle2: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.0,
+            color: Color(0xffBDBDBD)),
+        bodyText1: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 16.0,
+            color: Colors.black54),
+        bodyText2: TextStyle(
+            fontWeight: FontWeight.normal, fontSize: 14.0, color: Colors.white),
+        button: TextStyle(
+            fontWeight: FontWeight.normal, fontSize: 14.0, color: Colors.white),
+        caption: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 12.0,
+            color: Color(0xFF828282)),
+        overline: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 12.0,
+            color: Colors.black));
+  }
 }
