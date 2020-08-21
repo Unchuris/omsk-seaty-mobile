@@ -5,12 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
+import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 import 'package:flutter_svg/svg.dart';
 
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+
+import 'dialog/childs/checkbox_list.dart';
+import 'dialog/dialog_with_child.dart';
+import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
   final List<BenchLight> markers;
@@ -20,6 +25,13 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  Map<BenchType, bool> benches = {
+    BenchType.TABLE_NEARBY: false,
+    BenchType.COVERED_BENCH: false,
+    BenchType.SCENIC_VIEW: false,
+    BenchType.FOR_A_LARGE_COMPANY: false
+  };
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -53,11 +65,30 @@ class _AppDrawerState extends State<AppDrawer> {
                 icon: SvgPicture.asset("assets/topUsers.svg"),
                 text:
                     AppLocalizations.of(context).translate('string_top_users')),
+            _createDrawerItem(
+              icon: Icon(Icons.settings),
+              text: 'Dialog test',
+              onTap: () {
+                _createDialog(context, benches);
+              },
+            )
           ],
         ),
       ),
     );
   }
+}
+
+void _createDialog(BuildContext context, Map<BenchType, bool> benches) {
+  showDialog(
+      context: context,
+      builder: (context) => ListProvider(
+          benches,
+          DialogWithChild(
+              title: 'Lorem ipsum',
+              buttonText: 'Button Text',
+              child: CheckBoxList(),
+              buttonType: DialogButtonType.list)));
 }
 
 Widget _createHeaderWithUser(User user, BuildContext context) {
