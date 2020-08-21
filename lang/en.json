@@ -17,6 +17,14 @@
     "string_add": "Done",
     "string_favorites": "Favorites",
 
+    "dialog_title_choose": "Choose one or more options",
+    "dialog_title_thanks": "Thanks!",
+    "dialog_button_good": "Good",
+    "dialog_button_add": "Add",
+    "dialog_child_string": "Your bench will appear on the map as soon as it is checked by the moderator",
+    "dialog_child_status_bench": "The status of adding can be viewed in",
+    "dialog_child_my_benches_string": "My benches",
+
     "high_comfort": "High comfort",
     "urn_nearby": "Urn nearby",
     "table_nearby": "Table nearby",

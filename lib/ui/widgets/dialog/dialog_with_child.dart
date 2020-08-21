@@ -75,6 +75,7 @@ class DialogWithChild extends StatelessWidget {
                               {
                                 var provider = ListProvider.of(context);
                                 print('List: ${provider.list}');
+                                Navigator.pop(context);
                               }
                               break;
                             case DialogButtonType.complain:

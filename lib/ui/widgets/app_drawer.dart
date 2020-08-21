@@ -92,8 +92,10 @@ class _AppDrawerState extends State<AppDrawer> {
         builder: (context) => ListProvider(
             benches,
             DialogWithChild(
-                title: 'Lorem ipsum',
-                buttonText: 'Button Text',
+                title: AppLocalizations.of(context)
+                    .translate('dialog_title_choose'),
+                buttonText:
+                    AppLocalizations.of(context).translate('dialog_button_add'),
                 child: CheckBoxList(),
                 buttonType: DialogButtonType.list)));
   }
@@ -102,8 +104,10 @@ class _AppDrawerState extends State<AppDrawer> {
     showDialog(
         context: context,
         builder: (context) => DialogWithChild(
-            title: 'Lorem ipsum',
-            buttonText: 'Button Text',
+            title:
+                AppLocalizations.of(context).translate('dialog_title_thanks'),
+            buttonText:
+                AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
             buttonType: DialogButtonType.close));
   }
