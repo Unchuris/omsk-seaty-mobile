@@ -19,6 +19,7 @@
 
     "dialog_title_choose": "Выберите один или несколько вариантов",
     "dialog_title_thanks": "Спасибо!",
+    "dialog_title_complain": "Пожаловаться",
     "dialog_button_good": "Хорошо",
     "dialog_button_add": "Добавить",
     "dialog_child_string": "Ваша лавочка появится на карте как только пройдет проверку модератором",
@@ -32,6 +33,10 @@
     "for_a_large_company": "Для большой компании",
     "scenic_view": "Живописный вид",
     "bus_stop": "Остановка",
+
+    "absent_bench": "Лавочки нет",
+    "inappropriate_content": "Неприемлемый контент",
+    "offensive_material": "Оскорбительные материалы",
 
     "bench_filter": "Фильтр лавочек",
     "find": "Найти"

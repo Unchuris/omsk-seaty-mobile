@@ -70,20 +70,21 @@ class DialogWithChild extends StatelessWidget {
                     child: InkWell(
                         borderRadius: bottomBorder,
                         onTap: () {
+                          var provider = ListProvider.of(context);
                           switch (buttonType) {
-                            case DialogButtonType.list:
+                            case DialogButtonType.LIST:
                               {
-                                var provider = ListProvider.of(context);
                                 print('List: ${provider.list}');
                                 Navigator.pop(context);
                               }
                               break;
-                            case DialogButtonType.complain:
+                            case DialogButtonType.COMPLAIN:
                               {
-                                print('complain');
+                                print('List: ${provider.list}');
+                                Navigator.pop(context);
                               }
                               break;
-                            case DialogButtonType.close:
+                            case DialogButtonType.CLOSE:
                               {
                                 Navigator.pop(context);
                               }
@@ -102,4 +103,4 @@ class DialogWithChild extends StatelessWidget {
   }
 }
 
-enum DialogButtonType { list, complain, close }
+enum DialogButtonType { LIST, COMPLAIN, CLOSE }

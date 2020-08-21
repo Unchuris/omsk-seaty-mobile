@@ -6,6 +6,7 @@ import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -26,13 +27,6 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  Map<BenchType, bool> benches = {
-    BenchType.TABLE_NEARBY: false,
-    BenchType.COVERED_BENCH: false,
-    BenchType.SCENIC_VIEW: false,
-    BenchType.FOR_A_LARGE_COMPANY: false
-  };
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -70,7 +64,14 @@ class _AppDrawerState extends State<AppDrawer> {
               icon: Icon(Icons.settings),
               text: 'Dialog test list',
               onTap: () {
-                _createDialogWithList(benches);
+                _createDialogWithList();
+              },
+            ),
+            _createDrawerItem(
+              icon: Icon(Icons.settings),
+              text: 'Dialog test complain',
+              onTap: () {
+                _createDialogComplain();
               },
             ),
             _createDrawerItem(
@@ -86,7 +87,14 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  void _createDialogWithList(Map<BenchType, bool> benches) {
+  void _createDialogWithList() {
+    Map<BenchType, bool> benches = {
+      BenchType.TABLE_NEARBY: false,
+      BenchType.COVERED_BENCH: false,
+      BenchType.SCENIC_VIEW: false,
+      BenchType.FOR_A_LARGE_COMPANY: false
+    };
+
     showDialog(
         context: context,
         builder: (context) => ListProvider(
@@ -97,7 +105,27 @@ class _AppDrawerState extends State<AppDrawer> {
                 buttonText:
                     AppLocalizations.of(context).translate('dialog_button_add'),
                 child: CheckBoxList(),
-                buttonType: DialogButtonType.list)));
+                buttonType: DialogButtonType.LIST)));
+  }
+
+  void _createDialogComplain() {
+    Map<ComplainType, bool> complains = {
+      ComplainType.ABSENT_BENCH: false,
+      ComplainType.INAPPROPRIATE_CONTENT: false,
+      ComplainType.OFFENSIVE_MATERIAL: false
+    };
+
+    showDialog(
+        context: context,
+        builder: (context) => ListProvider(
+            complains,
+            DialogWithChild(
+                title: AppLocalizations.of(context)
+                    .translate('dialog_title_complain'),
+                buttonText: AppLocalizations.of(context)
+                    .translate('dialog_title_complain'),
+                child: CheckBoxList(),
+                buttonType: DialogButtonType.COMPLAIN)));
   }
 
   void _createDialogThanks() {
@@ -109,7 +137,7 @@ class _AppDrawerState extends State<AppDrawer> {
             buttonText:
                 AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
-            buttonType: DialogButtonType.close));
+            buttonType: DialogButtonType.CLOSE));
   }
 }
 

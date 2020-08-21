@@ -19,6 +19,7 @@
 
     "dialog_title_choose": "Choose one or more options",
     "dialog_title_thanks": "Thanks!",
+    "dialog_title_complain": "Complain",
     "dialog_button_good": "Good",
     "dialog_button_add": "Add",
     "dialog_child_string": "Your bench will appear on the map as soon as it is checked by the moderator",
@@ -32,6 +33,10 @@
     "for_a_large_company": "For a large company",
     "scenic_view": "Scenic view",
     "bus_stop": "Bus stop",
+
+    "absent_bench": "Absent bench",
+    "inappropriate_content": "Inappropriate content",
+    "offensive_material": "Offensive material",
 
     "bench_filter": "Bench filter",
     "find": "Find"

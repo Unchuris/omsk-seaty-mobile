@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 
 import '../list_provider.dart';
 
@@ -37,5 +38,6 @@ class _CheckBoxListState extends State<CheckBoxList> {
 
   String _getNameOfObject(Object object) {
     if (object is BenchType) return benchTypeToString(object, context);
+    if (object is ComplainType) return complaintTypeToString(object, context);
   }
 }
