@@ -47,7 +47,8 @@ class _AppDrawerState extends State<AppDrawer> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FavoritesPage(uid: user.uid)));
+                          builder: (context) => FavoritesPage(uid:
+                              "RLqxkm4egTVFRuLCNQWfRITAtXF2"))); // TODO user.uid
                 }),
             _createDrawerItem(
                 icon: SvgPicture.asset("assets/topBenches.svg"),
