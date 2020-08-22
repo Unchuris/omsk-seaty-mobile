@@ -76,19 +76,19 @@ class _AppDrawerState extends State<AppDrawer> {
               },
             ),
             _createDrawerItem(
-              icon: Icon(Icons.settings),
-              text: 'Dialog test thanks',
-              onTap: () {
-                _createDialogThanks();
+                icon: Icon(Icons.settings),
+                text: 'Dialog test thanks',
+                onTap: () {
+                  _createDialogThanks();
+                }),
             BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
-              builder: (context, state) {
-                return Switch(
-                      value: state.themeState.isLightMode,
-                      onChanged: (value) =>
-                          BlocProvider.of<ThemeChangeBloc>(context)
-                              .add(OnThemeChangedEvent(value)));
-              },
-            )
+                builder: (context, state) {
+              return Switch(
+                  value: state.themeState.isLightMode,
+                  onChanged: (value) =>
+                      BlocProvider.of<ThemeChangeBloc>(context)
+                          .add(OnThemeChangedEvent(value)));
+            })
           ],
         ),
       ),
