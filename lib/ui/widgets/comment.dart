@@ -44,9 +44,10 @@ class _CommentState extends State<Comment> {
         height: _height,
         duration: Duration(microseconds: 1000),
         child: Row(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Flexible(
-              flex: 1,
+              flex: 0,
               child: Padding(
                 padding:
                     const EdgeInsets.only(top: 12.0, bottom: 12.0, left: 8.0),
@@ -62,8 +63,8 @@ class _CommentState extends State<Comment> {
                 ),
               ),
             ),
-            Flexible(
-              flex: 6,
+            Expanded(
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Column(
@@ -78,7 +79,7 @@ class _CommentState extends State<Comment> {
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                     Text(
-                      widget.comment.comment,
+                      widget.comment.text,
                       style: Theme.of(context).textTheme.bodyText2,
                       overflow: TextOverflow.ellipsis,
                       maxLines: _maxLine,
@@ -88,7 +89,7 @@ class _CommentState extends State<Comment> {
               ),
             ),
             Flexible(
-              flex: 0,
+              flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -101,7 +102,7 @@ class _CommentState extends State<Comment> {
                         SizedBox(
                           width: 4.0,
                         ),
-                        Text(widget.comment.rate.toString(),
+                        Text(widget.comment.rating.toString(),
                             style: Theme.of(context).textTheme.subtitle1),
                         SizedBox(
                             width: 24.0,

@@ -3,25 +3,23 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/benches.dart';
+import 'package:omsk_seaty_mobile/http.dart';
 
+import '../models/bench_light.dart';
 
 class MarkerRepository {
-
-  Set<FilterType> filters = Set.from(
-    [
-      FilterType(benchType: BenchType.HIGH_COMFORT, enable: false),
-      FilterType(benchType: BenchType.URN_NEARBY, enable: false),
-      FilterType(benchType: BenchType.TABLE_NEARBY, enable: false),
-      FilterType(benchType: BenchType.COVERED_BENCH, enable: false),
-      FilterType(benchType: BenchType.FOR_A_LARGE_COMPANY, enable: false),
-      FilterType(benchType: BenchType.SCENIC_VIEW, enable: false),
-      FilterType(benchType: BenchType.BUS_STOP, enable: false)
-    ]
-  );
+  Set<FilterType> filters = Set.from([
+    FilterType(benchType: BenchType.HIGH_COMFORT, enable: false),
+    FilterType(benchType: BenchType.URN_NEARBY, enable: false),
+    FilterType(benchType: BenchType.TABLE_NEARBY, enable: false),
+    FilterType(benchType: BenchType.COVERED_BENCH, enable: false),
+    FilterType(benchType: BenchType.FOR_A_LARGE_COMPANY, enable: false),
+    FilterType(benchType: BenchType.SCENIC_VIEW, enable: false),
+    FilterType(benchType: BenchType.BUS_STOP, enable: false)
+  ]);
   List<BenchLight> benches = List();
 
   List<BenchLight> filteredBenches = List();
@@ -40,13 +38,16 @@ class MarkerRepository {
       return filteredBenches;
     }
     //TODO add https://pub.dev/packages/dio
-    var url = "https://omsk-seaty-backend.herokuapp.com/api/benches/";
-    final response = await http.get(url, headers: {'Content-Type': 'application/json'});
+
+    final response = await dio.get(
+      "/benches",
+    );
 
     if (response.statusCode == 200) {
-      var b = Bench.fromJson(json.decode(utf8.decode(response.bodyBytes)));
-      var rng = new Random();
-      benches = b.benches.map((it) => _getBenchLight(it, rng)).toList();
+      benches =
+          ((response.data) as List).map((i) => BenchLight.fromJson(i)).toList();
+/*       var rng = new Random();
+      benches = b.benches.map((it) => _getBenchLight(it, rng)).toList();*/
       filteredBenches = _getFilteredBenches();
       return filteredBenches;
     } else {
@@ -55,7 +56,8 @@ class MarkerRepository {
   }
 
   BenchLight _getBenchLight(Benches it, Random rng) {
-    return BenchLight( //TODO remove mapper
+    return BenchLight(
+        //TODO remove mapper
         id: it.pk.toString(),
         name: it.title,
         address: it.place,
@@ -64,13 +66,15 @@ class MarkerRepository {
         imageUrl: imgList[rng.nextInt(imgList.length)],
         like: (rng.nextInt(1) == 1) ? true : false,
         score: 228,
-        feature: _getMockFilter(rng.nextInt(3))
-    );
+        feature: _getMockFilter(rng.nextInt(3)));
   }
 
   List<BenchLight> _getFilteredBenches() {
-    Set<BenchType> currentFilter = filters.where((it) => it.enable).map((it) => it.benchType).toSet();
-    return benches.where((it) => it.feature.containsAll(currentFilter)).toList();
+    Set<BenchType> currentFilter =
+        filters.where((it) => it.enable).map((it) => it.benchType).toSet();
+    return benches
+        .where((it) => it.feature.containsAll(currentFilter))
+        .toList();
   }
 
   //TODO remove mock data
@@ -101,7 +105,10 @@ class MarkerRepository {
     return filteredBenches.where((it) => markersId.contains(it.id)).toList();
   }
 
-  Future<List<BenchLight>> getBenchesByVisibleRegion(LatLngBounds latLngBounds) async {
-    return filteredBenches.where((it) => latLngBounds.contains(LatLng(it.latitude, it.longitude))).toList();
+  Future<List<BenchLight>> getBenchesByVisibleRegion(
+      LatLngBounds latLngBounds) async {
+    return filteredBenches
+        .where((it) => latLngBounds.contains(LatLng(it.latitude, it.longitude)))
+        .toList();
   }
 }

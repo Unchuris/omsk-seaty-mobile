@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/start_rating.dart';
+import 'package:omsk_seaty_mobile/http.dart';
 
 class AddCommentPage extends StatefulWidget {
-  AddCommentPage({Key key}) : super(key: key);
+  AddCommentPage({Key key, this.benchId, this.onAdd}) : super(key: key);
+  Function(UiComment) onAdd;
+  final String benchId;
   static String routeName = '/addComment';
   @override
   _AddCommentPageState createState() => _AddCommentPageState();
@@ -12,9 +18,13 @@ class AddCommentPage extends StatefulWidget {
 
 class _AddCommentPageState extends State<AddCommentPage> {
   int rating = 0;
+  final myController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).viewInsets.bottom);
+    return _buildComment();
+  }
+
+  Widget _buildComment() {
     return Scaffold(
       appBar: CustomAppBar(
           height: MediaQuery.of(context).padding.top,
@@ -36,6 +46,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: TextField(
+                controller: myController,
                 textInputAction: TextInputAction.done,
                 textAlign: TextAlign.center,
                 maxLines: null,
@@ -73,7 +84,16 @@ class _AddCommentPageState extends State<AddCommentPage> {
                     child: Text(
                         AppLocalizations.of(context).translate('string_add'),
                         style: Theme.of(context).textTheme.headline6),
-                    onPressed: () {
+                    onPressed: () async {
+                      var _user =
+                          BlocProvider.of<AuthenticationBloc>(context).getUser;
+                      var responce = await dio.post('/comments/', data: {
+                        'uid': _user.uid,
+                        'bench_id': widget.benchId,
+                        'text': myController.text,
+                        'rating': rating
+                      });
+                      widget.onAdd(UiComment.fromJson(responce.data));
                       Navigator.pop(context);
                     },
                   ),

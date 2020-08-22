@@ -3,29 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
+
 import 'package:omsk_seaty_mobile/http.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
-class BenchCard extends StatefulWidget {
-  final BenchLight bench;
-  const BenchCard({this.bench}) : super();
+class BenchFavoriteCard extends StatefulWidget {
+  final UIBencCard bench;
+  const BenchFavoriteCard({this.bench}) : super();
 
   @override
-  _BenchCardState createState() => _BenchCardState();
+  _BenchFavoriteCardState createState() => _BenchFavoriteCardState();
 }
 
-class _BenchCardState extends State<BenchCard> {
+class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
   @override
   Widget build(BuildContext context) {
-    var bench = UIBencCard(
-        widget.bench.name, 4.5, widget.bench.imageUrl, widget.bench.like);
-    return _buildBenchCard(bench);
+    return _buildBenchCard(widget.bench);
   }
 
   Widget _buildBenchCard(UIBencCard bench) {
-    return Padding(
+    Padding(
       padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
       child: Container(
           width: MediaQuery.of(context).size.width * .90,
