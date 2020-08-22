@@ -1,27 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
-
-import 'package:flutter_svg/svg.dart';
-
-import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
-
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_event.dart';
+import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 import 'dialog/childs/checkbox_list.dart';
 import 'dialog/dialog_with_child.dart';
 import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
   final List<BenchLight> markers;
+
   AppDrawer(this.markers);
+
   @override
   _AppDrawerState createState() => _AppDrawerState();
 }
@@ -49,7 +50,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 text:
                     AppLocalizations.of(context).translate('string_favorites'),
                 onTap: () {
-                  Navigator.pushNamed(context, FavoritesPage.roateName,
+                  Navigator.pushNamed(context, FavoritesPage.routeName,
                       arguments: widget.markers);
                 }),
             _createDrawerItem(
@@ -79,6 +80,13 @@ class _AppDrawerState extends State<AppDrawer> {
               text: 'Dialog test thanks',
               onTap: () {
                 _createDialogThanks();
+            BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
+              builder: (context, state) {
+                return Switch(
+                      value: state.themeState.isLightMode,
+                      onChanged: (value) =>
+                          BlocProvider.of<ThemeChangeBloc>(context)
+                              .add(OnThemeChangedEvent(value)));
               },
             )
           ],

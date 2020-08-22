@@ -22,55 +22,51 @@ class _FilterDrawerState extends State<FilterDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Container(
-            child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 75.0, left: 16.0),
-              child: Text(
-                AppLocalizations.of(context).translate('bench_filter'),
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 75.0, right: 16.0),
-              child: IconButton(
-                  icon: SvgPicture.asset("assets/union.svg"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _getHeader(),
+          Expanded(child: ListView(children: _getFilters(_filters, context))),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+            child: Center(
+              child: RaisedButton(
+                  child: Text(AppLocalizations.of(context).translate('find').toUpperCase(), //TODO не учитываем турецкий язык, поэтому локаль не передаем
+                      style: Theme.of(context).textTheme.button),
                   onPressed: () {
+                    //TODO добавить проверку, что список не поменялся
+                    BlocProvider.of<MapBloc>(context).add(
+                        OnFilterChangedEvent(filterTypes: _filters.toSet()));
                     Navigator.pop(context);
                   }),
             ),
-          ],
-        ),
-        ..._getFilters(_filters, context),
-        Padding(
-          padding: const EdgeInsets.only(top: 90.0),
-          child: Center(
-            child: ButtonTheme(
-              minWidth: 209,
-              height: 50,
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Color(0xffF2994A),
-                child: Text(AppLocalizations.of(context).translate('find'),
-                    style: Theme.of(context).textTheme.headline6),
-                onPressed: () {
-                  //TODO добавить проверку, что список не поменялся
-                  BlocProvider.of<MapBloc>(context)
-                      .add(OnFilterChangedEvent(filterTypes: _filters.toSet()));
-                  Navigator.pop(context);
-                },
-              ),
-            ),
           ),
-        )
+        ],
+      ),
+    );
+  }
+
+  Widget _getHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 75.0, left: 16.0),
+          child: Text(
+            AppLocalizations.of(context).translate('bench_filter'),
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 75.0, right: 16.0),
+          child: IconButton(
+              icon: SvgPicture.asset("assets/union.svg"),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
       ],
-    )));
+    );
   }
 
   List<Widget> _getFilters(List<FilterType> filters, BuildContext context) {

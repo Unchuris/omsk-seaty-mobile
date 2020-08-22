@@ -15,23 +15,6 @@ class UpdateUserLocationEffect extends MapEffect {
   List<Object> get props => [position];
 }
 
-class OpenDetailsScreenEffect extends MapEffect {
-  final String benchId;
-
-  const OpenDetailsScreenEffect({this.benchId});
-
-  @override
-  List<Object> get props => [benchId];
-}
-
-class OpenAddBenchScreenEffect extends MapEffect {
-
-  const OpenAddBenchScreenEffect();
-
-  @override
-  List<Object> get props => [];
-}
-
 class CameraMoveEffect extends MapEffect {
 
   const CameraMoveEffect();
