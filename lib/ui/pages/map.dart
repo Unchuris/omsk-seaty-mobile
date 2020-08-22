@@ -52,8 +52,8 @@ class _MapScreenState extends State<MapScreen>
             return;
           }
           if (effect is OpenDetailsScreenEffect) {
-            Navigator.pushNamed(context, BenchPage.routeName,
-                arguments: effect.benchId);
+            /*  Navigator.pushNamed(context, BenchPage.routeName,
+                arguments: effect.benchId); */
             return;
           }
           if (effect is OpenAddBenchScreenEffect) {
@@ -61,14 +61,14 @@ class _MapScreenState extends State<MapScreen>
             return;
           }
           if (effect is CameraMoveEffect) {
-//              setState(() {
-//                _isVisible = false;
-//              });
+            setState(() {
+              _isVisible = false;
+            });
           }
           if (effect is CameraIdleEffect) {
-//              setState(() {
-//                _isVisible = true;
-//              });
+            setState(() {
+              _isVisible = true;
+            });
           }
         }),
       ],
@@ -231,8 +231,12 @@ class _MapScreenState extends State<MapScreen>
   }
 
   void _onBenchSliderItemClicked(BenchLight benchLight) {
-    BlocProvider.of<MapBloc>(context)
-        .add(OnBenchClickedEvent(benchId: benchLight.id));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BenchPage(
+                  benchId: benchLight.id,
+                )));
   }
 
   @override

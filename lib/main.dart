@@ -3,9 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'dart:async';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
@@ -22,7 +22,14 @@ import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 
+import 'http.dart';
+
 void main() async {
+  dio.options
+    ..baseUrl = "https://dac6513c7c3b.ngrok.io/api/"
+    ..connectTimeout = 5000
+    ..receiveTimeout = 5000;
+
   WidgetsFlutterBinding.ensureInitialized();
   final UserRepository _userRepository = UserRepository();
   Crashlytics.instance.enableInDevMode = true;
@@ -31,21 +38,21 @@ void main() async {
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
   //runZoned(() {
-    runApp(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthenticationBloc>(
-              create: (context) =>
-              AuthenticationBloc(userRepository: _userRepository)
-                ..add(AuthenticationStarted())),
-          BlocProvider<MapBloc>(
-              create: (context) => MapBloc(
-                  repository: MarkerRepository(),
-                  geolocationRepository: GeolocationRepository()))
-        ],
-        child: MyApp(userRepository: _userRepository, isSigned: isSigned),
-      ),
-    );
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+            create: (context) =>
+                AuthenticationBloc(userRepository: _userRepository)
+                  ..add(AuthenticationStarted())),
+        BlocProvider<MapBloc>(
+            create: (context) => MapBloc(
+                repository: MarkerRepository(),
+                geolocationRepository: GeolocationRepository()))
+      ],
+      child: MyApp(userRepository: _userRepository, isSigned: isSigned),
+    ),
+  );
   //}, onError: Crashlytics.instance.recordError);
 }
 

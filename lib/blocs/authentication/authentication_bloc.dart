@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
+import 'package:omsk_seaty_mobile/http.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -13,7 +14,8 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
-
+  User _user;
+  User get getUser => _user;
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
@@ -37,18 +39,21 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
-      final user = await _userRepository.getUser();
-      yield AuthenticationSuccess(user);
+      _user = await _userRepository.getUser();
+      yield AuthenticationSuccess(_user);
     } else {
       yield AuthenticationFailure();
     }
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
-    var user = await _userRepository.getUser();
-    _userRepository.saveUserToPreferences(user);
+    _user = await _userRepository.getUser();
+
+    var responce = await dio.post('users/', data: _user.toJson());
+
+    _userRepository.saveUserToPreferences(_user);
     if (await _userRepository.isSkipped()) _userRepository.removeIsSkipped();
-    yield AuthenticationSuccess(user);
+    yield AuthenticationSuccess(_user);
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {

@@ -42,8 +42,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 text:
                     AppLocalizations.of(context).translate('string_favorites'),
                 onTap: () {
-                  Navigator.pushNamed(context, FavoritesPage.roateName,
-                      arguments: widget.markers);
+                  var user =
+                      BlocProvider.of<AuthenticationBloc>(context).getUser;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FavoritesPage(uid: user.uid)));
                 }),
             _createDrawerItem(
                 icon: SvgPicture.asset("assets/topBenches.svg"),
