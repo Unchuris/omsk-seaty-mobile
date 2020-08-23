@@ -57,4 +57,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
       itemCount: benches.length,
     );
   }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
+  }
 }

@@ -71,11 +71,7 @@ class _BenchCardState extends State<BenchCard> {
               child: MaterialButton(
                 onPressed: () {},
                 color: Colors.white,
-                child: Image.asset(
-                  "assets/road.png",
-                  width: 30,
-                  fit: BoxFit.contain,
-                ),
+                child: SvgPicture.asset("assets/road.svg"),
                 padding: EdgeInsets.all(5),
                 shape: CircleBorder(),
               ),
@@ -83,7 +79,7 @@ class _BenchCardState extends State<BenchCard> {
             Positioned(
               top: MediaQuery.of(context).size.height * .165,
               right: 0,
-              child: MaterialButton(
+              child: RawMaterialButton(
                 onPressed: () async {
                   if (bench.like) {
                     setState(() {
@@ -107,7 +103,7 @@ class _BenchCardState extends State<BenchCard> {
                         markerId: widget.bench.id, liked: bench.like));
                   }
                 },
-                color: Colors.white,
+                fillColor: Theme.of(context).buttonColor,
                 child: bench.like
                     ? SvgPicture.asset("assets/like.svg")
                     : SvgPicture.asset("assets/unlike.svg"),

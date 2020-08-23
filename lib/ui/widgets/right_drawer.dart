@@ -48,27 +48,21 @@ class _FilterDrawerState extends State<FilterDrawer> {
         ),
         ..._getFilters(_filters, context),
         Padding(
-          padding: const EdgeInsets.only(top: 90.0),
-          child: Center(
-            child: ButtonTheme(
-              minWidth: 209,
-              height: 50,
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Color(0xffF2994A),
-                child: Text(AppLocalizations.of(context).translate('find'),
-                    style: Theme.of(context).textTheme.headline6),
-                onPressed: () {
-                  //TODO добавить проверку, что список не поменялся
-                  BlocProvider.of<MapBloc>(context)
-                      .add(OnFilterChangedEvent(filterTypes: _filters.toSet()));
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ),
-        )
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+            child: Center(
+              child: RaisedButton(
+                  child: Text(
+                      AppLocalizations.of(context)
+                          .translate('find')
+                          .toUpperCase(), //TODO не учитываем турецкий язык, поэтому локаль не передаем
+                      style: Theme.of(context).textTheme.button),
+                  onPressed: () {
+                    //TODO добавить проверку, что список не поменялся
+                    BlocProvider.of<MapBloc>(context).add(
+                        OnFilterChangedEvent(filterTypes: _filters.toSet()));
+                    Navigator.pop(context);
+                  }),
+            )),
       ],
     )));
   }

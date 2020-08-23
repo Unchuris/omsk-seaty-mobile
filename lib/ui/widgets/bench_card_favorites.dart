@@ -20,11 +20,8 @@ class BenchFavoriteCard extends StatefulWidget {
 class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
   @override
   Widget build(BuildContext context) {
-    return _buildBenchCard(widget.bench);
-  }
-
-  Widget _buildBenchCard(UIBencCard bench) {
-    Padding(
+    var bench = widget.bench;
+    return Padding(
       padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
       child: Container(
           width: MediaQuery.of(context).size.width * .90,
@@ -65,20 +62,16 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
               ],
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height * .165,
-              right: 50,
-              child: MaterialButton(
-                onPressed: () {},
-                color: Colors.white,
-                child: Image.asset(
-                  "assets/road.png",
-                  width: 30,
-                  fit: BoxFit.contain,
-                ),
-                padding: EdgeInsets.all(5),
-                shape: CircleBorder(),
-              ),
-            ),
+                top: MediaQuery.of(context).size.height * .165,
+                right: 50,
+                child: ButtonTheme(
+                  minWidth: 63.0,
+                  height: 56.0,
+                  child: RaisedButton(
+                      child: Text("В путь",
+                          style: Theme.of(context).textTheme.button),
+                      onPressed: () {}),
+                )),
             Positioned(
               top: MediaQuery.of(context).size.height * .165,
               right: 0,
@@ -116,5 +109,6 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
             ),
           ])),
     );
+    ;
   }
 }

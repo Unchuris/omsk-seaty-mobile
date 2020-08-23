@@ -466,4 +466,10 @@ class _BenchPageState extends State<BenchPage> {
             icon: SvgPicture.asset("assets/busstop.svg"));
     }
   }
+
+  @override
+  void dispose() {
+    _benchPageBloc.close();
+    super.dispose();
+  }
 }
