@@ -35,14 +35,6 @@ class OnFilterChangedEvent extends MapEvent {
   List<Object> get props => [filterTypes];
 }
 
-class OnBenchClickedEvent extends MapEvent {
-  final String benchId;
-  const OnBenchClickedEvent({this.benchId});
-
-  @override
-  List<Object> get props => [benchId];
-}
-
 class OnBenchSliderPageChanged extends MapEvent {
   final BenchLight bench;
   const OnBenchSliderPageChanged({this.bench});

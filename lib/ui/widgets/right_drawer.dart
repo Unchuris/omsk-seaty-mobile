@@ -22,32 +22,12 @@ class _FilterDrawerState extends State<FilterDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Container(
-            child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 75.0, left: 16.0),
-              child: Text(
-                AppLocalizations.of(context).translate('bench_filter'),
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 75.0, right: 16.0),
-              child: IconButton(
-                  icon: SvgPicture.asset("assets/union.svg"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-            ),
-          ],
-        ),
-        ..._getFilters(_filters, context),
-        Padding(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _getHeader(),
+          Expanded(child: ListView(children: _getFilters(_filters, context))),
+          Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 20),
             child: Center(
               child: RaisedButton(
@@ -62,9 +42,34 @@ class _FilterDrawerState extends State<FilterDrawer> {
                         OnFilterChangedEvent(filterTypes: _filters.toSet()));
                     Navigator.pop(context);
                   }),
-            )),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 75.0, left: 16.0),
+          child: Text(
+            AppLocalizations.of(context).translate('bench_filter'),
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 75.0, right: 16.0),
+          child: IconButton(
+              icon: SvgPicture.asset("assets/union.svg"),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
       ],
-    )));
+    );
   }
 
   List<Widget> _getFilters(List<FilterType> filters, BuildContext context) {

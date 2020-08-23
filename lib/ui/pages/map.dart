@@ -17,6 +17,7 @@ import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
 
 import 'bench/bench.dart';
+import 'favorites/favorites.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -36,6 +37,7 @@ class _MapScreenState extends State<MapScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // ignore: close_sinks
     final blocMap = BlocProvider.of<MapBloc>(context);
 
@@ -49,15 +51,6 @@ class _MapScreenState extends State<MapScreen>
                   LatLng(effect.position.latitude, effect.position.longitude),
                   DEFAULT_ZOOM_SIZE));
             });
-            return;
-          }
-          if (effect is OpenDetailsScreenEffect) {
-            /*  Navigator.pushNamed(context, BenchPage.routeName,
-                arguments: effect.benchId); */
-            return;
-          }
-          if (effect is OpenAddBenchScreenEffect) {
-            //Navigator.pushNamed(context, BenchPage.routeName);
             return;
           }
           if (effect is CameraMoveEffect) {
@@ -88,8 +81,21 @@ class _MapScreenState extends State<MapScreen>
                                   body: Stack(children: [
                                     _getGoogleMap(snapshotMarkers.data),
                                     _getBenchSlider(snapshotBenches.data),
-                                    _getMenuButton(),
-                                    _getFilterButton(),
+                                    _getMenuButton(context),
+                                    _getFilterButton(context),
+                                    Positioned(
+                                        bottom: 56,
+                                        right: 0,
+                                        child: Column(
+                                          children: [
+                                            _buildMyLocation(context),
+                                            Container(
+                                              margin: EdgeInsets.only(top: 26),
+                                              child:
+                                                  _buildAddBenchButton(context),
+                                            ),
+                                          ],
+                                        )),
                                   ]),
                                   //TODO remove mock favorites
                                   drawer: AppDrawer([]),
@@ -101,11 +107,6 @@ class _MapScreenState extends State<MapScreen>
                                   endDrawerEnableOpenDragGesture: false,
                                 );
                               }))),
-          Positioned(
-            bottom: 220,
-            left: 5,
-            child: _buildMyLocation(),
-          )
         ],
       ),
     ));
@@ -120,15 +121,29 @@ class _MapScreenState extends State<MapScreen>
     });
   }
 
-  Widget _buildMyLocation() {
-    return SizedBox(
-        child: Visibility(
-      visible: _isVisible,
-      child: IconButton(
-          icon: Icon(Icons.my_location),
-          onPressed: () => BlocProvider.of<MapBloc>(context)
-              .add(OnMapLocationButtonClickedEvent())),
-    ));
+  Widget _buildMyLocation(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: () => BlocProvider.of<MapBloc>(context)
+          .add(OnMapLocationButtonClickedEvent()),
+      elevation: 8.0,
+      fillColor: Theme.of(context).buttonColor,
+      child: SvgPicture.asset("assets/ic_location.svg"),
+      padding: EdgeInsets.only(left: 19.0, right: 19.0, top: 15, bottom: 15),
+      shape: CircleBorder(),
+    );
+  }
+
+  Widget _buildAddBenchButton(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: () {
+        Navigator.pushNamed(context, FavoritesPage.routeName);
+      },
+      elevation: 8.0,
+      fillColor: Theme.of(context).buttonColor,
+      child: SvgPicture.asset("assets/ic_add_bench.svg"),
+      padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+      shape: CircleBorder(),
+    );
   }
 
   Widget _getGoogleMap(Map<String, Marker> data) {
@@ -161,7 +176,7 @@ class _MapScreenState extends State<MapScreen>
                 child: BenchSlider(
                     items: benches,
                     options: BenchSliderOptions(
-                      // добавить бесконечную прокрутки, если выбран не кластер
+                      // TODO добавить бесконечную прокрутки, если выбран не кластер
                       height: 200,
                       onPageChanged: _onBenchSliderPageChanged,
                       onItemClicked: _onBenchSliderItemClicked,
@@ -170,44 +185,44 @@ class _MapScreenState extends State<MapScreen>
             : Container());
   }
 
-  Widget _getMenuButton() {
+  Widget _getMenuButton(BuildContext context) {
     return Positioned(
-      top: 51,
-      left: 0,
-      child: Container(
-        width: 63,
-        height: 56,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(50.0),
-                bottomRight: Radius.circular(50.0))),
-        child: IconButton(
-          icon: SvgPicture.asset("assets/menu.svg"),
-          onPressed: () => _scaffoldKey.currentState.openDrawer(),
-        ),
-      ),
-    );
+        top: 51,
+        left: -24,
+        child: ButtonTheme(
+          minWidth: 63.0,
+          height: 56.0,
+          child: RawMaterialButton(
+            onPressed: () => _scaffoldKey.currentState.openDrawer(),
+            elevation: 14.0,
+            fillColor: Theme.of(context).canvasColor,
+            child: SvgPicture.asset("assets/menu.svg"),
+            padding: EdgeInsets.only(left: 18, top: 20, bottom: 20),
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.horizontal(right: Radius.circular(50))),
+          ),
+        ));
   }
 
-  Widget _getFilterButton() {
+  Widget _getFilterButton(BuildContext context) {
     return Positioned(
-      top: 51,
-      right: 0,
-      child: Container(
-        width: 63,
-        height: 56,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50.0),
-                bottomLeft: Radius.circular(50.0))),
-        child: IconButton(
-          icon: SvgPicture.asset("assets/fulter.svg"),
-          onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
-        ),
-      ),
-    );
+        top: 51,
+        right: -24,
+        child: ButtonTheme(
+          minWidth: 63.0,
+          height: 56.0,
+          child: RawMaterialButton(
+            onPressed: () => _scaffoldKey.currentState.openEndDrawer(),
+            elevation: 14.0,
+            fillColor: Theme.of(context).canvasColor,
+            child: SvgPicture.asset("assets/fulter.svg"),
+            padding: EdgeInsets.only(right: 14, top: 16, bottom: 16),
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.horizontal(left: Radius.circular(50))),
+          ),
+        ));
   }
 
   void _onCameraMoveStarted() {
