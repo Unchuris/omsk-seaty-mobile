@@ -56,8 +56,8 @@ class _AddCommentPageState extends State<AddCommentPage> {
                 decoration: InputDecoration(
                     contentPadding:
                         const EdgeInsets.only(left: 16.0, right: 16.0),
-                    labelStyle: Theme.of(context).textTheme.headline5,
-                    helperStyle: Theme.of(context).textTheme.headline4,
+                    labelStyle: Theme.of(context).textTheme.subtitle1,
+                    helperStyle: Theme.of(context).textTheme.subtitle2,
                     labelText: AppLocalizations.of(context)
                         .translate('string_add_comment_label_text'),
                     helperText: AppLocalizations.of(context)
@@ -83,7 +83,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                     color: Color(0xffF2994A),
                     child: Text(
                         AppLocalizations.of(context).translate('string_add'),
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.button),
                     onPressed: () async {
                       var _user =
                           BlocProvider.of<AuthenticationBloc>(context).getUser;

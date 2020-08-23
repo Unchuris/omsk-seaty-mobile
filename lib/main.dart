@@ -6,7 +6,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
-import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
+
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';

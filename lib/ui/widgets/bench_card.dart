@@ -78,6 +78,30 @@ class _BenchCardState extends State<BenchCard> {
               ),
             ),
             Positioned(
+              top: 8,
+              right: 16,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0, left: 16.0),
+                    child: SvgPicture.asset(
+                      "assets/rate.svg",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0, left: 4.0),
+                    child: Text(
+                      bench.rate.toString(),
+                      style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 14.0,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
               top: MediaQuery.of(context).size.height * .165,
               right: 0,
               child: RawMaterialButton(

@@ -44,6 +44,7 @@ class _CommentState extends State<Comment> {
         height: _height,
         duration: Duration(microseconds: 1000),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
             Flexible(
@@ -80,7 +81,7 @@ class _CommentState extends State<Comment> {
                     ),
                     Text(
                       widget.comment.text,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyText1,
                       overflow: TextOverflow.ellipsis,
                       maxLines: _maxLine,
                     ),

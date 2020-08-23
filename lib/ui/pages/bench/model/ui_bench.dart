@@ -6,6 +6,8 @@ class UiBench {
   String name;
   String address;
   double rate;
+  double lat;
+  double lon;
   bool like;
   List<BenchType> features;
   List<UiComment> comments;
@@ -24,6 +26,8 @@ class UiBench {
     imageUrl =
         'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg';
     like = json['like'];
+    lat = json['lat'];
+    lon = json['lon'];
     rate = 4.0;
     if (json['features'] != null) {
       features = new List<BenchType>();

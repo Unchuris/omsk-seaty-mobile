@@ -62,6 +62,30 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
               ],
             ),
             Positioned(
+              top: 8,
+              right: 16,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0, left: 16.0),
+                    child: SvgPicture.asset(
+                      "assets/rate.svg",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0, left: 4.0),
+                    child: Text(
+                      bench.rate.toString(),
+                      style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 14.0,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
                 bottom: 0,
                 right: 69,
                 child: ButtonTheme(

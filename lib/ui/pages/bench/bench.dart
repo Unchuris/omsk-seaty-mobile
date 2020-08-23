@@ -16,6 +16,7 @@ import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../http.dart';
 
@@ -95,177 +96,192 @@ class _BenchPageState extends State<BenchPage> {
 
   Widget _buildBenchPage(UiBench bench) {
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       color: Color(0xFFE5E5E5),
       child: Column(
         children: [
-          Stack(children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.31,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: CachedNetworkImageProvider(bench.imageUrl),
-                      fit: BoxFit.fill)),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.31,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                      begin: FractionalOffset.topCenter,
-                      end: FractionalOffset.bottomCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.2),
-                        Colors.black.withOpacity(0.7),
-                      ],
-                      stops: [
-                        0.0,
-                        1.0
-                      ])),
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50.0,
-                      padding: EdgeInsets.only(top: 32.0, left: 15.0),
-                      child: IconButton(
-                          icon: SvgPicture.asset(
-                            "assets/leftarrowwhite.svg",
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 28.0, left: 16.0),
-                      child: Text(
-                        _bench.name,
-                        style: TextStyle(
-                            fontFamily: "Roboto",
-                            fontSize: 20.0,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.ideographic,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 28.0, left: 16.0),
-                                child: SvgPicture.asset(
-                                  "assets/pin.svg",
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 28.0, left: 8.0),
-                                child: Text(
-                                  bench.address,
-                                  style: TextStyle(
-                                      fontFamily: "Roboto",
-                                      fontSize: 14.0,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 6.0, left: 16.0),
-                                child: SvgPicture.asset(
-                                  "assets/rate.svg",
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 6.0, left: 8.0),
-                                child: Text(
-                                  bench.rate.toString(),
-                                  style: TextStyle(
-                                      fontFamily: "Roboto",
-                                      fontSize: 14.0,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          )
+          Expanded(
+            child: Stack(children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.31,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: CachedNetworkImageProvider(bench.imageUrl),
+                        fit: BoxFit.fill)),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.31,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    gradient: LinearGradient(
+                        begin: FractionalOffset.topCenter,
+                        end: FractionalOffset.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.2),
+                          Colors.black.withOpacity(0.7),
                         ],
+                        stops: [
+                          0.0,
+                          1.0
+                        ])),
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 50.0,
+                        padding: EdgeInsets.only(top: 32.0, left: 15.0),
+                        child: IconButton(
+                            icon: SvgPicture.asset(
+                              "assets/leftarrowwhite.svg",
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32.0, right: 17.0),
-                      child: SizedBox(
-                        height: 36.0,
-                        width: 36.0,
-                        child: MaterialButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () async {
-                            if (bench.like) {
-                              setState(() {
-                                bench.like = false;
-                              });
-                              var user =
-                                  BlocProvider.of<AuthenticationBloc>(context)
-                                      .getUser;
-                              var respone = await dio
-                                  .patch('/favorites/${user.uid}', data: {
-                                'uid': user.uid,
-                                'bench_id': widget.benchId
-                              });
-                              BlocProvider.of<MapBloc>(context).add(
-                                  OnLikeClickedEvent(
-                                      markerId: widget.benchId,
-                                      liked: bench.like));
-                            } else {
-                              setState(() {
-                                bench.like = true;
-                              });
-                              var user =
-                                  BlocProvider.of<AuthenticationBloc>(context)
-                                      .getUser;
-                              var respone = await dio
-                                  .put('/favorites/${user.uid}', data: {
-                                'uid': user.uid,
-                                'bench_id': widget.benchId
-                              });
-                              BlocProvider.of<MapBloc>(context).add(
-                                  OnLikeClickedEvent(
-                                      markerId: widget.benchId,
-                                      liked: bench.like));
-                            }
-                          },
-                          color: Colors.white,
-                          child: bench.like
-                              ? SvgPicture.asset("assets/like.svg")
-                              : SvgPicture.asset("assets/unlike.svg"),
-                          shape: CircleBorder(),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 28.0, left: 16.0),
+                        child: Text(
+                          _bench.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(color: Colors.white),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            )
-          ]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 28.0, left: 16.0),
+                                  child: SvgPicture.asset(
+                                    "assets/pin.svg",
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 28.0, left: 8.0),
+                                  child: Text(
+                                    bench.address,
+                                    style: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 6.0, left: 16.0),
+                                  child: SvgPicture.asset(
+                                    "assets/rate.svg",
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 6.0, left: 8.0),
+                                  child: Text(
+                                    bench.rate.toString(),
+                                    style: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0, right: 17.0),
+                        child: ButtonTheme(
+                          minWidth: 24.0,
+                          height: 34.0,
+                          child: RawMaterialButton(
+                              elevation: 8.0,
+                              fillColor: Theme.of(context).buttonColor,
+                              child: Text("В путь",
+                                  style: Theme.of(context).textTheme.button),
+                              onPressed: _launchURL),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 32.0, right: 17.0),
+                        child: SizedBox(
+                          height: 36.0,
+                          width: 36.0,
+                          child: MaterialButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              if (bench.like) {
+                                setState(() {
+                                  bench.like = false;
+                                });
+                                var user =
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .getUser;
+                                var respone = await dio
+                                    .patch('/favorites/${user.uid}', data: {
+                                  'uid': user.uid,
+                                  'bench_id': widget.benchId
+                                });
+                                BlocProvider.of<MapBloc>(context).add(
+                                    OnLikeClickedEvent(
+                                        markerId: widget.benchId,
+                                        liked: bench.like));
+                              } else {
+                                setState(() {
+                                  bench.like = true;
+                                });
+                                var user =
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .getUser;
+                                var respone = await dio
+                                    .put('/favorites/${user.uid}', data: {
+                                  'uid': user.uid,
+                                  'bench_id': widget.benchId
+                                });
+                                BlocProvider.of<MapBloc>(context).add(
+                                    OnLikeClickedEvent(
+                                        markerId: widget.benchId,
+                                        liked: bench.like));
+                              }
+                            },
+                            color: Colors.white,
+                            child: bench.like
+                                ? SvgPicture.asset("assets/like.svg")
+                                : SvgPicture.asset("assets/unlike.svg"),
+                            shape: CircleBorder(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ]),
+          ),
           Container(
             padding: EdgeInsets.all(0.0),
             child: Column(
@@ -276,10 +292,7 @@ class _BenchPageState extends State<BenchPage> {
                       padding: const EdgeInsets.only(
                           top: 8.0, bottom: 4.0, left: 16.0),
                       child: Text("О лавочке",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(fontSize: 16.0)),
+                          style: Theme.of(context).textTheme.bodyText1),
                     ),
                   ],
                 ),
@@ -371,7 +384,7 @@ class _BenchPageState extends State<BenchPage> {
                     child: Center(
                       child: ButtonTheme(
                         minWidth: 270,
-                        height: 50,
+                        height: 52,
                         child: FlatButton(
                           child: Text("ПОЖАЛОВАТЬСЯ",
                               style: Theme.of(context).textTheme.button),
@@ -417,6 +430,16 @@ class _BenchPageState extends State<BenchPage> {
       columns.add(Column(children: [items[i], items[i + 1]]));
     }
     return columns;
+  }
+
+  _launchURL() async {
+    var url =
+        'https://www.google.ru/maps/dir/?api=1&destination=${_bench.lat},${_bench.lon}&travelmode=walking';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   FilterCheckBox _getFilterCheckBox(BenchType benchType) {
