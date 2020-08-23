@@ -6,8 +6,9 @@ import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/bench_card_favorites.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 
-class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({Key key}) : super(key: key);
+class FavoritesPage extends StatefulWidget {
+  final String uid;
+  const FavoritesPage({Key key, this.uid}) : super(key: key);
   static String routeName = "/favorites";
   @override
   _FavoritesPageState createState() => _FavoritesPageState();

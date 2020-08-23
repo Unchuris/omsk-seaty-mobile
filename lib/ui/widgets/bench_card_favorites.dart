@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 
 import 'package:omsk_seaty_mobile/http.dart';
@@ -62,20 +62,22 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
               ],
             ),
             Positioned(
-                top: MediaQuery.of(context).size.height * .165,
-                right: 50,
+                bottom: 0,
+                right: 69,
                 child: ButtonTheme(
-                  minWidth: 63.0,
-                  height: 56.0,
-                  child: RaisedButton(
+                  minWidth: 24.0,
+                  height: 34.0,
+                  child: RawMaterialButton(
+                      elevation: 8.0,
+                      fillColor: Theme.of(context).buttonColor,
                       child: Text("В путь",
                           style: Theme.of(context).textTheme.button),
-                      onPressed: () {}),
+                      onPressed: _launchURL),
                 )),
             Positioned(
-              top: MediaQuery.of(context).size.height * .165,
+              bottom: 0,
               right: 0,
-              child: MaterialButton(
+              child: RawMaterialButton(
                 onPressed: () async {
                   if (bench.like) {
                     setState(() {
@@ -99,7 +101,7 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
                         markerId: widget.bench.id, liked: bench.like));
                   }
                 },
-                color: Colors.white,
+                fillColor: Colors.white,
                 child: bench.like
                     ? SvgPicture.asset("assets/like.svg")
                     : SvgPicture.asset("assets/unlike.svg"),
@@ -109,6 +111,15 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
             ),
           ])),
     );
-    ;
+  }
+
+  _launchURL() async {
+    var url =
+        'https://www.google.ru/maps/dir/?api=1&destination=${widget.bench.lat},${widget.bench.lon}&travelmode=walking';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -75,6 +75,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Fluster<MapMarker> _fluster;
 
+  Position get getUserPosition => _userPosition;
+
   CameraCurrentPosition _currentCameraPosition = CameraCurrentPosition(
       currentZoom: 10,
       visibleRegion: LatLngBounds(

@@ -7,6 +7,7 @@ import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/http.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BenchCard extends StatefulWidget {
   final BenchLight bench;
@@ -68,9 +69,9 @@ class _BenchCardState extends State<BenchCard> {
             Positioned(
               top: MediaQuery.of(context).size.height * .165,
               right: 50,
-              child: MaterialButton(
-                onPressed: () {},
-                color: Colors.white,
+              child: RawMaterialButton(
+                onPressed: _launchURL,
+                fillColor: Colors.white,
                 child: SvgPicture.asset("assets/road.svg"),
                 padding: EdgeInsets.all(5),
                 shape: CircleBorder(),
@@ -103,7 +104,7 @@ class _BenchCardState extends State<BenchCard> {
                         markerId: widget.bench.id, liked: bench.like));
                   }
                 },
-                fillColor: Theme.of(context).buttonColor,
+                fillColor: Colors.white,
                 child: bench.like
                     ? SvgPicture.asset("assets/like.svg")
                     : SvgPicture.asset("assets/unlike.svg"),
@@ -113,5 +114,15 @@ class _BenchCardState extends State<BenchCard> {
             ),
           ])),
     );
+  }
+
+  _launchURL() async {
+    var url =
+        'https://www.google.ru/maps/dir/?api=1&destination=${widget.bench.latitude},${widget.bench.longitude}&travelmode=walking';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
