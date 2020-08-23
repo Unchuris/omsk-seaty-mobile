@@ -9,6 +9,7 @@ import 'package:omsk_seaty_mobile/data/models/user.dart';
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  String _uid;
 
   static const String _isSkippedPreferencesValue = 'isSkipped';
   static const String _userPreferencesValue = 'user';
@@ -17,6 +18,10 @@ class UserRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn();
 
+  Future init() async {
+    _uid = await _getUserUid();
+  }
+
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
@@ -24,7 +29,9 @@ class UserRepository {
     final AuthCredential credential = GoogleAuthProvider.getCredential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
     await _firebaseAuth.signInWithCredential(credential);
-    return _firebaseAuth.currentUser();
+    var user = await _firebaseAuth.currentUser();
+    _uid = user.uid;
+    return user;
   }
 
   Future<bool> isSignedIn() async {
@@ -36,8 +43,26 @@ class UserRepository {
     }
   }
 
+  String getUid() {
+    return (_uid != null) ? _uid : "";
+  }
+
+  Future<String> _getUserUid() async {
+    if (_uid != null) return _uid;
+
+    if (await isSignedIn()) {
+      var user = await getUser();
+      if (user != null) {
+        _uid = user.uid;
+        return _uid;
+      }
+    }
+    return null;
+  }
+
   Future signOut() async {
     _removeUserFromPreferences();
+    _uid = null;
     Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
   }
 

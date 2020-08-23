@@ -14,7 +14,6 @@ import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:image/image.dart' as images;
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
-import 'package:omsk_seaty_mobile/http.dart';
 
 import 'map_effect.dart';
 
