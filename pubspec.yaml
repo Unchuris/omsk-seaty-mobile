@@ -37,7 +37,7 @@ dependencies:
   fluster: ^1.1.2
   carousel_slider: ^2.2.1
   image: ^2.1.14
-  http: ^0.12.2
+  dio: ^3.0.10
   shared_preferences: '^0.5.8'
   cached_network_image: ^2.2.0+1
   flutter_svg: ^0.18.0

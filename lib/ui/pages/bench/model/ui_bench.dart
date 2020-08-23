@@ -2,19 +2,63 @@ import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 
 class UiBench {
-  String imageLink;
-  String locationName;
+  String imageUrl;
+  String name;
   String address;
   double rate;
-  bool isFavorites;
-  Set<BenchType> filters;
+  bool like;
+  List<BenchType> features;
   List<UiComment> comments;
+
   UiBench(
-      {this.imageLink,
-      this.locationName,
+      {this.imageUrl,
+      this.name,
       this.address,
       this.rate,
-      this.isFavorites,
-      this.filters,
+      this.like,
+      this.features,
       this.comments});
+  UiBench.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    address = json['address'];
+    imageUrl =
+        'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg';
+    like = json['like'];
+    rate = 4.0;
+    if (json['features'] != null) {
+      features = new List<BenchType>();
+      json['features'].forEach((v) {
+        switch (v['feature']) {
+          case "Высокий комфорт":
+            features.add(BenchType.HIGH_COMFORT);
+            break;
+          case "Урна рядом":
+            features.add(BenchType.URN_NEARBY);
+            break;
+          case "Стол Рядом":
+            features.add(BenchType.TABLE_NEARBY);
+            break;
+          case "Крытая лавочка":
+            features.add(BenchType.COVERED_BENCH);
+            break;
+          case "Для большой компании":
+            features.add(BenchType.FOR_A_LARGE_COMPANY);
+            break;
+          case "Живописный вид":
+            features.add(BenchType.SCENIC_VIEW);
+            break;
+          case "Остановка":
+            features.add(BenchType.BUS_STOP);
+            break;
+          default:
+        }
+      });
+    }
+    if (json['comments'] != null) {
+      comments = new List<UiComment>();
+      json['comments'].forEach((comment) {
+        comments.add(UiComment.fromJson(comment));
+      });
+    }
+  }
 }

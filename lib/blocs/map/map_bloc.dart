@@ -36,6 +36,7 @@ class CurrentMarker {
 
   const CurrentMarker({this.type, this.markerId});
 }
+
 //TODO исправить баг, если слайдер открыт, то при нажатии на пин показывается не он
 class MapBloc extends Bloc<MapEvent, MapState> {
   static const maxZoom = 21;
@@ -96,11 +97,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     if (event is MarkersLoading) {
-        _geolocationRepository
-          .getCurrentPositionStream()
-          .listen((position) {
-            _userPosition = position;
-          });
+      _geolocationRepository.getCurrentPositionStream().listen((position) {
+        _userPosition = position;
+      });
       _buildMediaPool();
       return;
     }
@@ -119,20 +118,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
 
       if (constrainCluster) {
-        var selectedBitmapDescriptor = await _createSelectedClusterBitmapDescriptor(cluster);
-        _markers[cluster.clusterId.toString()] = _markerUpdateIcon(_markers[cluster.clusterId.toString()], selectedBitmapDescriptor);
+        var selectedBitmapDescriptor =
+            await _createSelectedClusterBitmapDescriptor(cluster);
+        _markers[cluster.clusterId.toString()] = _markerUpdateIcon(
+            _markers[cluster.clusterId.toString()], selectedBitmapDescriptor);
       } else {
-        var selectedBitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
-        _markers[bench.id] = _markerUpdateIcon(_markers[bench.id], selectedBitmapDescriptor);
+        var selectedBitmapDescriptor =
+            await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
+        _markers[bench.id] =
+            _markerUpdateIcon(_markers[bench.id], selectedBitmapDescriptor);
       }
 
       await _selectedMarkerToBaseMarker();
 
-      _currentMarker = constrainCluster ? cluster : MapMarker(
-          markerId: bench.id,
-          latitude: bench.latitude,
-          longitude: bench.longitude
-      );
+      _currentMarker = constrainCluster
+          ? cluster
+          : MapMarker(
+              markerId: bench.id,
+              latitude: bench.latitude,
+              longitude: bench.longitude);
       _addMarkers(_markers);
       return;
     }
@@ -150,22 +154,36 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     if (event is OnLikeClickedEvent) {
-      //TODO
+      for (var bench in _benches) {
+        if (bench.id == event.markerId) {
+          bench.like = event.liked;
+          _addBenches(_benches);
+          break;
+        }
+      }
       return;
     }
     if (event is OnMarkerTapEvent) {
-      if (identical(event.marker,_currentMarker)) {
+      if (identical(event.marker, _currentMarker)) {
         return;
       }
       if (event.marker.isCluster) {
-        List<String> children = _fluster.points(event.marker.clusterId).map((it) => it.markerId).toList();
-        var selectedBitmapDescriptor = await _createSelectedClusterBitmapDescriptor(event.marker);
-        _markers[event.marker.clusterId.toString()] = _markerUpdateIcon(_markers[event.marker.clusterId.toString()], selectedBitmapDescriptor);
+        List<String> children = _fluster
+            .points(event.marker.clusterId)
+            .map((it) => it.markerId)
+            .toList();
+        var selectedBitmapDescriptor =
+            await _createSelectedClusterBitmapDescriptor(event.marker);
+        _markers[event.marker.clusterId.toString()] = _markerUpdateIcon(
+            _markers[event.marker.clusterId.toString()],
+            selectedBitmapDescriptor);
         _benches = await _repository.getClusterBenches(children);
         _addBenches(_benches);
       } else {
-        var selectedBitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
-        _markers[event.marker.markerId] = _markerUpdateIcon(_markers[event.marker.markerId], selectedBitmapDescriptor);
+        var selectedBitmapDescriptor =
+            await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
+        _markers[event.marker.markerId] = _markerUpdateIcon(
+            _markers[event.marker.markerId], selectedBitmapDescriptor);
       }
       await _selectedMarkerToBaseMarker();
       _currentMarker = event.marker;
@@ -180,9 +198,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       _currentCameraPosition = event.cameraPosition;
       _displayMarkers();
       await _updateBenchesByVisibleRegion();
-      if (_currentMarker != null
-          && !_currentMarker.isCluster
-          && _currentCameraPosition.visibleRegion.contains(LatLng(_currentMarker.latitude, _currentMarker.longitude))) {
+      if (_currentMarker != null &&
+          !_currentMarker.isCluster &&
+          _currentCameraPosition.visibleRegion.contains(
+              LatLng(_currentMarker.latitude, _currentMarker.longitude))) {
         _addBenches(_benches);
       }
       yield* _mapOnCameraIdleToEffect(event);
@@ -202,8 +221,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     yield CameraMoveEffect();
   }
 
-  Stream<MapState> _mapOnCameraIdleToEffect(
-      OnCameraIdleEvent event) async* {
+  Stream<MapState> _mapOnCameraIdleToEffect(OnCameraIdleEvent event) async* {
     yield CameraIdleEffect();
   }
 
@@ -226,9 +244,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _selectedMarkerToBaseMarker() async {
     if (_currentMarker != null) {
-      var bitmapDescriptor = _currentMarker.isCluster ? await _createClusterBitmapDescriptor(_currentMarker) : await _getImageBitmapDescriptor(IMAGE_PIN);
-      var id = _currentMarker.isCluster ? _currentMarker.clusterId.toString() : _currentMarker.markerId;
-      if (_markers[id] != null) _markers[id] = _markerUpdateIcon(_markers[id], bitmapDescriptor);
+      var bitmapDescriptor = _currentMarker.isCluster
+          ? await _createClusterBitmapDescriptor(_currentMarker)
+          : await _getImageBitmapDescriptor(IMAGE_PIN);
+      var id = _currentMarker.isCluster
+          ? _currentMarker.clusterId.toString()
+          : _currentMarker.markerId;
+      if (_markers[id] != null)
+        _markers[id] = _markerUpdateIcon(_markers[id], bitmapDescriptor);
     }
   }
 
@@ -239,8 +262,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           bench.id: MapMarker(
               markerId: bench.id,
               latitude: bench.latitude,
-              longitude: bench.longitude
-          )
+              longitude: bench.longitude)
       };
     });
 
@@ -295,9 +317,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
       if (feature.isCluster) {
         bitmapDescriptor = (_currentMarker != null &&
-            _currentMarker.markerId == feature.markerId
-        ) ? await _createSelectedClusterBitmapDescriptor(feature) :
-          await _createClusterBitmapDescriptor(feature);
+                _currentMarker.markerId == feature.markerId)
+            ? await _createSelectedClusterBitmapDescriptor(feature)
+            : await _createClusterBitmapDescriptor(feature);
       } else if (_currentMarker != null &&
           _currentMarker.markerId == feature.markerId) {
         bitmapDescriptor = await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
@@ -306,32 +328,33 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
 
       var marker = Marker(
-          markerId: feature.isCluster ? MarkerId(feature.clusterId.toString()) : MarkerId(feature.markerId),
+          markerId: feature.isCluster
+              ? MarkerId(feature.clusterId.toString())
+              : MarkerId(feature.markerId),
           position: LatLng(feature.latitude, feature.longitude),
           infoWindow: null,
           onTap: () {
             add(OnMarkerTapEvent(marker: feature));
           },
-          icon: bitmapDescriptor
-      );
-      markers.putIfAbsent(feature.isCluster ? feature.clusterId.toString() : feature.markerId, () => marker);
+          icon: bitmapDescriptor);
+      markers.putIfAbsent(
+          feature.isCluster ? feature.clusterId.toString() : feature.markerId,
+          () => marker);
     }
     _markers = markers;
     _addMarkers(_markers);
   }
 
   _updateBenchesByVisibleRegion() async {
-    _benches = await _repository.getBenchesByVisibleRegion(_currentCameraPosition.visibleRegion);
+    _benches = await _repository
+        .getBenchesByVisibleRegion(_currentCameraPosition.visibleRegion);
   }
 
-  Future<BitmapDescriptor> _createSelectedClusterBitmapDescriptor(MapMarker feature) async {
+  Future<BitmapDescriptor> _createSelectedClusterBitmapDescriptor(
+      MapMarker feature) async {
     var child = await _getImage(IMAGE_SELECTEDCLUSTERPIN, 200, 200);
-    images.drawString(
-        child,
-        images.arial_24,
-        (feature.pointsSize ~/ 10 != 0) ? 62 : 68,
-        19,
-        '${feature.pointsSize}');
+    images.drawString(child, images.arial_24,
+        (feature.pointsSize ~/ 10 != 0) ? 62 : 68, 19, '${feature.pointsSize}');
 
     var png = images.encodePng(child);
 
@@ -342,12 +365,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       MapMarker feature) async {
     var child = await _getImage(IMAGE_CLUSTERPIN, 150, 150);
 
-    images.drawString(
-        child,
-        images.arial_24,
-        (feature.pointsSize ~/ 10 != 0) ? 47 : 54,
-        12,
-        '${feature.pointsSize}');
+    images.drawString(child, images.arial_24,
+        (feature.pointsSize ~/ 10 != 0) ? 47 : 54, 12, '${feature.pointsSize}');
 
     var png = images.encodePng(child);
 

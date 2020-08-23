@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,15 +25,26 @@ import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 
+import 'http.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HydratedCubit.storage = await HydratedStorage.build();
   final UserRepository _userRepository = UserRepository();
+  await _userRepository.init();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
+
+  dio.options
+    ..headers['content-Type'] = 'application/json'
+    ..headers['Authorization'] = 'token ${_userRepository.getUid()}'
+    ..baseUrl = "https://dac6513c7c3b.ngrok.io/api/"
+    ..connectTimeout = 5000
+    ..receiveTimeout = 5000;
+  dio.interceptors.add(LogInterceptor()); //TODO remove
   //runZoned(() {
   runApp(
     MultiBlocProvider(
