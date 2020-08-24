@@ -8,7 +8,7 @@ class BenchLight {
   double longitude;
   String imageUrl;
   bool like;
-  int score;
+  double score;
   Set<BenchType> feature;
 
   BenchLight(
@@ -31,7 +31,7 @@ class BenchLight {
     imageUrl =
         'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg';
     like = json['like'];
-    score = json['score'];
+    score = json['rating'];
     if (json['features'] != null) {
       feature = new Set<BenchType>();
       json['features'].forEach((v) {

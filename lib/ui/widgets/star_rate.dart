@@ -34,7 +34,7 @@ class StarWidget extends StatelessWidget {
         textBaseline: TextBaseline.ideographic,
         children: [
           Text(
-            rate.toString(),
+            rate.toStringAsFixed(1),
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(

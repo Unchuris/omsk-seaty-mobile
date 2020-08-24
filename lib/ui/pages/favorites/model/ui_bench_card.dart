@@ -14,7 +14,7 @@ class UIBencCard {
     imageUrl =
         'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg';
     like = true;
-    rate = 4.0;
+    rate = json['rating'];
     id = json['id'].toString();
   }
 }

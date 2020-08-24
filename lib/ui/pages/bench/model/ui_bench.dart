@@ -28,7 +28,7 @@ class UiBench {
     like = json['like'];
     lat = json['lat'];
     lon = json['lon'];
-    rate = 4.0;
+    rate = json['rating'];
     if (json['features'] != null) {
       features = new List<BenchType>();
       json['features'].forEach((v) {

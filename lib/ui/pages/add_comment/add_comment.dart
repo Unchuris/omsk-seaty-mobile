@@ -9,7 +9,7 @@ import 'package:omsk_seaty_mobile/http.dart';
 
 class AddCommentPage extends StatefulWidget {
   AddCommentPage({Key key, this.benchId, this.onAdd}) : super(key: key);
-  Function(UiComment) onAdd;
+  Function onAdd;
   final String benchId;
   static String routeName = '/addComment';
   @override
@@ -93,7 +93,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                         'text': myController.text,
                         'rating': rating
                       });
-                      widget.onAdd(UiComment.fromJson(responce.data));
+                      widget.onAdd();
                       Navigator.pop(context);
                     },
                   ),

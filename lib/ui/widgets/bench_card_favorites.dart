@@ -75,7 +75,7 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0, left: 4.0),
                     child: Text(
-                      bench.rate.toString(),
+                      bench.rate.toStringAsFixed(1),
                       style: TextStyle(
                           fontFamily: "Roboto",
                           fontSize: 14.0,

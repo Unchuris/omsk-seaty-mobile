@@ -20,8 +20,8 @@ class BenchCard extends StatefulWidget {
 class _BenchCardState extends State<BenchCard> {
   @override
   Widget build(BuildContext context) {
-    var bench = UIBencCard(
-        widget.bench.name, 4.5, widget.bench.imageUrl, widget.bench.like);
+    var bench = UIBencCard(widget.bench.name, widget.bench.score,
+        widget.bench.imageUrl, widget.bench.like);
     return _buildBenchCard(bench);
   }
 
@@ -91,7 +91,7 @@ class _BenchCardState extends State<BenchCard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0, left: 4.0),
                     child: Text(
-                      bench.rate.toString(),
+                      bench.rate.toStringAsFixed(1),
                       style: TextStyle(
                           fontFamily: "Roboto",
                           fontSize: 14.0,

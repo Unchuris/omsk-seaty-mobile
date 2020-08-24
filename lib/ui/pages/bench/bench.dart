@@ -87,6 +87,35 @@ class _BenchPageState extends State<BenchPage> {
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
               return _buildBenchPage(state.benchUi);
+            } else if (state is BenchPageError) {
+              return Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Ошибка соединения",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Text(
+                    "Проверьте соединение и попробуйте еще.",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  SizedBox(
+                    height: 60,
+                  ),
+                  RawMaterialButton(
+                    onPressed: () => {
+                      _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId))
+                    },
+                    elevation: 8.0,
+                    fillColor: Theme.of(context).buttonColor,
+                    child: Icon(Icons.refresh),
+                    padding: EdgeInsets.only(
+                        left: 19.0, right: 19.0, top: 15, bottom: 15),
+                    shape: CircleBorder(),
+                  )
+                ],
+              ));
             }
           }),
         ),
@@ -201,7 +230,7 @@ class _BenchPageState extends State<BenchPage> {
                                   padding: const EdgeInsets.only(
                                       top: 6.0, left: 8.0),
                                   child: Text(
-                                    bench.rate.toString(),
+                                    bench.rate.toStringAsFixed(1),
                                     style: TextStyle(
                                         fontFamily: "Roboto",
                                         fontSize: 14.0,
@@ -345,7 +374,12 @@ class _BenchPageState extends State<BenchPage> {
               (bench.comments.length == 0 || bench.comments == null)
                   ? Container(
                       width: MediaQuery.of(context).size.width,
-                      child: Center(child: Text("Комментариев нет")))
+                      child: Center(
+                        child: Text(
+                          "Комментариев нет",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ))
                   : Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.41,
@@ -387,7 +421,10 @@ class _BenchPageState extends State<BenchPage> {
                         height: 52,
                         child: FlatButton(
                           child: Text("ПОЖАЛОВАТЬСЯ",
-                              style: Theme.of(context).textTheme.button),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  .copyWith(color: Colors.orange)),
                           onPressed: () => {},
                         ),
                       ),
@@ -400,10 +437,8 @@ class _BenchPageState extends State<BenchPage> {
     );
   }
 
-  addComment(UiComment comment) {
-    setState(() {
-      _bench.comments.add(comment);
-    });
+  addComment() {
+    _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
   }
 
   _getFilters(List<BenchType> filters) {
