@@ -21,6 +21,7 @@ import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
+import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
@@ -29,7 +30,7 @@ import 'http.dart';
 
 void main() async {
   dio.options
-    ..baseUrl = "https://8ce1da6f30c6.ngrok.io/api/"
+    ..baseUrl = "http://cb054927efb4.ngrok.io/api/"
     ..connectTimeout = 5000
     ..receiveTimeout = 5000;
 
@@ -112,6 +113,7 @@ class MyApp extends StatelessWidget {
               AddCommentPage.routeName: (context) => AddCommentPage(),
               FavoritesPage.routeName: (context) => FavoritesPage(),
               BenchPage.routeName: (context) => BenchPage(),
+              TopUserPage.routeName: (context) => TopUserPage()
             },
           );
         }));

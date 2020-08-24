@@ -10,6 +10,7 @@ import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_event.dart';
@@ -62,9 +63,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 text: AppLocalizations.of(context)
                     .translate('string_top_benches')),
             _createDrawerItem(
-                icon: SvgPicture.asset("assets/topUsers.svg"),
-                text:
-                    AppLocalizations.of(context).translate('string_top_users')),
+              icon: SvgPicture.asset("assets/topUsers.svg"),
+              text: AppLocalizations.of(context).translate('string_top_users'),
+              onTap: () {
+                Navigator.pushNamed(context, TopUserPage.routeName);
+              },
+            ),
             _createDrawerItem(
               icon: Icon(Icons.settings),
               text: 'Dialog test list',

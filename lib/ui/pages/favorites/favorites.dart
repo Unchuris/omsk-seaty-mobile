@@ -35,13 +35,41 @@ class _FavoritesPageState extends State<FavoritesPage> {
             builder: (context, state) {
           if (state is FavoritesInitial) {
             print('initial');
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
+            return Center(child: CircularProgressIndicator());
           } else if (state is FavoritesPageLoading) {
             print('loading');
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
+            return Center(child: CircularProgressIndicator());
           } else if (state is FavoritesPageInitialed) {
             print('load');
             return _buildBenchCard(state.benchCard);
+          } else if (state is FavoritesPageError) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Ошибка соединения",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Text(
+                  "Проверьте соединение и попробуйте еще.",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+                RawMaterialButton(
+                  onPressed: () =>
+                      {_bloc.add(GetFavoritesEvent(uid: widget.uid))},
+                  elevation: 8.0,
+                  fillColor: Theme.of(context).buttonColor,
+                  child: Icon(Icons.refresh),
+                  padding: EdgeInsets.only(
+                      left: 19.0, right: 19.0, top: 15, bottom: 15),
+                  shape: CircleBorder(),
+                )
+              ],
+            ));
           }
         }),
       ),

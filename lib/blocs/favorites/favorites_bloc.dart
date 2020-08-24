@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
@@ -25,8 +26,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
             List<UIBencCard>.from(data.map((i) => UIBencCard.fromJson(i)));
 
         yield FavoritesPageInitialed(benchCard: uiBench);
-      } catch (e) {
-        var s = e;
+      } on DioError catch (e) {
+        yield FavoritesPageError();
       }
     }
   }
