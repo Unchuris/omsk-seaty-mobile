@@ -10,6 +10,7 @@ class FavoritesPage extends StatefulWidget {
   final String uid;
   const FavoritesPage({Key key, this.uid}) : super(key: key);
   static String routeName = "/favorites";
+
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
 }

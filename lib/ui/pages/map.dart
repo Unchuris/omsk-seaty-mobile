@@ -54,14 +54,14 @@ class _MapScreenState extends State<MapScreen>
             return;
           }
           if (effect is CameraMoveEffect) {
-/*             setState(() {
-              _isVisible = false;
-            }); */
+//              setState(() {
+//                _isVisible = false;
+//              });
           }
           if (effect is CameraIdleEffect) {
-/*             setState(() {
-              _isVisible = true;
-            }); */
+//              setState(() {
+//                _isVisible = true;
+//              });
           }
         }),
       ],

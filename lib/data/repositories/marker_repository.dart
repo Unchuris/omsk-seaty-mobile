@@ -46,27 +46,11 @@ class MarkerRepository {
     if (response.statusCode == 200) {
       benches =
           ((response.data) as List).map((i) => BenchLight.fromJson(i)).toList();
-/*       var rng = new Random();
-      benches = b.benches.map((it) => _getBenchLight(it, rng)).toList();*/
       filteredBenches = _getFilteredBenches();
       return filteredBenches;
     } else {
       throw Exception('Ошибка загрузки данных');
     }
-  }
-
-  BenchLight _getBenchLight(Benches it, Random rng) {
-    return BenchLight(
-        //TODO remove mapper
-        id: it.pk.toString(),
-        name: it.title,
-        address: it.place,
-        latitude: it.latitude,
-        longitude: it.longitude,
-        imageUrl: imgList[rng.nextInt(imgList.length)],
-        like: (rng.nextInt(1) == 1) ? true : false,
-        score: 228,
-        feature: _getMockFilter(rng.nextInt(3)));
   }
 
   List<BenchLight> _getFilteredBenches() {
@@ -75,30 +59,6 @@ class MarkerRepository {
     return benches
         .where((it) => it.feature.containsAll(currentFilter))
         .toList();
-  }
-
-  //TODO remove mock data
-  Set<BenchType> _getMockFilter(int i) {
-    switch (i) {
-      case 0:
-        return Set.from([
-          BenchType.BUS_STOP,
-          BenchType.COVERED_BENCH,
-          BenchType.TABLE_NEARBY,
-        ]);
-      case 1:
-        return Set.from([
-          BenchType.BUS_STOP,
-          BenchType.COVERED_BENCH,
-        ]);
-      case 2:
-        return Set.from([
-          BenchType.BUS_STOP,
-          BenchType.URN_NEARBY,
-        ]);
-      default:
-        return Set.from([BenchType.BUS_STOP]);
-    }
   }
 
   Future<List<BenchLight>> getClusterBenches(List<String> markersId) async {
