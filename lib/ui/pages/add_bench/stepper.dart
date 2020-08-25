@@ -429,32 +429,36 @@ class _AddBenchStepperState extends State<AddBenchStepper>
     final List<Widget> children = <Widget>[
       for (int i = 0; i < widget.steps.length; i += 1) ...<Widget>[
         InkResponse(
-          onTap: widget.steps[i].state != AddBenchStepState.disabled
-              ? () {
-                  if (widget.onStepTapped != null) widget.onStepTapped(i);
-                }
-              : null,
-          canRequestFocus: widget.steps[i].state != AddBenchStepState.disabled,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 50.0,
-                child: Center(
-                  child: _buildIcon(i),
+            onTap: widget.steps[i].state != AddBenchStepState.disabled
+                ? () {
+                    if (widget.onStepTapped != null) widget.onStepTapped(i);
+                  }
+                : null,
+            canRequestFocus:
+                widget.steps[i].state != AddBenchStepState.disabled,
+            child: Column(
+              children: [
+                Column(
+                  children: <Widget>[
+                    Container(
+                      //height: 50.0,
+                      child: Center(
+                        child: _buildIcon(i),
+                      ),
+                    ),
+                    Container(
+                      child: _buildHeaderText(i),
+                    ),
+                  ],
                 ),
-              ),
-              Container(
-                child: _buildHeaderText(i),
-              ),
-            ],
-          ),
-        ),
+              ],
+            )),
         if (!_isLast(i))
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(right: 10, left: 10),
               height: 2.0,
-              color: Colors.orange,
+              color: Colors.red,
             ),
           ),
       ],

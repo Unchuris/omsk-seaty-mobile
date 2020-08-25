@@ -28,6 +28,7 @@ import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 
+import 'blocs/add_image/add_image_bloc.dart';
 import 'http.dart';
 
 void main() async {
@@ -52,6 +53,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider<AddImageBloc>(
+          create: (context) => AddImageBloc(),
+          child: AddBenchScreen(),
+        ),
         BlocProvider<AuthenticationBloc>(
             create: (context) =>
                 AuthenticationBloc(userRepository: _userRepository)
