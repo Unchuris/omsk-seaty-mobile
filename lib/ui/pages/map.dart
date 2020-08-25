@@ -136,7 +136,7 @@ class _MapScreenState extends State<MapScreen>
   Widget _buildAddBenchButton(BuildContext context) {
     return RawMaterialButton(
       onPressed: () {
-        Navigator.pushNamed(context, FavoritesPage.routeName);
+        Navigator.pushNamed(context, '/add_bench');
       },
       elevation: 8.0,
       fillColor: Theme.of(context).buttonColor,

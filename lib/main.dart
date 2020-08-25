@@ -14,6 +14,7 @@ import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
+import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
@@ -115,6 +116,7 @@ class MyApp extends StatelessWidget {
                   LoginScreen(userRepository: _userRepository),
               '/map': (context) => MapScreen(),
               '/profile': (context) => ProfilePage(),
+              '/add_bench': (context) => AddBenchScreen(),
               AddCommentPage.routeName: (context) => AddCommentPage(),
               FavoritesPage.routeName: (context) => FavoritesPage(),
               BenchPage.routeName: (context) => BenchPage(),
