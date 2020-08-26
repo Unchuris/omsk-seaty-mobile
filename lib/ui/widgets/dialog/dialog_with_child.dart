@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'list_provider.dart';
 
-class DialogWithChild extends StatelessWidget {
+class DialogWithChild extends StatefulWidget {
   final String title;
   final Widget child;
   final String buttonText;
   final DialogButtonType buttonType;
+  final Function onTap;
+  DialogWithChild(
+      {this.title, this.child, this.buttonText, this.buttonType, this.onTap});
 
-  DialogWithChild({this.title, this.child, this.buttonText, this.buttonType});
+  @override
+  _DialogWithChildState createState() => _DialogWithChildState();
+}
 
+class _DialogWithChildState extends State<DialogWithChild> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -31,7 +37,7 @@ class DialogWithChild extends StatelessWidget {
           SizedBox(height: 10),
           _createTitle(),
           SizedBox(height: 10),
-          child,
+          widget.child,
           _createBottomButton(context)
         ],
       ),
@@ -42,7 +48,7 @@ class DialogWithChild extends StatelessWidget {
     return Container(
         width: 210,
         child: Text(
-          title,
+          widget.title,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20),
         ));
@@ -62,40 +68,13 @@ class DialogWithChild extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.orange, borderRadius: bottomBorder)),
             Center(
-                child: Text(buttonText,
+                child: Text(widget.buttonText,
                     style: TextStyle(fontSize: 18, color: Colors.white))),
             SizedBox.expand(
                 child: Material(
                     type: MaterialType.transparency,
                     child: InkWell(
-                        borderRadius: bottomBorder,
-                        onTap: () {
-                          var provider = ListProvider.of(context);
-                          switch (buttonType) {
-                            case DialogButtonType.LIST:
-                              {
-                                print('List: ${provider.list}');
-                                Navigator.pop(context);
-                              }
-                              break;
-                            case DialogButtonType.COMPLAIN:
-                              {
-                                print('List: ${provider.list}');
-                                Navigator.pop(context);
-                              }
-                              break;
-                            case DialogButtonType.CLOSE:
-                              {
-                                Navigator.pop(context);
-                              }
-                              break;
-                            default:
-                              {
-                                print('Wrong choise');
-                              }
-                              break;
-                          }
-                        }))),
+                        borderRadius: bottomBorder, onTap: widget.onTap))),
           ],
         ),
       ),

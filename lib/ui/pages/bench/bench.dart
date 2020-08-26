@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
@@ -28,6 +30,7 @@ class BenchPage extends StatefulWidget {
   BenchPage({Key key, this.benchId}) : super(key: key);
   static String routeName = '/bench';
   final String benchId;
+
   @override
   _BenchPageState createState() => _BenchPageState();
 }
@@ -35,6 +38,7 @@ class BenchPage extends StatefulWidget {
 class _BenchPageState extends State<BenchPage> {
   final BenchPageBloc _benchPageBloc = BenchPageBloc();
   UiBench _bench;
+  FToast fToast;
   String commentString;
   List<Widget> _filters;
   Map<ComplainType, bool> _complains = {
@@ -42,15 +46,18 @@ class _BenchPageState extends State<BenchPage> {
     ComplainType.INAPPROPRIATE_CONTENT: false,
     ComplainType.OFFENSIVE_MATERIAL: false
   };
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
     super.initState();
+    fToast = FToast(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: (Theme.of(context).brightness == Brightness.light)
           ? Color(0xFFE5E5E5)
           : Color(0xFFE5E5E5),
@@ -94,7 +101,7 @@ class _BenchPageState extends State<BenchPage> {
             } else if (state is BenchPageInitial) {
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
-              return _buildBenchPage(state.benchUi);
+              return _buildBenchPage(state.benchUi, context);
             } else if (state is BenchPageError) {
               return Center(
                   child: Column(
@@ -131,7 +138,7 @@ class _BenchPageState extends State<BenchPage> {
     );
   }
 
-  Widget _buildBenchPage(UiBench bench) {
+  Widget _buildBenchPage(UiBench bench, BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -428,8 +435,7 @@ class _BenchPageState extends State<BenchPage> {
                                   .button
                                   .copyWith(color: Colors.orange)),
                           onPressed: () async {
-                            await _createDialogComplain();
-                            print(_complains);
+                            _createDialogComplain(context);
                           },
                         ),
                       ),
@@ -442,19 +448,63 @@ class _BenchPageState extends State<BenchPage> {
     );
   }
 
-  void _createDialogComplain() {
+  void _createDialogComplain(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) => ListProvider(
-            _complains,
-            DialogWithChild(
-                title: AppLocalizations.of(context)
-                    .translate('dialog_title_complain'),
-                buttonText: AppLocalizations.of(context)
-                    .translate('dialog_title_complain'),
-                child: CheckBoxList(),
-                buttonType: DialogButtonType.COMPLAIN)));
+      context: context,
+      builder: (context) => ListProvider(
+          _complains,
+          DialogWithChild(
+              title: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              buttonText: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              child: CheckBoxList(),
+              onTap: onTap,
+              buttonType: DialogButtonType.COMPLAIN)),
+    );
   }
+
+  onTap() async {
+    var report = '';
+    _complains.forEach((key, value) {
+      if (value == true) {
+        report = report + complaintTypeToString(key, context) + " ";
+      }
+    });
+    Navigator.pop(context);
+    try {
+      var response = await dio.post("/reports/create-bench-report/",
+          data: {"bench_id": widget.benchId, "report_message": report});
+    } on DioError catch (e) {
+      if (e.response.statusCode == 405) {
+        print("405 ошибка");
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Вы уже жаловались на эту лавочку.'),
+              Icon(Icons.error)
+            ],
+          ),
+          backgroundColor: Colors.red,
+        ));
+      } else {
+        print("ошибка сети");
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Проблемы с соединением, повторите попытку.'),
+              Icon(Icons.error)
+            ],
+          ),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
+  }
+
+  push() async {}
 
   addComment() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
