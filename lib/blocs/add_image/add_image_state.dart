@@ -8,14 +8,23 @@ abstract class AddImageState extends Equatable {
 }
 
 class AddImageInitial extends AddImageState {}
+class AddImageLocationLoading extends AddImageState {
+  final String imagePath;
+
+  const AddImageLocationLoading(this.imagePath);
+
+  List<Object> get props => [imagePath];
+}
 
 class AddImageSuccess extends AddImageState {
-  final Widget image;
+  final String imagePath;
+  final String address;
+  final GeoPoint geoPoint;
 
-  const AddImageSuccess(this.image);
+  const AddImageSuccess(this.imagePath, this.address, this.geoPoint);
 
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [imagePath, address, geoPoint];
 }
 
 class AddImageFailture extends AddImageState {}

@@ -41,5 +41,14 @@
     "bench_filter": "Фильтр лавочек",
     "find": "Найти",
 
-    "top_users":"ТОП пользователей"
+    "top_users":"ТОП пользователей",
+
+    "string_add_photo": "Добавить фото",
+    "string_select_from_where": "Откуда вы хотите добавить фото?",
+    "string_gallery": "Галерея",
+    "string_camera": "Камера",
+    "string_on_map": "НА КАРТЕ",
+    "string_next": "Далее",
+    "string_no_location": "Укажите место для новой лавочки",
+    "string_add_new_photo": "Добавьте фото для новой лавочки"
 }

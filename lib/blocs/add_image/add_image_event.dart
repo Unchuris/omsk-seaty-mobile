@@ -8,12 +8,21 @@ abstract class AddImageEvent extends Equatable {
 }
 
 class AddImageStarted extends AddImageEvent {
-  final Widget image;
+  final String imagePath;
 
-  const AddImageStarted(this.image);
+  const AddImageStarted(this.imagePath);
 
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [imagePath];
+}
+
+class AddImageLocation extends AddImageEvent {
+  final GeoPoint location;
+
+  const AddImageLocation(this.location);
+
+  @override
+  List<Object> get props => [location];
 }
 
 class AddImageCanceled extends AddImageEvent {}
