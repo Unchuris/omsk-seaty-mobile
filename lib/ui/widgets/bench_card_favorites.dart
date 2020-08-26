@@ -109,8 +109,9 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
                     });
                     var user =
                         BlocProvider.of<AuthenticationBloc>(context).getUser;
-                    var respone = await dio.patch('/favorites/${user.uid}',
-                        data: {'uid': user.uid, 'bench_id': widget.bench.id});
+                    var respone =
+                        await dio.patch('/benches/${widget.bench.id}/like/');
+
                     BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
                         markerId: widget.bench.id, liked: bench.like));
                   } else {
@@ -119,8 +120,9 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
                     });
                     var user =
                         BlocProvider.of<AuthenticationBloc>(context).getUser;
-                    var respone = await dio.put('/favorites/${user.uid}',
-                        data: {'uid': user.uid, 'bench_id': widget.bench.id});
+                    var respone =
+                        await dio.put('/benches/${widget.bench.id}/like/');
+
                     BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
                         markerId: widget.bench.id, liked: bench.like));
                   }

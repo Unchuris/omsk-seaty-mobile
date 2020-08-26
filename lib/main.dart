@@ -21,7 +21,9 @@ import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
+import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
+import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
@@ -39,14 +41,14 @@ void main() async {
 
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
-
   dio.options
     ..headers['content-Type'] = 'application/json'
     ..headers['Authorization'] = 'token ${_userRepository.getUid()}'
-    ..baseUrl = "https://dac6513c7c3b.ngrok.io/api/"
+    ..baseUrl = "http://064780782cb2.eu.ngrok.io/api/"
     ..connectTimeout = 5000
     ..receiveTimeout = 5000;
-  dio.interceptors.add(LogInterceptor()); //TODO remove
+  dio.interceptors.add(LogInterceptor());
+  //TODO remove
   //runZoned(() {
   runApp(
     MultiBlocProvider(
@@ -118,7 +120,9 @@ class MyApp extends StatelessWidget {
               AddCommentPage.routeName: (context) => AddCommentPage(),
               FavoritesPage.routeName: (context) => FavoritesPage(),
               BenchPage.routeName: (context) => BenchPage(),
-              TopUserPage.routeName: (context) => TopUserPage()
+              TopUserPage.routeName: (context) => TopUserPage(),
+              TopBechesPage.routeName: (context) => TopBechesPage(),
+              MyBenchPage.routeName: (context) => MyBenchPage(),
             },
           );
         }));

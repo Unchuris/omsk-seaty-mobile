@@ -41,5 +41,7 @@
     "bench_filter": "Bench filter",
     "find": "Find",
 
-    "top_users":"Top users"
+    "top_users":"Top users",
+    "top_benches": "Top benches",
+    "my_benches": "My benches"
 }

@@ -20,7 +20,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     if (event is GetFavoritesEvent) {
       try {
         yield FavoritesPageLoading();
-        final response = await dio.get("/favorites/${event.uid}");
+        final response = await dio.get("/favorites/");
         var data = response.data['favorites'];
         List<UIBencCard> uiBench =
             List<UIBencCard>.from(data.map((i) => UIBencCard.fromJson(i)));

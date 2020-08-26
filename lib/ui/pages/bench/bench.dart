@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
-import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
@@ -33,7 +37,11 @@ class _BenchPageState extends State<BenchPage> {
   UiBench _bench;
   String commentString;
   List<Widget> _filters;
-
+  Map<ComplainType, bool> _complains = {
+    ComplainType.ABSENT_BENCH: false,
+    ComplainType.INAPPROPRIATE_CONTENT: false,
+    ComplainType.OFFENSIVE_MATERIAL: false
+  };
   @override
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
@@ -270,11 +278,8 @@ class _BenchPageState extends State<BenchPage> {
                                 var user =
                                     BlocProvider.of<AuthenticationBloc>(context)
                                         .getUser;
-                                var respone = await dio
-                                    .patch('/favorites/${user.uid}', data: {
-                                  'uid': user.uid,
-                                  'bench_id': widget.benchId
-                                });
+                                var respone = dio
+                                    .patch('/benches/${widget.benchId}/like/');
                                 BlocProvider.of<MapBloc>(context).add(
                                     OnLikeClickedEvent(
                                         markerId: widget.benchId,
@@ -287,10 +292,7 @@ class _BenchPageState extends State<BenchPage> {
                                     BlocProvider.of<AuthenticationBloc>(context)
                                         .getUser;
                                 var respone = await dio
-                                    .put('/favorites/${user.uid}', data: {
-                                  'uid': user.uid,
-                                  'bench_id': widget.benchId
-                                });
+                                    .put('/benches/${widget.benchId}/like/');
                                 BlocProvider.of<MapBloc>(context).add(
                                     OnLikeClickedEvent(
                                         markerId: widget.benchId,
@@ -425,7 +427,10 @@ class _BenchPageState extends State<BenchPage> {
                                   .textTheme
                                   .button
                                   .copyWith(color: Colors.orange)),
-                          onPressed: () => {},
+                          onPressed: () async {
+                            await _createDialogComplain();
+                            print(_complains);
+                          },
                         ),
                       ),
                     )),
@@ -435,6 +440,20 @@ class _BenchPageState extends State<BenchPage> {
         ],
       ),
     );
+  }
+
+  void _createDialogComplain() {
+    showDialog(
+        context: context,
+        builder: (context) => ListProvider(
+            _complains,
+            DialogWithChild(
+                title: AppLocalizations.of(context)
+                    .translate('dialog_title_complain'),
+                buttonText: AppLocalizations.of(context)
+                    .translate('dialog_title_complain'),
+                child: CheckBoxList(),
+                buttonType: DialogButtonType.COMPLAIN)));
   }
 
   addComment() {

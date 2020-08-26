@@ -60,4 +60,10 @@ class _TopUserPageState extends State<TopUserPage> {
       },
     );
   }
+
+  @override
+  void dispose() {
+    _topUserBloc.close();
+    super.dispose();
+  }
 }
