@@ -43,9 +43,7 @@ void main() async {
   dio.options
     ..headers['content-Type'] = 'application/json'
     ..headers['Authorization'] = 'token ${_userRepository.getUid()}'
-    ..baseUrl = "https://dac6513c7c3b.ngrok.io/api/"
-    ..connectTimeout = 5000
-    ..receiveTimeout = 5000;
+    ..baseUrl = "https://355032-cu98624.tmweb.ru/api/";
   dio.interceptors.add(LogInterceptor()); //TODO remove
   //runZoned(() {
   runApp(

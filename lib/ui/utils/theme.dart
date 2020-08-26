@@ -18,6 +18,9 @@ class AppTheme {
       accentColor: Color(0xfff2994a),
       buttonColor: Color(0xfff2994a),
       backgroundColor: Colors.white,
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Colors.transparent
+      ),
       buttonTheme: ButtonThemeData(
           minWidth: 209,
           height: 50,
@@ -40,6 +43,9 @@ class AppTheme {
       accentColor: Colors.green,
       buttonColor: Colors.green,
       backgroundColor: Colors.black,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.transparent
+      ),
       buttonTheme: ButtonThemeData(
           minWidth: 50,
           shape: RoundedRectangleBorder(

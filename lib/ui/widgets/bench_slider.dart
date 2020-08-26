@@ -36,6 +36,7 @@ class _BenchSlider extends State<BenchSlider> {
   _BenchSlider(this._carouselController);
 
   BenchLight currentBench;
+  int currentId;
 
   @override
   void initState() {
@@ -43,9 +44,12 @@ class _BenchSlider extends State<BenchSlider> {
   }
 
   void onPageChanged(int index, CarouselPageChangedReason changeReason) {
-    if (index < items.length) {
+    if (changeReason == CarouselPageChangedReason.manual &&
+        index < items.length &&
+        currentId != index) {
+      currentId = index;
       currentBench = items[index];
-      options.onPageChanged(currentBench);
+      options.onPageChanged(items[index], currentId);
     }
   }
 
@@ -53,13 +57,15 @@ class _BenchSlider extends State<BenchSlider> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       items: _getBenches(onClick: (BenchLight benchLight) {
-        if (currentBench.id == benchLight.id) {
+        if (identical(currentBench.id, benchLight.id)) {
           options.onItemClicked(benchLight);
         } else {
-          _carouselController.animateToPage(items.indexOf(benchLight));
+          var id = items.indexOf(benchLight);
+          if (id > 0) _carouselController.animateToPage(id);
         }
       }),
       options: CarouselOptions(
+          initialPage: options.initialPage,
           enlargeCenterPage: options.enlargeCenterPage,
           enableInfiniteScroll: options.enableInfiniteScroll,
           onPageChanged: onPageChanged,
@@ -69,23 +75,26 @@ class _BenchSlider extends State<BenchSlider> {
   }
 
   List<Widget> _getBenches({Function onClick}) => items
-      .map((item) => GestureDetector(onTap: () => onClick(item), child: BenchCard(bench: item)))
+      .map((item) => GestureDetector(
+          onTap: () => onClick(item), child: BenchCard(bench: item)))
       .toList();
 }
 
 class BenchSliderOptions {
   final double height;
+  final int initialPage;
 
   final bool enableInfiniteScroll;
   final bool enlargeCenterPage;
 
-  final Function(BenchLight benchLight) onPageChanged;
+  final Function(BenchLight benchLight, int index) onPageChanged;
   final Function(BenchLight benchLight) onItemClicked;
 
   BenchSliderOptions({
     this.enlargeCenterPage: true,
     this.height,
     this.enableInfiniteScroll: false,
+    this.initialPage: 0,
     this.onPageChanged,
     this.onItemClicked,
   });

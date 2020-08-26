@@ -22,6 +22,12 @@ class BenchLight {
       this.score,
       this.feature});
 
+  @override
+  bool operator == (Object o) {
+    if (identical(this, o)) return true;
+    return o is BenchLight && o.id == id;
+  }
+
   BenchLight.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     name = json['name'];

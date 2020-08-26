@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
 
 import 'map_bloc.dart';
 
@@ -24,9 +25,10 @@ class CameraMoveEffect extends MapEffect {
 }
 
 class CameraIdleEffect extends MapEffect {
-
-  const CameraIdleEffect();
+  final SliderBenchesUi sliderBenchesUi;
+  final bool onMarkerTaped;
+  const CameraIdleEffect({this.sliderBenchesUi, this.onMarkerTaped});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [sliderBenchesUi, onMarkerTaped];
 }
