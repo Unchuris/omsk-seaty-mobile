@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'list_provider.dart';
 
-class DialogWithChild extends StatefulWidget {
+class DialogWithChild extends StatelessWidget {
   final String title;
   final Widget child;
   final String buttonText;
@@ -11,11 +11,6 @@ class DialogWithChild extends StatefulWidget {
   DialogWithChild(
       {this.title, this.child, this.buttonText, this.buttonType, this.onTap});
 
-  @override
-  _DialogWithChildState createState() => _DialogWithChildState();
-}
-
-class _DialogWithChildState extends State<DialogWithChild> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -37,7 +32,7 @@ class _DialogWithChildState extends State<DialogWithChild> {
           SizedBox(height: 10),
           _createTitle(),
           SizedBox(height: 10),
-          widget.child,
+          child,
           _createBottomButton(context)
         ],
       ),
@@ -48,7 +43,7 @@ class _DialogWithChildState extends State<DialogWithChild> {
     return Container(
         width: 210,
         child: Text(
-          widget.title,
+          title,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20),
         ));
@@ -68,13 +63,12 @@ class _DialogWithChildState extends State<DialogWithChild> {
                 decoration: BoxDecoration(
                     color: Colors.orange, borderRadius: bottomBorder)),
             Center(
-                child: Text(widget.buttonText,
+                child: Text(buttonText,
                     style: TextStyle(fontSize: 18, color: Colors.white))),
             SizedBox.expand(
                 child: Material(
                     type: MaterialType.transparency,
-                    child: InkWell(
-                        borderRadius: bottomBorder, onTap: widget.onTap))),
+                    child: InkWell(borderRadius: bottomBorder, onTap: onTap))),
           ],
         ),
       ),
