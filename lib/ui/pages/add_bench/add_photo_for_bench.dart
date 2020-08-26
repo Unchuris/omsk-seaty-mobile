@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
+import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_camera.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_map.dart';
 
 class AddPhotoScreen extends StatelessWidget {
@@ -42,12 +43,16 @@ class AddPhotoScreen extends StatelessWidget {
               return _buildAddressRow(context, state);
             } else if (state is AddImageLocationLoading) {
               return Container(
+                  margin: EdgeInsets.only(top: 16),
                   child: Center(child: CircularProgressIndicator()),
                   height: 80);
             } else {
               return Container(
+                  margin: EdgeInsets.only(top: 16),
                   child: Center(
-                      child: Text(AppLocalizations.of(context).translate("string_add_new_photo"),
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate("string_add_new_photo"),
                           style: Theme.of(context).textTheme.bodyText1)),
                   height: 80);
             }
@@ -171,7 +176,7 @@ class AddPhotoScreen extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)
                           .translate("string_camera")),
                       onTap: () async {
-                        await _setImageFromSource(
+                        await _setImageFromInAppCamera(
                             dialogContext, ImageSource.camera);
                         Navigator.of(dialogContext).pop();
                       },
@@ -203,6 +208,20 @@ class AddPhotoScreen extends StatelessWidget {
   Future<GeoPoint> getCurrentLocation() async {
     final location = await Geolocator()
         .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+    if (location == null) return null;
     return GeoPoint(latitude: location.latitude, longitude: location.longitude);
+  }
+
+  Future<void> _setImageFromInAppCamera(
+      BuildContext context, ImageSource camera) async {
+    final newPhotoPath = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AddPhotoCameraScreen()));
+    if (newPhotoPath != null) {
+      BlocProvider.of<AddImageBloc>(context).add(AddImageStarted(newPhotoPath));
+      final location = await getCurrentLocation();
+      if (location != null) {
+        BlocProvider.of<AddImageBloc>(context).add(AddImageLocation(location));
+      }
+    }
   }
 }
