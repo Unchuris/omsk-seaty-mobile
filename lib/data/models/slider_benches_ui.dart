@@ -16,15 +16,4 @@ class SliderBenchesUi {
         currentBenches: sliderBenchesUi.currentBenches,
         isClusterState: sliderBenchesUi.isClusterState);
   }
-
-  int getInitPage() {
-    var initPage = 0;
-    if (benches != null && currentBenches != null && benches.isNotEmpty) {
-      var index = benches.indexOf(currentBenches);
-      if (index > 0) {
-        initPage = index;
-      }
-    }
-    return initPage;
-  }
 }

@@ -36,11 +36,21 @@ class _BenchSlider extends State<BenchSlider> {
   _BenchSlider(this._carouselController);
 
   BenchLight currentBench;
-  int currentId;
+  int currentId = 0;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(BenchSlider oldWidget) {
+    var initPage = _getInitPage();
+    if (initPage != currentId) {
+      currentId = initPage;
+      _carouselController.jumpToPage(initPage);
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void onPageChanged(int index, CarouselPageChangedReason changeReason) {
@@ -65,13 +75,24 @@ class _BenchSlider extends State<BenchSlider> {
         }
       }),
       options: CarouselOptions(
-          initialPage: options.initialPage,
+          initialPage: _getInitPage(),
           enlargeCenterPage: options.enlargeCenterPage,
-          enableInfiniteScroll: options.enableInfiniteScroll,
+          enableInfiniteScroll: false, //TODO options enableInfiniteScroll
           onPageChanged: onPageChanged,
           height: options.height),
       carouselController: _carouselController,
     );
+  }
+
+  int _getInitPage() {
+    var initPage = 0;
+    if (options.currentBenches != null && items.isNotEmpty) {
+      var index = items.indexOf(options.currentBenches);
+      if (index > 0) {
+        initPage = index;
+      }
+    }
+    return initPage;
   }
 
   List<Widget> _getBenches({Function onClick}) => items
@@ -82,7 +103,7 @@ class _BenchSlider extends State<BenchSlider> {
 
 class BenchSliderOptions {
   final double height;
-  final int initialPage;
+  final BenchLight currentBenches;
 
   final bool enableInfiniteScroll;
   final bool enlargeCenterPage;
@@ -94,7 +115,7 @@ class BenchSliderOptions {
     this.enlargeCenterPage: true,
     this.height,
     this.enableInfiniteScroll: false,
-    this.initialPage: 0,
+    this.currentBenches,
     this.onPageChanged,
     this.onItemClicked,
   });

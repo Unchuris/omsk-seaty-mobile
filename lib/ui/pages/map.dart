@@ -38,16 +38,7 @@ class _MapScreenState extends State<MapScreen>
   bool _isVisibleHelpElements = true;
   bool _isCloseBottomSheet = true;
   SliderBenchesUi _sliderBenchesUi;
-  int initPage = -1;
   PersistentBottomSheetController _bottomSheetController;
-
-  @override
-  void didUpdateWidget(MapScreen oldWidget) {
-    if (initPage > 0) {
-      _carouselController.jumpToPage(initPage);
-    }
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +50,6 @@ class _MapScreenState extends State<MapScreen>
         child: MultiBlocListener(
       listeners: [
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
-          initPage = -1;
           if (effect is LoadDaraFailture) {
             _scaffoldKey.currentState.showSnackBar(
                 getSnackBarError("Опа, а че с инетом?!", context)); //TODO change text
@@ -107,7 +97,6 @@ class _MapScreenState extends State<MapScreen>
             }
             //Нажали на маркер и надо обновить список
             // Function eq = ListEquality().equals;
-            initPage = effect.sliderBenchesUi.getInitPage();
             _bottomSheetController.setState(() {
               _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
             });
@@ -228,8 +217,8 @@ class _MapScreenState extends State<MapScreen>
     return BenchSlider(
         items: benches.benches,
         options: BenchSliderOptions(
-          initialPage: _sliderBenchesUi == null ? benches.getInitPage() : 0,
-          enableInfiniteScroll: benches.isClusterState,
+          currentBenches: benches.currentBenches,
+          enableInfiniteScroll: !benches.isClusterState,
           height: 200,
           onPageChanged: _onBenchSliderPageChanged,
           onItemClicked: _onBenchSliderItemClicked,

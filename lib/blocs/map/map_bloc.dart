@@ -254,8 +254,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Stream<MapState> _mapOnCameraIdleToEffect() async* {
+    var result = _onMarkerTaped;
+    _onMarkerTaped = false;
     yield CameraIdleEffect(
-        sliderBenchesUi: _sliderBenchesUi, onMarkerTaped: _onMarkerTaped);
+        sliderBenchesUi: _sliderBenchesUi, onMarkerTaped: result);
   }
 
   Stream<MapState> _showLoadDaraFailtureState(String message) async* {
@@ -269,6 +271,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     return super.close();
   }
 
+  //TODO check marker id is null
   Marker _markerUpdateIcon(Marker marker, BitmapDescriptor bitmapDescriptor) {
     return Marker(
         markerId: marker.markerId,
