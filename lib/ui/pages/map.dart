@@ -246,12 +246,12 @@ class _MapScreenState extends State<MapScreen>
   }
 
   void _onBenchSliderItemClicked(BenchLight benchLight) {
-    Navigator.push(
+/*     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => BenchPage(
                   benchId: benchLight.id,
-                )));
+                ))); */
   }
 
   @override

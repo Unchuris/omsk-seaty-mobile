@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
@@ -38,7 +37,7 @@ class BenchPage extends StatefulWidget {
 class _BenchPageState extends State<BenchPage> {
   final BenchPageBloc _benchPageBloc = BenchPageBloc();
   UiBench _bench;
-  FToast fToast;
+
   String commentString;
   List<Widget> _filters;
   Map<ComplainType, bool> _complains = {
@@ -51,7 +50,6 @@ class _BenchPageState extends State<BenchPage> {
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
     super.initState();
-    fToast = FToast(context);
   }
 
   @override
