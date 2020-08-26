@@ -27,15 +27,17 @@ class _BenchCardState extends State<BenchCard> {
   }
 
   Widget _buildBenchCard(UIBencCard bench) {
-    return Padding(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-      child: InkWell(
-        onTap: () {
-          MaterialPageRoute(
-              builder: (context) => BenchPage(
-                    benchId: bench.id,
-                  ));
-        },
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BenchPage(
+                      benchId: widget.bench.id,
+                    )));
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
         child: Container(
             width: MediaQuery.of(context).size.width * .90,
             height: MediaQuery.of(context).size.height * .28,

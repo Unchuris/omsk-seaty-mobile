@@ -19,6 +19,7 @@ class BenchPageBloc extends Bloc<BenchPageEvent, BenchPageState> {
       try {
         yield BenchPageLoading();
         final responce = await dio.get("/benches/${event.benchId}");
+
         var uiBench = UiBench.fromJson(responce.data);
         yield BenchPageInitialed(benchUi: uiBench);
       } catch (e) {

@@ -95,12 +95,16 @@ class _BenchPageState extends State<BenchPage> {
           child: BlocBuilder<BenchPageBloc, BenchPageState>(
               builder: (context, state) {
             if (state is BenchPageLoading) {
+              print('loading');
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitial) {
+              print('initial');
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
+              print('loaded');
               return _buildBenchPage(state.benchUi, context);
             } else if (state is BenchPageError) {
+              print('error');
               return Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -399,6 +403,7 @@ class _BenchPageState extends State<BenchPage> {
                                   horizontal: 16.0, vertical: 2.0),
                               child: Comment(
                                 comment: bench.comments[index],
+                                scaffoldKey: _scaffoldKey,
                               ),
                             );
                           }),

@@ -119,7 +119,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    'Проблемы с соединением, повторите попытку.'),
+                                    'Проблемы с соединением,повторите попытку.'),
                                 Icon(Icons.error)
                               ],
                             ),
