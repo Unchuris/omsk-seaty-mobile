@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -40,6 +41,8 @@ class AuthenticationBloc
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       _user = await _userRepository.getUser();
+      var responce = await dio.post('users/', data: _user.toJson());
+
       yield AuthenticationSuccess(_user);
     } else {
       yield AuthenticationFailure();

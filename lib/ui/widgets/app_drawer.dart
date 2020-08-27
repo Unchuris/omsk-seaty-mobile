@@ -10,6 +10,8 @@ import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
+import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
@@ -44,24 +46,26 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             _createDrawerItem(
                 icon: SvgPicture.asset("assets/myBench.svg"),
-                text: AppLocalizations.of(context)
-                    .translate('string_my_benches')),
+                text:
+                    AppLocalizations.of(context).translate('string_my_benches'),
+                onTap: () {
+                  Navigator.pushNamed(context, MyBenchPage.routeName);
+                }),
             _createDrawerItem(
                 icon: SvgPicture.asset("assets/favorites.svg"),
                 text:
                     AppLocalizations.of(context).translate('string_favorites'),
                 onTap: () {
-                  var user =
-                      BlocProvider.of<AuthenticationBloc>(context).getUser;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FavoritesPage(uid: user.uid)));
+                  Navigator.pushNamed(context, FavoritesPage.routeName);
                 }),
             _createDrawerItem(
-                icon: SvgPicture.asset("assets/topBenches.svg"),
-                text: AppLocalizations.of(context)
-                    .translate('string_top_benches')),
+              icon: SvgPicture.asset("assets/topBenches.svg"),
+              text:
+                  AppLocalizations.of(context).translate('string_top_benches'),
+              onTap: () {
+                Navigator.pushNamed(context, TopBechesPage.routeName);
+              },
+            ),
             _createDrawerItem(
               icon: SvgPicture.asset("assets/topUsers.svg"),
               text: AppLocalizations.of(context).translate('string_top_users'),

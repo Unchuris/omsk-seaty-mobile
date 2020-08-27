@@ -40,7 +40,7 @@ class MarkerRepository {
     //TODO add https://pub.dev/packages/dio
 
     final response = await dio.get(
-      "/benches",
+      "/benches/",
     );
 
     if (response.statusCode == 200) {

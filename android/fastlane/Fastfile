@@ -6,7 +6,7 @@
 #     https://docs.fastlane.tools/actions
 #
 # For a list of all available plugins, check out
-#
+#       bundle exec fastlane android_beta_app
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
@@ -25,7 +25,7 @@ platform :android do
         firebase_app_distribution(
             app: "1:953709135359:android:c668660ec30a9a0408d3ca",
             groups: "tester",
-            release_notes: "Добавил состояние выбранного маркера",
+            release_notes: "загрузка при авторизации, исправлен баг с токеном авторизации",
             firebase_cli_path: "/usr/local/bin/firebase",
             apk_path: "../build/app/outputs/apk/release/app-release.apk"
         )

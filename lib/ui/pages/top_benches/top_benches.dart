@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/blocs/favorites/favorites_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/top_benches/top_benches_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/bench_card_favorites.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 
-class FavoritesPage extends StatefulWidget {
-  const FavoritesPage({Key key}) : super(key: key);
-  static String routeName = "/favorites";
-
+class TopBechesPage extends StatefulWidget {
+  TopBechesPage({Key key}) : super(key: key);
+  static String routeName = "/top-benches";
   @override
-  _FavoritesPageState createState() => _FavoritesPageState();
+  _TopBechesPageState createState() => _TopBechesPageState();
 }
 
-class _FavoritesPageState extends State<FavoritesPage> {
-  FavoritesBloc _bloc = FavoritesBloc();
+class _TopBechesPageState extends State<TopBechesPage> {
+  TopBenchesBloc _bloc = TopBenchesBloc();
   @override
   void initState() {
-    _bloc.add(GetFavoritesEvent());
+    _bloc.add(GetTopBenchesEvent());
     super.initState();
   }
 
@@ -27,21 +26,21 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       appBar: CustomAppBar(
           height: MediaQuery.of(context).padding.top,
-          title: AppLocalizations.of(context).translate('string_favorites')),
+          title: AppLocalizations.of(context).translate('top_benches')),
       body: BlocProvider(
         create: (context) => _bloc,
-        child: BlocBuilder<FavoritesBloc, FavoritesState>(
+        child: BlocBuilder<TopBenchesBloc, TopBenchesState>(
             builder: (context, state) {
-          if (state is FavoritesInitial) {
+          if (state is TopBenchesInitial) {
             print('initial');
             return Center(child: CircularProgressIndicator());
-          } else if (state is FavoritesPageLoading) {
+          } else if (state is TopBenchesPageLoading) {
             print('loading');
             return Center(child: CircularProgressIndicator());
-          } else if (state is FavoritesPageInitialed) {
+          } else if (state is TopBenchesPageInitialed) {
             print('load');
             return _buildBenchCard(state.benchCard);
-          } else if (state is FavoritesPageError) {
+          } else if (state is TopBenchesPageError) {
             return Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +57,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   height: 60,
                 ),
                 RawMaterialButton(
-                  onPressed: () => {_bloc.add(GetFavoritesEvent())},
+                  onPressed: () => {_bloc.add(GetTopBenchesEvent())},
                   elevation: 8.0,
                   fillColor: Theme.of(context).buttonColor,
                   child: Icon(Icons.refresh),

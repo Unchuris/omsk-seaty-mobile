@@ -1,18 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
-import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
@@ -24,6 +29,7 @@ class BenchPage extends StatefulWidget {
   BenchPage({Key key, this.benchId}) : super(key: key);
   static String routeName = '/bench';
   final String benchId;
+
   @override
   _BenchPageState createState() => _BenchPageState();
 }
@@ -31,9 +37,15 @@ class BenchPage extends StatefulWidget {
 class _BenchPageState extends State<BenchPage> {
   final BenchPageBloc _benchPageBloc = BenchPageBloc();
   UiBench _bench;
+
   String commentString;
   List<Widget> _filters;
-
+  Map<ComplainType, bool> _complains = {
+    ComplainType.ABSENT_BENCH: false,
+    ComplainType.INAPPROPRIATE_CONTENT: false,
+    ComplainType.OFFENSIVE_MATERIAL: false
+  };
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
@@ -43,6 +55,7 @@ class _BenchPageState extends State<BenchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: (Theme.of(context).brightness == Brightness.light)
           ? Color(0xFFE5E5E5)
           : Color(0xFFE5E5E5),
@@ -82,12 +95,16 @@ class _BenchPageState extends State<BenchPage> {
           child: BlocBuilder<BenchPageBloc, BenchPageState>(
               builder: (context, state) {
             if (state is BenchPageLoading) {
+              print('loading');
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitial) {
+              print('initial');
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
-              return _buildBenchPage(state.benchUi);
+              print('loaded');
+              return _buildBenchPage(state.benchUi, context);
             } else if (state is BenchPageError) {
+              print('error');
               return Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +140,7 @@ class _BenchPageState extends State<BenchPage> {
     );
   }
 
-  Widget _buildBenchPage(UiBench bench) {
+  Widget _buildBenchPage(UiBench bench, BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -270,11 +287,8 @@ class _BenchPageState extends State<BenchPage> {
                                 var user =
                                     BlocProvider.of<AuthenticationBloc>(context)
                                         .getUser;
-                                var respone = await dio
-                                    .patch('/favorites/${user.uid}', data: {
-                                  'uid': user.uid,
-                                  'bench_id': widget.benchId
-                                });
+                                var respone = dio
+                                    .patch('/benches/${widget.benchId}/like/');
                                 BlocProvider.of<MapBloc>(context).add(
                                     OnLikeClickedEvent(
                                         markerId: widget.benchId,
@@ -287,10 +301,7 @@ class _BenchPageState extends State<BenchPage> {
                                     BlocProvider.of<AuthenticationBloc>(context)
                                         .getUser;
                                 var respone = await dio
-                                    .put('/favorites/${user.uid}', data: {
-                                  'uid': user.uid,
-                                  'bench_id': widget.benchId
-                                });
+                                    .put('/benches/${widget.benchId}/like/');
                                 BlocProvider.of<MapBloc>(context).add(
                                     OnLikeClickedEvent(
                                         markerId: widget.benchId,
@@ -392,6 +403,7 @@ class _BenchPageState extends State<BenchPage> {
                                   horizontal: 16.0, vertical: 2.0),
                               child: Comment(
                                 comment: bench.comments[index],
+                                scaffoldKey: _scaffoldKey,
                               ),
                             );
                           }),
@@ -425,7 +437,9 @@ class _BenchPageState extends State<BenchPage> {
                                   .textTheme
                                   .button
                                   .copyWith(color: Colors.orange)),
-                          onPressed: () => {},
+                          onPressed: () async {
+                            _createDialogComplain(context);
+                          },
                         ),
                       ),
                     )),
@@ -436,6 +450,64 @@ class _BenchPageState extends State<BenchPage> {
       ),
     );
   }
+
+  void _createDialogComplain(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => ListProvider(
+          _complains,
+          DialogWithChild(
+              title: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              buttonText: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              child: CheckBoxList(),
+              onTap: onTap,
+              buttonType: DialogButtonType.COMPLAIN)),
+    );
+  }
+
+  onTap() async {
+    var report = '';
+    _complains.forEach((key, value) {
+      if (value == true) {
+        report = report + complaintTypeToString(key, context) + " ";
+      }
+    });
+    Navigator.pop(context);
+    try {
+      var response = await dio.post("/reports/create-bench-report/",
+          data: {"bench_id": widget.benchId, "report_message": report});
+    } on DioError catch (e) {
+      if (e.response.statusCode == 405) {
+        print("405 ошибка");
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Вы уже жаловались на эту лавочку.'),
+              Icon(Icons.error)
+            ],
+          ),
+          backgroundColor: Colors.red,
+        ));
+      } else {
+        print("ошибка сети");
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Проблемы с соединением, повторите попытку.'),
+              Icon(Icons.error)
+            ],
+          ),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
+  }
+
+  push() async {}
 
   addComment() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
