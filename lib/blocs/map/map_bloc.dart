@@ -261,7 +261,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Stream<MapState> _showLoadDaraFailtureState(String message) async* {
-    yield LoadDaraFailture(message: message);
+    yield LoadDataFailture(message: message);
   }
 
   @override

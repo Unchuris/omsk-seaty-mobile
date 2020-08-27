@@ -43,14 +43,13 @@ class _MapScreenState extends State<MapScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // ignore: close_sinks
     final blocMap = BlocProvider.of<MapBloc>(context);
 
     return Material(
         child: MultiBlocListener(
       listeners: [
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
-          if (effect is LoadDaraFailture) {
+          if (effect is LoadDataFailture) {
             _scaffoldKey.currentState.showSnackBar(
                 getSnackBarError("Опа, а че с инетом?!", context)); //TODO change text
             return;
@@ -74,32 +73,39 @@ class _MapScreenState extends State<MapScreen>
             }
             if (_sliderBenchesUi == null || _isCloseBottomSheet) {
               _isCloseBottomSheet = false;
-              setState(() {
-                _isVisibleHelpElements = false;
-              });
+              if (_isVisibleHelpElements) {
+                setState(() {
+                  _isVisibleHelpElements = false;
+                });
+              }
               _bottomSheetController = _scaffoldKey.currentState
                   .showBottomSheet(
                       (context) => _getBenchSlider(effect.sliderBenchesUi));
               _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
               _bottomSheetController.closed.then((value) {
                 _isCloseBottomSheet = true;
-                setState(() {
-                  _isVisibleHelpElements = true;
-                });
+                if (!_isVisibleHelpElements) {
+                  setState(() {
+                    _isVisibleHelpElements = true;
+                  });
+                }
               });
               return;
             }
             //Скрывать диалог, если нечего показывать
             if (effect.sliderBenchesUi.benches.isEmpty) {
               _sliderBenchesUi = null;
-              _bottomSheetController.close();
+              if (_bottomSheetController != null) {
+                _bottomSheetController.close();
+              }
               return;
             }
             //Нажали на маркер и надо обновить список
-            // Function eq = ListEquality().equals;
-            _bottomSheetController.setState(() {
-              _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
-            });
+            if (_bottomSheetController != null) {
+              _bottomSheetController?.setState(() {
+                _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
+              });
+            }
             return;
           }
         }),
@@ -116,7 +122,6 @@ class _MapScreenState extends State<MapScreen>
                           key: _scaffoldKey,
                           body: Stack(children: [
                             _getGoogleMap(snapshotMarkers.data),
-                            //_getBenchSlider(snapshotBenches.data),
                             _getMenuButton(context),
                             _getFilterButton(context),
                             Positioned(
@@ -132,8 +137,6 @@ class _MapScreenState extends State<MapScreen>
                                   ],
                                 ))
                           ]),
-//                                  bottomSheet:
-//                                      _getBenchSlider(snapshotBenches.data),
                           //TODO remove mock favorites
                           drawer: AppDrawer([]),
                           endDrawer: FilterDrawer(

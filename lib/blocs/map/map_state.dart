@@ -16,9 +16,9 @@ class MarkersInitial extends MapState {
   List<Object> get props => [];
 }
 
-class LoadDaraFailture extends MapState {
+class LoadDataFailture extends MapState {
   final String message;
-  const LoadDaraFailture({this.message});
+  const LoadDataFailture({this.message});
   @override
   List<Object> get props => [message];
 }

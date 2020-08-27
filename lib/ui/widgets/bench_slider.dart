@@ -27,7 +27,7 @@ class BenchSlider extends StatefulWidget {
 }
 
 class _BenchSlider extends State<BenchSlider> {
-  BenchSliderOptions get options => widget.options ?? BenchSliderOptions();
+  BenchSliderOptions get options => widget.options ?? BenchSliderOptions(height: 200);
 
   List<BenchLight> get items => widget.items ?? List<BenchLight>();
 
@@ -39,18 +39,13 @@ class _BenchSlider extends State<BenchSlider> {
   int currentId = 0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didUpdateWidget(BenchSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
     var initPage = _getInitPage();
     if (initPage != currentId) {
       currentId = initPage;
-      _carouselController.jumpToPage(initPage);
+      _carouselController.animateToPage(initPage);
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   void onPageChanged(int index, CarouselPageChangedReason changeReason) {
@@ -113,7 +108,7 @@ class BenchSliderOptions {
 
   BenchSliderOptions({
     this.enlargeCenterPage: true,
-    this.height,
+    @required this.height,
     this.enableInfiniteScroll: false,
     this.currentBenches,
     this.onPageChanged,
