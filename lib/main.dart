@@ -45,9 +45,7 @@ void main() async {
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
 
   dio.options
-    ..baseUrl = "https://355032-cu98624.tmweb.ru/api/"
-    ..connectTimeout = 5000
-    ..receiveTimeout = 5000;
+    ..baseUrl = "https://355032-cu98624.tmweb.ru/api/";
   dio.interceptors
       .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
     var customHeaders;

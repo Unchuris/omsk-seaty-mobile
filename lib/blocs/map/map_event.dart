@@ -37,7 +37,8 @@ class OnFilterChangedEvent extends MapEvent {
 
 class OnBenchSliderPageChanged extends MapEvent {
   final BenchLight bench;
-  const OnBenchSliderPageChanged({this.bench});
+  final int index;
+  const OnBenchSliderPageChanged({this.bench, this.index});
 
   @override
   List<Object> get props => [bench];
