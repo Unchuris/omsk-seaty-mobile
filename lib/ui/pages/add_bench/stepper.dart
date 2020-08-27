@@ -441,7 +441,7 @@ class _AddBenchStepperState extends State<AddBenchStepper>
                 Column(
                   children: <Widget>[
                     Container(
-                      //height: 50.0,
+                      height: 50.0,
                       child: Center(
                         child: _buildIcon(i),
                       ),
@@ -456,9 +456,9 @@ class _AddBenchStepperState extends State<AddBenchStepper>
         if (!_isLast(i))
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(right: 10, left: 10),
+              //margin: const EdgeInsets.only(right: 10, left: 10),
               height: 2.0,
-              color: Colors.red,
+              color: Colors.orange,
             ),
           ),
       ],

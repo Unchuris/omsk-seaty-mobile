@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'list_provider.dart';
-
 class DialogWithChild extends StatelessWidget {
   final String title;
   final Widget child;
   final String buttonText;
-  final DialogButtonType buttonType;
+  //final DialogButtonType buttonType;
+  final Function onTap;
 
-  DialogWithChild({this.title, this.child, this.buttonText, this.buttonType});
+  DialogWithChild({this.title, this.child, this.buttonText, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +68,9 @@ class DialogWithChild extends StatelessWidget {
                     type: MaterialType.transparency,
                     child: InkWell(
                         borderRadius: bottomBorder,
-                        onTap: () {
-                          var provider = ListProvider.of(context);
+                        onTap: //() {
+                            onTap
+                        /*var provider = ListProvider.of(context);
                           switch (buttonType) {
                             case DialogButtonType.LIST:
                               {
@@ -91,11 +91,12 @@ class DialogWithChild extends StatelessWidget {
                               break;
                             default:
                               {
-                                print('Wrong choise');
+                                print('Wrong choose');
                               }
                               break;
-                          }
-                        }))),
+                          }*/
+                        //}
+                        ))),
           ],
         ),
       ),

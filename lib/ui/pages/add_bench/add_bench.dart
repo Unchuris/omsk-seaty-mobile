@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
-
+import 'package:omsk_seaty_mobile/ui/pages/add_bench/steps/step_add_information.dart';
 import 'stepper.dart';
 
 class AddBenchScreen extends StatefulWidget {
@@ -28,12 +28,7 @@ class _AddBenchState extends State<AddBenchScreen> {
     return AddBenchStepper(
       steps: [
         _buildAddImageStep(context),
-        AddBenchStep(
-            isActive: false,
-            title: Text('Add information'),
-            content: Center(
-                child: Text('Second step',
-                    style: TextStyle(color: Colors.black)))),
+        _buildAddInformationStep(),
         AddBenchStep(
             title: Text('Star bench'),
             content: Center(
@@ -48,6 +43,86 @@ class _AddBenchState extends State<AddBenchScreen> {
       currentStep: _index,
     );
   }
+
+  _buildAddInformationStep() {
+    return AddBenchStep(
+        title: Text('Add information'), content: AddInformationStep());
+  }
+
+  /*_buildAddInformationStep() {
+    return AddBenchStep(
+        title: Text('Add information'),
+        content: Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Text('About bench',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(color: Colors.black)),
+                Row(
+                  children: [
+                    _buildAddInformationButton(),
+                    _buildInformationButtons()
+                  ],
+                )
+              ],
+            )));
+  }
+
+  _buildAddInformationButton() {
+    Map<BenchType, bool> benches = {
+      BenchType.TABLE_NEARBY: false,
+      BenchType.COVERED_BENCH: false,
+      BenchType.SCENIC_VIEW: false,
+      BenchType.FOR_A_LARGE_COMPANY: false
+    };
+
+    return Container(
+      margin: const EdgeInsets.only(left: 16),
+      height: 30,
+      width: 30,
+      child: RawMaterialButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) => ListProvider(
+                  benches,
+                  BlocProvider<InformationAboutBloc>(
+                      create: (context) => _informationAboutBloc,
+                      child: DialogWithChild(
+                          title: AppLocalizations.of(context)
+                              .translate('dialog_title_choose'),
+                          buttonText: AppLocalizations.of(context)
+                              .translate('dialog_button_add'),
+                          child: CheckBoxList(),
+                          buttonType: DialogButtonType.LIST))));
+        },
+        fillColor: Colors.orange,
+        child: Icon(
+          Icons.add,
+          size: 24.0,
+        ),
+        shape: CircleBorder(),
+      ),
+    );
+  }
+
+  _buildInformationButtons() {
+    return Container(
+        height: 50,
+        margin: const EdgeInsets.only(left: 16),
+        child: BlocProvider(
+            create: (context) => _informationAboutBloc,
+            child: BlocBuilder<InformationAboutBloc, InformationAboutState>(
+              builder: (context, state) {
+                if (state is InformationAboutDone) {
+                  return Text('Test yes',
+                      style: TextStyle(color: Colors.black));
+                }
+                return Text('Test no', style: TextStyle(color: Colors.black));
+              },
+            )));
+  }*/
 
   _buildAddImageStep(BuildContext context) {
     return AddBenchStep(

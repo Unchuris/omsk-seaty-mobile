@@ -17,7 +17,6 @@ import 'package:omsk_seaty_mobile/ui/utils/theme_change_event.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 import 'dialog/childs/checkbox_list.dart';
 import 'dialog/dialog_with_child.dart';
-import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
   final List<BenchLight> markers;
@@ -69,7 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 Navigator.pushNamed(context, TopUserPage.routeName);
               },
             ),
-            _createDrawerItem(
+            /*_createDrawerItem(
               icon: Icon(Icons.settings),
               text: 'Dialog test list',
               onTap: () {
@@ -82,7 +81,7 @@ class _AppDrawerState extends State<AppDrawer> {
               onTap: () {
                 _createDialogComplain();
               },
-            ),
+            ),*/
             _createDrawerItem(
                 icon: Icon(Icons.settings),
                 text: 'Dialog test thanks',
@@ -103,7 +102,7 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  void _createDialogWithList() {
+  /*void _createDialogWithList() {
     Map<BenchType, bool> benches = {
       BenchType.TABLE_NEARBY: false,
       BenchType.COVERED_BENCH: false,
@@ -142,7 +141,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     .translate('dialog_title_complain'),
                 child: CheckBoxList(),
                 buttonType: DialogButtonType.COMPLAIN)));
-  }
+  }*/
 
   void _createDialogThanks() {
     showDialog(
@@ -153,7 +152,7 @@ class _AppDrawerState extends State<AppDrawer> {
             buttonText:
                 AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
-            buttonType: DialogButtonType.CLOSE));
+            onTap: () => Navigator.pop(context)));
   }
 }
 
