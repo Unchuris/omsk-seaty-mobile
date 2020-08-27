@@ -8,9 +8,8 @@ abstract class FavoritesEvent extends Equatable {
 }
 
 class GetFavoritesEvent extends FavoritesEvent {
-  final String uid;
-  const GetFavoritesEvent({this.uid});
+  const GetFavoritesEvent();
 
   @override
-  List<Object> get props => [uid];
+  List<Object> get props => [];
 }

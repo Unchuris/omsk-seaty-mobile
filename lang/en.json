@@ -55,4 +55,7 @@
     "string_no_location": "Set location for the new bench",
     "string_add_new_photo": "Add a photo for your new bench",
     "string_cancel": "Cancel"
+    "top_users":"Top users",
+    "top_benches": "Top benches",
+    "my_benches": "My benches"
 }

@@ -7,8 +7,9 @@ class DialogWithChild extends StatelessWidget {
   final Widget child;
   final String buttonText;
   final DialogButtonType buttonType;
-
-  DialogWithChild({this.title, this.child, this.buttonText, this.buttonType});
+  final Function onTap;
+  DialogWithChild(
+      {this.title, this.child, this.buttonText, this.buttonType, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -67,35 +68,7 @@ class DialogWithChild extends StatelessWidget {
             SizedBox.expand(
                 child: Material(
                     type: MaterialType.transparency,
-                    child: InkWell(
-                        borderRadius: bottomBorder,
-                        onTap: () {
-                          var provider = ListProvider.of(context);
-                          switch (buttonType) {
-                            case DialogButtonType.LIST:
-                              {
-                                print('List: ${provider.list}');
-                                Navigator.pop(context);
-                              }
-                              break;
-                            case DialogButtonType.COMPLAIN:
-                              {
-                                print('List: ${provider.list}');
-                                Navigator.pop(context);
-                              }
-                              break;
-                            case DialogButtonType.CLOSE:
-                              {
-                                Navigator.pop(context);
-                              }
-                              break;
-                            default:
-                              {
-                                print('Wrong choice');
-                              }
-                              break;
-                          }
-                        }))),
+                    child: InkWell(borderRadius: bottomBorder, onTap: onTap))),
           ],
         ),
       ),

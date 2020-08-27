@@ -27,29 +27,46 @@ class LoginForm extends StatelessWidget {
           _swithToMapScreen(context);
         }
       },
-      child: Column(
-        children: <Widget>[
-          GoogleLoginButton(),
-          SizedBox(height: 10),
-          ButtonTheme(
-            minWidth: 270,
-            height: 50,
-            child: FlatButton(
-              child: Text(AppLocalizations.of(context).translate('string_skip'),
-                  style: TextStyle(color: Colors.orange)),
-              onPressed: () => {
-                _swithToMapScreen(context),
-                BlocProvider.of<AuthenticationBloc>(context)
-                    .add(AuthenticationSkipped())
-              },
-            ),
-          )
-        ],
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, state) {
+          if (state.isLoading || state.isSuccess) {
+            print('загрузка');
+            return Column(
+              children: [
+                SizedBox(height: 10),
+                CircularProgressIndicator(),
+                SizedBox(height: 50),
+              ],
+            );
+          } else {
+            print('авторизация');
+            return Column(
+              children: <Widget>[
+                GoogleLoginButton(),
+                SizedBox(height: 10),
+                ButtonTheme(
+                  minWidth: 270,
+                  height: 50,
+                  child: FlatButton(
+                    child: Text(
+                        AppLocalizations.of(context).translate('string_skip'),
+                        style: TextStyle(color: Colors.orange)),
+                    onPressed: () => {
+                      _swithToMapScreen(context),
+                      BlocProvider.of<AuthenticationBloc>(context)
+                          .add(AuthenticationSkipped())
+                    },
+                  ),
+                )
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
   void _swithToMapScreen(BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/map');
+    Navigator.popAndPushNamed(context, "/map");
   }
 }

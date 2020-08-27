@@ -1,4 +1,5 @@
 class UiComment {
+  String id;
   String uid;
   String displayName;
   String rank;
@@ -8,6 +9,7 @@ class UiComment {
 
   UiComment(
       {this.uid,
+      this.id,
       this.displayName,
       this.text,
       this.rank,
@@ -15,6 +17,7 @@ class UiComment {
       this.rating});
 
   UiComment.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
     var user = json['author'];
     uid = user['uid'];
     displayName = user['displayName'];

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
@@ -19,6 +20,7 @@ class AddCommentPage extends StatefulWidget {
 class _AddCommentPageState extends State<AddCommentPage> {
   int rating = 0;
   final myController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return _buildComment();
@@ -26,6 +28,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
 
   Widget _buildComment() {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: CustomAppBar(
           height: MediaQuery.of(context).padding.top,
           title: AppLocalizations.of(context).translate('string_add_comment')),
@@ -87,14 +90,43 @@ class _AddCommentPageState extends State<AddCommentPage> {
                     onPressed: () async {
                       var _user =
                           BlocProvider.of<AuthenticationBloc>(context).getUser;
-                      var responce = await dio.post('/comments/', data: {
-                        'uid': _user.uid,
-                        'bench_id': widget.benchId,
-                        'text': myController.text,
-                        'rating': rating
-                      });
-                      widget.onAdd();
-                      Navigator.pop(context);
+                      try {
+                        var responce = await dio.post('/comments/', data: {
+                          'uid': _user.uid,
+                          'bench_id': widget.benchId,
+                          'text': myController.text,
+                          'rating': rating
+                        });
+                        widget.onAdd();
+                        Navigator.pop(context);
+                      } on DioError catch (e) {
+                        if (e.response.statusCode == 405) {
+                          print("405 ошибка");
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Вы уже комментировали даннулю лавочку.'),
+                                Icon(Icons.error)
+                              ],
+                            ),
+                            backgroundColor: Colors.red,
+                          ));
+                        } else {
+                          print("ошибка сети");
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    'Проблемы с соединением,повторите попытку.'),
+                                Icon(Icons.error)
+                              ],
+                            ),
+                            backgroundColor: Colors.red,
+                          ));
+                        }
+                      }
                     },
                   ),
                 ),
