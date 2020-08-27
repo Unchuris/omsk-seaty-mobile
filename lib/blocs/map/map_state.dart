@@ -16,6 +16,13 @@ class MarkersInitial extends MapState {
   List<Object> get props => [];
 }
 
+class LoadDataFailture extends MapState {
+  final String message;
+  const LoadDataFailture({this.message});
+  @override
+  List<Object> get props => [message];
+}
+
 class FindButtonPressingState extends MapState {
   final Map<String, bool> checkBox;
   const FindButtonPressingState({this.checkBox});

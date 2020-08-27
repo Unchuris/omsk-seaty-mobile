@@ -10,11 +10,13 @@ import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
+import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 import 'bench/bench.dart';
 import 'favorites/favorites.dart';
@@ -33,18 +35,25 @@ class _MapScreenState extends State<MapScreen>
   final CarouselControllerImpl _carouselController = CarouselController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _isVisible = true;
+  bool _isVisibleHelpElements = true;
+  bool _isCloseBottomSheet = true;
+  SliderBenchesUi _sliderBenchesUi;
+  PersistentBottomSheetController _bottomSheetController;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // ignore: close_sinks
     final blocMap = BlocProvider.of<MapBloc>(context);
 
     return Material(
         child: MultiBlocListener(
       listeners: [
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
+          if (effect is LoadDataFailture) {
+            _scaffoldKey.currentState.showSnackBar(
+                getSnackBarError("Опа, а че с инетом?!", context)); //TODO change text
+            return;
+          }
           if (effect is UpdateUserLocationEffect) {
             await _controller.future.then((controller) {
               controller.animateCamera(CameraUpdate.newLatLngZoom(
@@ -54,14 +63,50 @@ class _MapScreenState extends State<MapScreen>
             return;
           }
           if (effect is CameraMoveEffect) {
-//              setState(() {
-//                _isVisible = false;
-//              });
+            return;
           }
           if (effect is CameraIdleEffect) {
-//              setState(() {
-//                _isVisible = true;
-//              });
+            if (effect.onMarkerTaped != true) return;
+            //TODO не самый лучший код, на методы разбить хотябы ¯\_(ツ)_/¯
+            if (_sliderBenchesUi == null && effect.sliderBenchesUi.benches.isEmpty) {
+              return;
+            }
+            if (_sliderBenchesUi == null || _isCloseBottomSheet) {
+              _isCloseBottomSheet = false;
+              if (_isVisibleHelpElements) {
+                setState(() {
+                  _isVisibleHelpElements = false;
+                });
+              }
+              _bottomSheetController = _scaffoldKey.currentState
+                  .showBottomSheet(
+                      (context) => _getBenchSlider(effect.sliderBenchesUi));
+              _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
+              _bottomSheetController.closed.then((value) {
+                _isCloseBottomSheet = true;
+                if (!_isVisibleHelpElements) {
+                  setState(() {
+                    _isVisibleHelpElements = true;
+                  });
+                }
+              });
+              return;
+            }
+            //Скрывать диалог, если нечего показывать
+            if (effect.sliderBenchesUi.benches.isEmpty) {
+              _sliderBenchesUi = null;
+              if (_bottomSheetController != null) {
+                _bottomSheetController.close();
+              }
+              return;
+            }
+            //Нажали на маркер и надо обновить список
+            if (_bottomSheetController != null) {
+              _bottomSheetController?.setState(() {
+                _sliderBenchesUi = SliderBenchesUi.from(effect.sliderBenchesUi);
+              });
+            }
+            return;
           }
         }),
       ],
@@ -72,41 +117,36 @@ class _MapScreenState extends State<MapScreen>
               builder: (context, snapshotFilter) =>
                   StreamBuilder<Map<String, Marker>>(
                       stream: blocMap.markers,
-                      builder: (context, snapshotMarkers) =>
-                          StreamBuilder<List<BenchLight>>(
-                              stream: blocMap.benches,
-                              builder: (context, snapshotBenches) {
-                                return Scaffold(
-                                  key: _scaffoldKey,
-                                  body: Stack(children: [
-                                    _getGoogleMap(snapshotMarkers.data),
-                                    _getBenchSlider(snapshotBenches.data),
-                                    _getMenuButton(context),
-                                    _getFilterButton(context),
-                                    Positioned(
-                                        bottom: 56,
-                                        right: 0,
-                                        child: Column(
-                                          children: [
-                                            _buildMyLocation(context),
-                                            Container(
-                                              margin: EdgeInsets.only(top: 26),
-                                              child:
-                                                  _buildAddBenchButton(context),
-                                            ),
-                                          ],
-                                        )),
-                                  ]),
-                                  //TODO remove mock favorites
-                                  drawer: AppDrawer([]),
-                                  endDrawer: FilterDrawer(
-                                      filters: snapshotFilter.data != null
-                                          ? snapshotFilter.data
-                                          : Set()),
-                                  drawerEnableOpenDragGesture: false,
-                                  endDrawerEnableOpenDragGesture: false,
-                                );
-                              }))),
+                      builder: (context, snapshotMarkers) {
+                        return Scaffold(
+                          key: _scaffoldKey,
+                          body: Stack(children: [
+                            _getGoogleMap(snapshotMarkers.data),
+                            _getMenuButton(context),
+                            _getFilterButton(context),
+                            Positioned(
+                                bottom: 56,
+                                right: 0,
+                                child: Column(
+                                  children: [
+                                    _buildMyLocation(context),
+                                    Container(
+                                      margin: EdgeInsets.only(top: 26),
+                                      child: _buildAddBenchButton(context),
+                                    ),
+                                  ],
+                                ))
+                          ]),
+                          //TODO remove mock favorites
+                          drawer: AppDrawer([]),
+                          endDrawer: FilterDrawer(
+                              filters: snapshotFilter.data != null
+                                  ? snapshotFilter.data
+                                  : Set()),
+                          drawerEnableOpenDragGesture: false,
+                          endDrawerEnableOpenDragGesture: false,
+                        );
+                      })),
         ],
       ),
     ));
@@ -122,28 +162,38 @@ class _MapScreenState extends State<MapScreen>
   }
 
   Widget _buildMyLocation(BuildContext context) {
-    return RawMaterialButton(
-      onPressed: () => BlocProvider.of<MapBloc>(context)
-          .add(OnMapLocationButtonClickedEvent()),
-      elevation: 8.0,
-      fillColor: Theme.of(context).buttonColor,
-      child: SvgPicture.asset("assets/ic_location.svg"),
-      padding: EdgeInsets.only(left: 19.0, right: 19.0, top: 15, bottom: 15),
-      shape: CircleBorder(),
-    );
+    return AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: _isVisibleHelpElements
+            ? RawMaterialButton(
+                onPressed: () => BlocProvider.of<MapBloc>(context)
+                    .add(OnMapLocationButtonClickedEvent()),
+                elevation: 8.0,
+                fillColor: Theme.of(context).buttonColor,
+                child: SvgPicture.asset("assets/ic_location.svg"),
+                padding: EdgeInsets.only(
+                    left: 19.0, right: 19.0, top: 15, bottom: 15),
+                shape: CircleBorder(),
+              )
+            : SizedBox.shrink());
   }
 
   Widget _buildAddBenchButton(BuildContext context) {
-    return RawMaterialButton(
-      onPressed: () {
-        Navigator.pushNamed(context, FavoritesPage.routeName);
-      },
-      elevation: 8.0,
-      fillColor: Theme.of(context).buttonColor,
-      child: SvgPicture.asset("assets/ic_add_bench.svg"),
-      padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
-      shape: CircleBorder(),
-    );
+    return AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: _isVisibleHelpElements
+            ? RawMaterialButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, FavoritesPage.routeName);
+                },
+                elevation: 8.0,
+                fillColor: Theme.of(context).buttonColor,
+                child: SvgPicture.asset("assets/ic_add_bench.svg"),
+                padding: EdgeInsets.only(
+                    left: 16.0, right: 16.0, top: 10, bottom: 10),
+                shape: CircleBorder(),
+              )
+            : SizedBox.shrink());
   }
 
   Widget _getGoogleMap(Map<String, Marker> data) {
@@ -166,23 +216,17 @@ class _MapScreenState extends State<MapScreen>
     );
   }
 
-  Widget _getBenchSlider(List<BenchLight> benches) {
-    return Visibility(
-        visible: _isVisible,
-        child: (benches != null && benches.isNotEmpty)
-            ? Container(
-                padding: EdgeInsets.only(bottom: 20.0),
-                alignment: Alignment.bottomCenter,
-                child: BenchSlider(
-                    items: benches,
-                    options: BenchSliderOptions(
-                      // TODO добавить бесконечную прокрутки, если выбран не кластер
-                      height: 200,
-                      onPageChanged: _onBenchSliderPageChanged,
-                      onItemClicked: _onBenchSliderItemClicked,
-                    ),
-                    carouselController: _carouselController))
-            : Container());
+  Widget _getBenchSlider(SliderBenchesUi benches) {
+    return BenchSlider(
+        items: benches.benches,
+        options: BenchSliderOptions(
+          currentBenches: benches.currentBenches,
+          enableInfiniteScroll: !benches.isClusterState,
+          height: 200,
+          onPageChanged: _onBenchSliderPageChanged,
+          onItemClicked: _onBenchSliderItemClicked,
+        ),
+        carouselController: _carouselController);
   }
 
   Widget _getMenuButton(BuildContext context) {
@@ -240,9 +284,9 @@ class _MapScreenState extends State<MapScreen>
     });
   }
 
-  void _onBenchSliderPageChanged(BenchLight benchLight) {
+  void _onBenchSliderPageChanged(BenchLight benchLight, int index) {
     BlocProvider.of<MapBloc>(context)
-        .add(OnBenchSliderPageChanged(bench: benchLight));
+        .add(OnBenchSliderPageChanged(bench: benchLight, index: index));
   }
 
   void _onBenchSliderItemClicked(BenchLight benchLight) {

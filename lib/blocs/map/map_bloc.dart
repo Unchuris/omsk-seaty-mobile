@@ -11,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/map_marker.dart';
+import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:image/image.dart' as images;
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
@@ -37,6 +38,7 @@ class CurrentMarker {
   const CurrentMarker({this.type, this.markerId});
 }
 
+//TODO добавить обработку ошибки сети и добавить loading
 //TODO исправить баг, если слайдер открыт, то при нажатии на пин показывается не он
 class MapBloc extends Bloc<MapEvent, MapState> {
   static const maxZoom = 21;
@@ -55,21 +57,27 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Position _userPosition;
   MapMarker _currentMarker;
+
   //Map<benchId, clusterId>
   Map<String, MapMarker> _clusters = Map();
 
   final _filterController = StreamController<Set<FilterType>>.broadcast();
+
   Stream<Set<FilterType>> get filters => _filterController.stream;
+
   Function(Set<FilterType>) get _addFilters => _filterController.sink.add;
 
   List<BenchLight> _benches;
-  final _benchesController = StreamController<List<BenchLight>>.broadcast();
-  Stream<List<BenchLight>> get benches => _benchesController.stream;
-  Function(List<BenchLight>) get _addBenches => _benchesController.sink.add;
+  SliderBenchesUi _sliderBenchesUi = SliderBenchesUi(benches: []);
+
+  //TODO dirty hack
+  bool _onMarkerTaped = false;
 
   Map<String, Marker> _markers;
   final _markerController = StreamController<Map<String, Marker>>.broadcast();
+
   Stream<Map<String, Marker>> get markers => _markerController.stream;
+
   Function(Map<String, Marker>) get _addMarkers => _markerController.sink.add;
 
   Fluster<MapMarker> _fluster;
@@ -95,6 +103,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
     if (event is OnMapLocationButtonClickedEvent) {
+      _onMarkerTaped = false;
       yield* _mapOnMapLocationButtonClickedToEffect();
       return;
     }
@@ -102,7 +111,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       _geolocationRepository.getCurrentPositionStream().listen((position) {
         _userPosition = position;
       });
-      _buildMediaPool();
+      try {
+        await _buildMediaPool();
+      } catch (_) {
+        yield* _showLoadDaraFailtureState(null);
+      }
       return;
     }
     if (event is OnMapCreatedEvent) {
@@ -112,10 +125,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     if (event is OnBenchSliderPageChanged) {
+      _onMarkerTaped = false;
       var bench = event.bench;
       var cluster = _clusters[bench.id];
       bool constrainCluster = cluster != null;
       if (constrainCluster && _currentMarker.clusterId == cluster.clusterId) {
+        return;
+      }
+
+      if (!constrainCluster && identical(_currentMarker.markerId, bench.id)) {
         return;
       }
 
@@ -145,30 +163,37 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     if (event is OnFilterChangedEvent) {
       _repository.filters = Set.of(event.filterTypes);
       _addFilters(_repository.filters);
-      if (_benches != null) {
-        _benches.clear();
-        _addBenches(_benches);
-      }
+      _sliderBenchesUi = SliderBenchesUi(benches: []);
       _currentMarker = null;
+      _onMarkerTaped = false;
       _clusters = Map();
-      _buildMediaPool();
+      try {
+        await _buildMediaPool();
+      } catch (_) {
+        yield* _showLoadDaraFailtureState(null);
+      }
       _updateBenchesByVisibleRegion();
       return;
     }
     if (event is OnLikeClickedEvent) {
-      for (var bench in _benches) {
+      _onMarkerTaped = false;
+      //TODO add request
+      for (var bench in _sliderBenchesUi.benches) {
         if (bench.id == event.markerId) {
           bench.like = event.liked;
-          _addBenches(_benches);
+          //TODO
+          //_addBenches(_sliderBenchesUi);
           break;
         }
       }
       return;
     }
     if (event is OnMarkerTapEvent) {
+      _onMarkerTaped = true;
       if (identical(event.marker, _currentMarker)) {
         return;
       }
+      _sliderBenchesUi.isClusterState = event.marker.isCluster;
       if (event.marker.isCluster) {
         List<String> children = _fluster
             .points(event.marker.clusterId)
@@ -179,8 +204,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         _markers[event.marker.clusterId.toString()] = _markerUpdateIcon(
             _markers[event.marker.clusterId.toString()],
             selectedBitmapDescriptor);
-        _benches = await _repository.getClusterBenches(children);
-        _addBenches(_benches);
+        _sliderBenchesUi.benches =
+            await _repository.getClusterBenches(children);
+        _sliderBenchesUi.currentBenches = null;
       } else {
         var selectedBitmapDescriptor =
             await _getImageBitmapDescriptor(IMAGE_SELECTEDPIN);
@@ -204,9 +230,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           !_currentMarker.isCluster &&
           _currentCameraPosition.visibleRegion.contains(
               LatLng(_currentMarker.latitude, _currentMarker.longitude))) {
-        _addBenches(_benches);
+        if (_benches.isNotEmpty) {
+          _sliderBenchesUi.currentBenches = _benches
+              .firstWhere((element) => element.id == _currentMarker.markerId);
+        }
+        _sliderBenchesUi.benches = _benches.toList();
       }
-      yield* _mapOnCameraIdleToEffect(event);
+      yield* _mapOnCameraIdleToEffect();
       return;
     }
     return;
@@ -223,18 +253,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     yield CameraMoveEffect();
   }
 
-  Stream<MapState> _mapOnCameraIdleToEffect(OnCameraIdleEvent event) async* {
-    yield CameraIdleEffect();
+  Stream<MapState> _mapOnCameraIdleToEffect() async* {
+    var result = _onMarkerTaped;
+    _onMarkerTaped = false;
+    yield CameraIdleEffect(
+        sliderBenchesUi: _sliderBenchesUi, onMarkerTaped: result);
+  }
+
+  Stream<MapState> _showLoadDaraFailtureState(String message) async* {
+    yield LoadDataFailture(message: message);
   }
 
   @override
   Future<void> close() {
     _markerController?.close();
-    _benchesController?.close();
     _filterController?.close();
     return super.close();
   }
 
+  //TODO check marker id is null
   Marker _markerUpdateIcon(Marker marker, BitmapDescriptor bitmapDescriptor) {
     return Marker(
         markerId: marker.markerId,
@@ -257,7 +294,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
-  void _buildMediaPool() async {
+  Future _buildMediaPool() async {
     var result = await _repository.getMarkers().then((benches) {
       return {
         for (var bench in benches)

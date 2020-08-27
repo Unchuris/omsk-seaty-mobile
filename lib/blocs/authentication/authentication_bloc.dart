@@ -51,7 +51,7 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
     _user = await _userRepository.getUser();
-
+    //TODO что это?)
     var responce = await dio.post('users/', data: _user.toJson());
 
     _userRepository.saveUserToPreferences(_user);
