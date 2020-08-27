@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
+import 'package:collection/collection.dart';
 
 import '../../app_localizations.dart';
 
@@ -18,6 +19,17 @@ class FilterDrawer extends StatefulWidget {
 
 class _FilterDrawerState extends State<FilterDrawer> {
   List<FilterType> get _filters => widget.filters.toList() ?? List();
+  var startList = List();
+  Function eq = ListEquality().equals;
+  var _isChangeList = false;
+
+  @override
+  void initState() {
+    startList = widget.filters
+        .map((e) => FilterType(benchType: e.benchType, enable: e.enable))
+        .toList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +38,41 @@ class _FilterDrawerState extends State<FilterDrawer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _getHeader(),
-          Expanded(child: ListView(children: _getFilters(_filters, context))),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 20),
-            child: Center(
-              child: RaisedButton(
-                  child: Text(
-                      AppLocalizations.of(context)
-                          .translate('find')
-                          .toUpperCase(), //TODO не учитываем турецкий язык, поэтому локаль не передаем
-                      style: Theme.of(context).textTheme.button),
-                  onPressed: () {
-                    //TODO добавить проверку, что список не поменялся
-                    BlocProvider.of<MapBloc>(context).add(
-                        OnFilterChangedEvent(filterTypes: _filters.toSet()));
-                    Navigator.pop(context);
-                  }),
-            ),
-          ),
+          Expanded(
+              child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView(children: _getFilters(_filters, context)))),
+          _buildButtonWithOpacity(
+              context,
+              _isChangeList ? 1 : 0.5,
+              _isChangeList
+                  ? () {
+                      BlocProvider.of<MapBloc>(context).add(
+                          OnFilterChangedEvent(filterTypes: _filters.toSet()));
+                      Navigator.pop(context);
+                    }
+                  : () {})
         ],
       ),
     );
+  }
+
+  bool _isEqList() {
+    return eq(_filters, startList);
+  }
+
+  Widget _buildButtonWithOpacity(
+      BuildContext context, double opacity, Function onTap) {
+    return Opacity(
+        opacity: opacity,
+        child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
+            child: RaisedButton(
+                child: Text(AppLocalizations.of(context).translate('find'),
+                    style: Theme.of(context).textTheme.button),
+                onPressed: onTap)));
   }
 
   Widget _getHeader() {
@@ -54,14 +80,14 @@ class _FilterDrawerState extends State<FilterDrawer> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 75.0, left: 16.0),
+          padding: EdgeInsets.only(top: 58.0, left: 16.0),
           child: Text(
             AppLocalizations.of(context).translate('bench_filter'),
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 75.0, right: 16.0),
+          padding: EdgeInsets.only(top: 58.0, right: 4.0),
           child: IconButton(
               icon: SvgPicture.asset("assets/union.svg"),
               onPressed: () {
@@ -76,7 +102,6 @@ class _FilterDrawerState extends State<FilterDrawer> {
     List<Widget> list = [];
     for (FilterType filterType in filters) {
       list.add(Container(
-        width: 220,
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
             child: _getFilterCheckBox(filterType)),
@@ -87,6 +112,12 @@ class _FilterDrawerState extends State<FilterDrawer> {
 
   _updateFilter(FilterType filterType, bool isSelected) {
     filterType.enable = isSelected;
+    var updateRequired = !_isEqList();
+    if (updateRequired != _isChangeList) {
+      setState(() {
+        _isChangeList = updateRequired;
+      });
+    }
   }
 
   // ignore: missing_return

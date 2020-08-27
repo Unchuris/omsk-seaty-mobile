@@ -80,8 +80,7 @@ class _FilterCheckBoxState extends State<FilterCheckBox> {
           child: Opacity(
             opacity: (_isSelected) ? 1 : 0.6,
             child: Container(
-              width: 140,
-              height: 30,
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2.0),
                 color: Color(0x1A000000 + widget.color),
@@ -114,6 +113,7 @@ class _FilterCheckBoxState extends State<FilterCheckBox> {
                   ),
                   Text(
                     widget.title,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyText1,
                   )
                 ],

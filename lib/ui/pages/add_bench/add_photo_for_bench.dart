@@ -85,7 +85,7 @@ class AddPhotoScreen extends StatelessWidget {
           child:
           Text(AppLocalizations.of(context).translate("string_next")),
           color: Theme.of(context).accentColor,
-          textColor: Colors.white,
+          textColor: Theme.of(context).primaryColor,
         )));
   }
 

@@ -35,7 +35,6 @@ class _BenchSlider extends State<BenchSlider> {
 
   _BenchSlider(this._carouselController);
 
-  BenchLight currentBench;
   int currentId = 0;
 
   @override
@@ -53,7 +52,6 @@ class _BenchSlider extends State<BenchSlider> {
         index < items.length &&
         currentId != index) {
       currentId = index;
-      currentBench = items[index];
       options.onPageChanged(items[index], currentId);
     }
   }
@@ -62,11 +60,14 @@ class _BenchSlider extends State<BenchSlider> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       items: _getBenches(onClick: (BenchLight benchLight) {
-        if (identical(currentBench.id, benchLight.id)) {
+        if (identical(items[currentId].id, benchLight.id)) {
           options.onItemClicked(benchLight);
         } else {
           var id = items.indexOf(benchLight);
-          if (id > 0) _carouselController.animateToPage(id);
+          if (id > 0) {
+            currentId = id;
+            _carouselController.animateToPage(id);
+          }
         }
       }),
       options: CarouselOptions(

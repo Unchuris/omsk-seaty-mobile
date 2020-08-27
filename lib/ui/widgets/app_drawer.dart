@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
@@ -22,9 +21,8 @@ import 'dialog/dialog_with_child.dart';
 import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
-  final List<BenchLight> markers;
 
-  AppDrawer(this.markers);
+  const AppDrawer();
 
   @override
   _AppDrawerState createState() => _AppDrawerState();

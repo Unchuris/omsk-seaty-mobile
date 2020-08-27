@@ -47,8 +47,8 @@ class _MapScreenState extends State<MapScreen>
       listeners: [
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
           if (effect is LoadDataFailture) {
-            _scaffoldKey.currentState.showSnackBar(
-                getSnackBarError("Опа, а че с инетом?!", context)); //TODO change text
+            _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+                "Опа, а че с инетом?!", context)); //TODO change text
             return;
           }
           if (effect is UpdateUserLocationEffect) {
@@ -65,7 +65,8 @@ class _MapScreenState extends State<MapScreen>
           if (effect is CameraIdleEffect) {
             if (effect.onMarkerTaped != true) return;
             //TODO не самый лучший код, на методы разбить хотябы ¯\_(ツ)_/¯
-            if (_sliderBenchesUi == null && effect.sliderBenchesUi.benches.isEmpty) {
+            if (_sliderBenchesUi == null &&
+                effect.sliderBenchesUi.benches.isEmpty) {
               return;
             }
             if (_sliderBenchesUi == null || _isCloseBottomSheet) {
@@ -135,7 +136,7 @@ class _MapScreenState extends State<MapScreen>
                                 ))
                           ]),
                           //TODO remove mock favorites
-                          drawer: AppDrawer([]),
+                          drawer: AppDrawer(),
                           endDrawer: FilterDrawer(
                               filters: snapshotFilter.data != null
                                   ? snapshotFilter.data
@@ -287,12 +288,12 @@ class _MapScreenState extends State<MapScreen>
   }
 
   void _onBenchSliderItemClicked(BenchLight benchLight) {
-    /*   Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => BenchPage(
                   benchId: benchLight.id,
-                ))); */
+                )));
   }
 
   @override

@@ -81,11 +81,11 @@ class AppTheme {
         bodyText1: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 16.0,
-            color: Colors.black54),
+            color: Colors.black),
         bodyText2: TextStyle(
             fontWeight: FontWeight.normal, fontSize: 14.0, color: Colors.white),
         button: TextStyle(
-            fontWeight: FontWeight.normal, fontSize: 14.0, color: Colors.white),
+            fontWeight: FontWeight.normal, fontSize: 18.0, color: Colors.white),
         caption: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 12.0,

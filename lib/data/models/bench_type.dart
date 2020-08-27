@@ -38,4 +38,10 @@ class FilterType {
   bool enable;
 
   FilterType({this.benchType, this.enable});
+
+  @override
+  bool operator == (Object o) {
+    return o is FilterType && o.enable == enable && o.benchType == benchType;
+  }
 }
+
