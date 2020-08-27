@@ -65,16 +65,28 @@ class AddPhotoScreen extends StatelessWidget {
     ));
   }
 
-  Container _buildNextButton(BuildContext context) {
-    return Container(
+  Widget _buildNextButton(BuildContext context) {
+    return BlocBuilder<AddImageBloc, AddImageState>(builder: (context, state) {
+      if (state is AddImageSuccess &&
+          state.geoPoint != null &&
+          state.imagePath != null) {
+        return _buildButtonWithOpacity(context, 1, onNextButton);
+      }
+      return _buildButtonWithOpacity(context, 0.5, (){});
+    });
+  }
+
+  Widget _buildButtonWithOpacity(BuildContext context, double opacity, Function onTap) {
+    return Opacity(opacity: opacity, child: Container(
         width: double.infinity,
         margin: EdgeInsets.all(24),
         child: MaterialButton(
-          onPressed: onNextButton,
-          child: Text(AppLocalizations.of(context).translate("string_next")),
+          onPressed: onTap,
+          child:
+          Text(AppLocalizations.of(context).translate("string_next")),
           color: Theme.of(context).accentColor,
           textColor: Colors.white,
-        ));
+        )));
   }
 
   Container _buildAddressRow(BuildContext context, AddImageSuccess state) {
@@ -162,9 +174,13 @@ class AddPhotoScreen extends StatelessWidget {
                 .translate("string_select_from_where"),
             buttonText: AppLocalizations.of(context).translate("string_cancel"),
             buttonType: DialogButtonType.CLOSE,
+            onTap: () {
+              Navigator.of(context).pop();
+            },
             child: ListBody(
               children: <Widget>[
-                _dialogRow(dialogContext, Icons.image, "string_gallery", () async {
+                _dialogRow(dialogContext, Icons.image, "string_gallery",
+                    () async {
                   await _setImageFromSource(dialogContext, ImageSource.gallery);
                 }),
                 _dialogRow(dialogContext, Icons.camera_alt, "string_camera",

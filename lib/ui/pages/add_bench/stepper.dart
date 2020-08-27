@@ -19,6 +19,35 @@ class BenchMaterialStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> rowWidgets = _getRowStepWidgets(context);
+
+    return Column(children: [
+      Container(
+          padding: EdgeInsets.only(top: 16, left: 32, right: 32),
+          child: Container(
+              child: Center(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: rowWidgets)))),
+      Container(
+          margin: EdgeInsets.only(bottom: 8),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              textBaseline: TextBaseline.ideographic,
+              children: steps
+                  .mapIndexed((index, step) => Opacity(
+                      opacity: index <= currentStep ? 1 : 0.5,
+                      child: Text(step.title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Theme.of(context).accentColor))))
+                  .toList())),
+      Expanded(child: steps[currentStep].body)
+    ]);
+  }
+
+  List<Widget> _getRowStepWidgets(BuildContext context) {
     final rowWidgets = <Widget>[];
     final stepsAmount = steps.length;
     for (int i = 0; i <= currentStep; i++) {
@@ -33,30 +62,7 @@ class BenchMaterialStepper extends StatelessWidget {
         rowWidgets.add(_stepLine(context, false));
       }
     }
-
-    return Column(children: [
-      Container(
-          padding: EdgeInsets.only(top: 16, left: 36, right: 36),
-          child: Container(
-              child: Center(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: rowWidgets)))),
-      Container(
-        margin: EdgeInsets.only(left: 16, right: 16, bottom: 8),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: steps
-                .mapIndexed((index, step) => Opacity(
-                    opacity: index <= currentStep ? 1 : 0.5,
-                    child: Text(step.title,
-                        style: TextStyle(
-                            fontSize: 11,
-                            color: Theme.of(context).accentColor))))
-                .toList()),
-      ),
-      Expanded(child: steps[currentStep].body)
-    ]);
+    return rowWidgets;
   }
 
   Widget _stepWidget(

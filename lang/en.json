@@ -41,8 +41,6 @@
     "bench_filter": "Bench filter",
     "find": "Find",
 
-    "top_users":"Top users",
-
     "string_add_photo": "Add photo",
     "string_add_bench": "Add bench",
     "string_add_info": "Add information",
@@ -54,8 +52,7 @@
     "string_next": "Next",
     "string_no_location": "Set location for the new bench",
     "string_add_new_photo": "Add a photo for your new bench",
-    "string_cancel": "Cancel"
-    "top_users":"Top users",
+    "string_cancel": "Cancel",
     "top_benches": "Top benches",
     "my_benches": "My benches"
 }

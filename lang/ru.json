@@ -41,8 +41,6 @@
     "bench_filter": "Фильтр лавочек",
     "find": "Найти",
 
-    "top_users":"ТОП пользователей",
-
     "string_add_photo": "Добавить фото",
     "string_add_bench": "Добавить лавочку",
     "string_add_info": "Добавить информацию",
@@ -54,7 +52,7 @@
     "string_next": "Далее",
     "string_no_location": "Укажите место для новой лавочки",
     "string_add_new_photo": "Добавьте фото для новой лавочки",
-    "string_cancel": "Отмена"
+    "string_cancel": "Отмена",
     "top_users":"ТОП пользователей",
     "top_benches": "ТОП лавочек",
     "my_benches": "Мои лавочки"
