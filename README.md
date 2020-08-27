@@ -1,16 +1,33 @@
-# omsk_seaty_mobile
+# Omsk Seaty
+Приложение для поиска лавочек в городе с использованием карты. Пользователи платформы могут смотреть и оценивать уже существующие или добавлять новые лавки.
 
-A new Flutter project.
+Лавочки делятся на категории и организуется их ТОП на основе оценок пользователей.
 
-## Getting Started
+Каждая новая лавочка проходит проверку модератором.
 
-This project is a starting point for a Flutter application.
+# Требования
+- Минимальная версия Android: 5.0 Lolipop (SDK 21)
+- Установленный Flutter SDK. [Инструкция](https://flutter.dev/docs/get-started/install)
 
-A few resources to get you started if this is your first Flutter project:
+# Как запустить
+1. Склонируйте репозиторий.
+2. Установите дополнение Flutter для [VSCode](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) или [Intellij IDEA](https://plugins.jetbrains.com/plugin/9212-flutter)
+3. Для запуска наберите в консоли ```flutter run``` или в меню вашей IDE Run
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+# Архитектура
+В качестве паттерна использовался [BLoC](https://bloclibrary.dev).
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Основные зависимости
+Эти сторонние сервисы необходимы для работы приложения:
+
+- [Google Maps API](https://developers.google.com/maps/documentation) для отрисовки карты на экране.
+- [Firebase](https://firebase.google.com) для аналитики, отправки отчётов, отправки сборок и авторизации.
+- [Fastlane](https://fastlane.tools/) для автоматизации сборки и их отправления в Firebase. 
+
+# Скриншоты
+
+# Сопровождающие
+Проект поддерживается силами этих людей:
+- Владислав Унчурис (автор идеи)
+- Андрей Краснов
+- Максим Турчин
