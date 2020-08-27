@@ -9,6 +9,7 @@ import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_camera.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_map.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
 
 class AddPhotoScreen extends StatelessWidget {
   final Function onNextButton;
@@ -156,35 +157,45 @@ class AddPhotoScreen extends StatelessWidget {
     return showDialog(
         context: context,
         builder: (BuildContext dialogContext) {
-          return AlertDialog(
-              title: Text(AppLocalizations.of(context)
-                  .translate("string_select_from_where")),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Text(AppLocalizations.of(context)
-                          .translate("string_gallery")),
-                      onTap: () async {
-                        await _setImageFromSource(
-                            dialogContext, ImageSource.gallery);
-                        Navigator.of(dialogContext).pop();
-                      },
-                    ),
-                    Padding(padding: EdgeInsets.all(8.0)),
-                    GestureDetector(
-                      child: Text(AppLocalizations.of(context)
-                          .translate("string_camera")),
-                      onTap: () async {
-                        await _setImageFromInAppCamera(
-                            dialogContext, ImageSource.camera);
-                        Navigator.of(dialogContext).pop();
-                      },
-                    )
-                  ],
-                ),
-              ));
+          return DialogWithChild(
+            title: AppLocalizations.of(context)
+                .translate("string_select_from_where"),
+            buttonText: AppLocalizations.of(context).translate("string_cancel"),
+            buttonType: DialogButtonType.CLOSE,
+            child: ListBody(
+              children: <Widget>[
+                _dialogRow(dialogContext, Icons.image, "string_gallery", () async {
+                  await _setImageFromSource(dialogContext, ImageSource.gallery);
+                }),
+                _dialogRow(dialogContext, Icons.camera_alt, "string_camera",
+                    () async {
+                  await _setImageFromInAppCamera(dialogContext);
+                })
+              ],
+            ),
+          );
         });
+  }
+
+  Widget _dialogRow(BuildContext context, IconData icon,
+      String textTranslateString, Function onTab) {
+    return Material(
+        color: Colors.transparent,
+        child: InkWell(
+            onTap: () async {
+              await onTab();
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Row(children: [
+                Icon(icon),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)
+                        .translate(textTranslateString))),
+              ]),
+            )));
   }
 
   Future<void> _setImageFromSource(
@@ -193,16 +204,15 @@ class AddPhotoScreen extends StatelessWidget {
     BlocProvider.of<AddImageBloc>(context).add(AddImageStarted(image.path));
   }
 
-  void _showMapForBenchLocation(BuildContext context, GeoPoint location) async {
-    final mapLocation = location ?? await getCurrentLocation();
-    Navigator.of(context)
-        .push(MaterialPageRoute(
-            builder: (context) => AddPhotoMapScreen(startPoint: mapLocation)))
-        .then((value) {
-      if (value != null) {
-        BlocProvider.of<AddImageBloc>(context).add(AddImageLocation(value));
-      }
-    });
+  void _showMapForBenchLocation(
+      BuildContext context, GeoPoint startLocation) async {
+    final mapLocation = startLocation ?? await getCurrentLocation();
+    final finalLocation = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddPhotoMapScreen(startPoint: mapLocation)));
+    if (finalLocation != null) {
+      BlocProvider.of<AddImageBloc>(context)
+          .add(AddImageLocation(finalLocation));
+    }
   }
 
   Future<GeoPoint> getCurrentLocation() async {
@@ -212,8 +222,7 @@ class AddPhotoScreen extends StatelessWidget {
     return GeoPoint(latitude: location.latitude, longitude: location.longitude);
   }
 
-  Future<void> _setImageFromInAppCamera(
-      BuildContext context, ImageSource camera) async {
+  Future<void> _setImageFromInAppCamera(BuildContext context) async {
     final newPhotoPath = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => AddPhotoCameraScreen()));
     if (newPhotoPath != null) {

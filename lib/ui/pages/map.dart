@@ -6,20 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
-
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
-
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
 
-import 'add_bench/add_bench.dart';
 import 'bench/bench.dart';
-import 'favorites/favorites.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";

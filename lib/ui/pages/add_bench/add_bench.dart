@@ -11,53 +11,44 @@ class AddBenchScreen extends StatefulWidget {
 }
 
 class _AddBenchState extends State<AddBenchScreen> {
-  var _index = 0;
+  int _currentStep = 0;
+  List<BenchStep> _steps;
+
+  @override
+  void initState() {
+    super.initState();
+    _steps = [
+      BenchStep(
+          title: "Add information",
+          body: AddPhotoScreen(onNextButton: _nextStep)),
+      BenchStep(title: "Add information", body: Container()),
+      BenchStep(title: "Add information", body: Container()),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text('Add bench')), body: _buildStepper(context));
+  }
+
+  Widget _buildStepper(BuildContext context) {
     return WillPopScope(
-        child: Scaffold(
-            appBar: AppBar(title: Text('Add bench')),
-            body: _buildStepper(context)),
+        child: BenchMaterialStepper(currentStep: _currentStep, steps: _steps),
         onWillPop: () async {
-          BlocProvider.of<AddImageBloc>(context).add(AddImageCanceled());
+          if (_currentStep != 0) {
+            setState(() {
+              _currentStep--;
+            });
+            return false;
+          }
           return true;
         });
   }
 
-  Widget _buildStepper(BuildContext context) {
-    return AddBenchStepper(
-      steps: [
-        _buildAddImageStep(context),
-        AddBenchStep(
-            isActive: false,
-            title: Text('Add information'),
-            content: Center(
-                child: Text('Second step',
-                    style: TextStyle(color: Colors.black)))),
-        AddBenchStep(
-            title: Text('Star bench'),
-            content: Center(
-                child:
-                    Text('Third step', style: TextStyle(color: Colors.black))))
-      ],
-      onStepTapped: (index) {
-        setState(() {
-          _index = index;
-        });
-      },
-      currentStep: _index,
-    );
-  }
-
-  _buildAddImageStep(BuildContext context) {
-    return AddBenchStep(
-        title: Text('Add photo'),
-        content: AddPhotoScreen(
-            onNextButton: () => {
-                  setState(() {
-                    _index++;
-                  })
-                }));
+  void _nextStep() {
+    setState(() {
+      _currentStep++;
+    });
   }
 }

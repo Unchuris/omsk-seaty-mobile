@@ -91,7 +91,7 @@ class DialogWithChild extends StatelessWidget {
                               break;
                             default:
                               {
-                                print('Wrong choise');
+                                print('Wrong choice');
                               }
                               break;
                           }

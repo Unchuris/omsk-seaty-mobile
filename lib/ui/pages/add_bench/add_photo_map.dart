@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
@@ -61,13 +62,15 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
       children: [
         GoogleMap(
           onCameraMove: (camera) => _onCameraPositionChanged(context, camera),
-          minMaxZoomPreference: MinMaxZoomPreference(20.0, 20.0),
+          minMaxZoomPreference: MinMaxZoomPreference(18.0, 18.0),
           zoomControlsEnabled: false,
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           compassEnabled: false,
           mapToolbarEnabled: false,
-          onMapCreated: (controller) {
+          onMapCreated: (controller) async {
+            final style = await rootBundle.loadString("assets/map-style.json");
+            controller.setMapStyle(style);
             _mapController = controller;
             _mapController.animateCamera(
               CameraUpdate.newCameraPosition(
