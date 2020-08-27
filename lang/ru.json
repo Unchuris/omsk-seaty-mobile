@@ -44,6 +44,9 @@
     "top_users":"ТОП пользователей",
 
     "string_add_photo": "Добавить фото",
+    "string_add_bench": "Добавить лавочку",
+    "string_add_info": "Добавить информацию",
+    "string_rate_bench": "Оценить лавочку",
     "string_select_from_where": "Выбрать фото",
     "string_gallery": "Галерея",
     "string_camera": "Камера",

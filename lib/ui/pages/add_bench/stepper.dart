@@ -36,7 +36,7 @@ class BenchMaterialStepper extends StatelessWidget {
 
     return Column(children: [
       Container(
-          padding: EdgeInsets.only(top: 16, left: 32, right: 32),
+          padding: EdgeInsets.only(top: 16, left: 36, right: 36),
           child: Container(
               child: Center(
                   child: Row(
@@ -47,9 +47,12 @@ class BenchMaterialStepper extends StatelessWidget {
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: steps
-                .map((step) => Text(step.title,
-                    style: TextStyle(
-                        fontSize: 12, color: Theme.of(context).accentColor)))
+                .mapIndexed((index, step) => Opacity(
+                    opacity: index <= currentStep ? 1 : 0.5,
+                    child: Text(step.title,
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(context).accentColor))))
                 .toList()),
       ),
       Expanded(child: steps[currentStep].body)
@@ -79,5 +82,15 @@ class BenchMaterialStepper extends StatelessWidget {
           opacity: active ? 1 : 0.5,
           child: Container(height: 2, color: Theme.of(context).accentColor)),
     );
+  }
+}
+
+extension ListMapIndexed<T> on List<T> {
+  List<U> mapIndexed<U>(U mapper(int, T)) {
+    List<U> result = <U>[];
+    for (int i = 0; i < this.length; i++) {
+      result.add(mapper(i, this[i]));
+    }
+    return result;
   }
 }

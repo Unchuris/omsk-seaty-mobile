@@ -44,6 +44,9 @@
     "top_users":"Top users",
 
     "string_add_photo": "Add photo",
+    "string_add_bench": "Add bench",
+    "string_add_info": "Add information",
+    "string_rate_bench": "Rate bench",
     "string_select_from_where": "Select photo",
     "string_gallery": "Gallery",
     "string_camera": "Camera",
