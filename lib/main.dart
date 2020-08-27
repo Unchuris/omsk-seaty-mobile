@@ -41,12 +41,28 @@ void main() async {
 
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
+
   dio.options
-    ..headers['content-Type'] = 'application/json'
-    ..headers['Authorization'] = 'token ${_userRepository.getUid()}'
-    ..baseUrl = "http://064780782cb2.eu.ngrok.io/api/"
+    ..baseUrl = "https://355032-cu98624.tmweb.ru/api/"
     ..connectTimeout = 5000
     ..receiveTimeout = 5000;
+  dio.interceptors
+      .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+    var customHeaders;
+    if (_userRepository.getUid() != "") {
+      customHeaders = {
+        'content-type': 'application/json',
+        'Authorization': 'token ${_userRepository.getUid()}'
+      };
+    } else {
+      customHeaders = {
+        'content-type': 'application/json',
+      };
+    }
+
+    options.headers.addAll(customHeaders);
+    return options;
+  }));
   dio.interceptors.add(LogInterceptor());
   //TODO remove
   //runZoned(() {

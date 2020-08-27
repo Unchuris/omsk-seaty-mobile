@@ -42,9 +42,7 @@ class AuthenticationBloc
     if (isSignedIn) {
       _user = await _userRepository.getUser();
       var responce = await dio.post('users/', data: _user.toJson());
-      dio.options..headers['Authorization'] = 'token ${_user.uid}';
 
-      dio.interceptors.add(LogInterceptor());
       yield AuthenticationSuccess(_user);
     } else {
       yield AuthenticationFailure();
@@ -55,7 +53,7 @@ class AuthenticationBloc
     _user = await _userRepository.getUser();
 
     var responce = await dio.post('users/', data: _user.toJson());
-    dio.options..headers['Authorization'] = 'token ${_user.uid}';
+
     _userRepository.saveUserToPreferences(_user);
     if (await _userRepository.isSkipped()) _userRepository.removeIsSkipped();
     yield AuthenticationSuccess(_user);
