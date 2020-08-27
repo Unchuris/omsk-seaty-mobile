@@ -26,8 +26,8 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
   GoogleMapController _mapController;
   AnimationController _animationController;
   Animation<double> _markerAnimation;
-  StreamController<GeoPoint> _pointStreamController = StreamController
-      .broadcast();
+  StreamController<GeoPoint> _pointStreamController =
+      StreamController.broadcast();
 
   Stream<GeoPoint> get _pointStream => _pointStreamController.stream;
 
@@ -76,7 +76,7 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                     target:
-                    LatLng(_centerPoint.latitude, _centerPoint.longitude),
+                        LatLng(_centerPoint.latitude, _centerPoint.longitude),
                     zoom: 20.0),
               ),
             );
@@ -87,21 +87,16 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
         Center(
           child: Icon(Icons.location_on,
               size: _markerAnimation.value,
-              color: Theme
-                  .of(context)
-                  .accentColor),
+              color: Theme.of(context).accentColor),
         ),
         Column(children: [
           Container(
             margin: EdgeInsets.only(top: 16),
             padding: EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
-            height: 80,
             color: Colors.white,
             child: Center(child: _buildAddressText(context)),
           ),
-          Container(color: Theme
-              .of(context)
-              .accentColor, height: 1)
+          Container(color: Theme.of(context).accentColor, height: 1)
         ]),
         Container(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
@@ -122,10 +117,8 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Text(snapshot.data,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline4);
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline4);
           } else {
             return LinearProgressIndicator();
           }
@@ -152,15 +145,10 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
       width: 56,
       child: RawMaterialButton(
         onPressed: () => onMyLocationClick(context),
-        fillColor: Theme
-            .of(context)
-            .accentColor,
+        fillColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.location_on,
-          color: Theme
-              .of(context)
-              .iconTheme
-              .color,
+          color: Theme.of(context).iconTheme.color,
           size: 32.0,
         ),
         shape: CircleBorder(),
@@ -174,15 +162,10 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
       width: 56,
       child: RawMaterialButton(
         onPressed: () => onFinishLocationSelection(context),
-        fillColor: Theme
-            .of(context)
-            .accentColor,
+        fillColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.forward,
-          color: Theme
-              .of(context)
-              .iconTheme
-              .color,
+          color: Theme.of(context).iconTheme.color,
           size: 32.0,
         ),
         shape: CircleBorder(),
