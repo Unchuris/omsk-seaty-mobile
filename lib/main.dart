@@ -14,6 +14,7 @@ import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/data/repositories/user_repository.dart';
+import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
@@ -29,6 +30,7 @@ import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
 
+import 'blocs/add_image/add_image_bloc.dart';
 import 'http.dart';
 
 void main() async {
@@ -67,6 +69,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider<AddImageBloc>(
+          create: (context) => AddImageBloc(),
+          child: AddBenchScreen(),
+        ),
         BlocProvider<AuthenticationBloc>(
             create: (context) =>
                 AuthenticationBloc(userRepository: _userRepository)
@@ -131,6 +137,7 @@ class MyApp extends StatelessWidget {
                   LoginScreen(userRepository: _userRepository),
               '/map': (context) => MapScreen(),
               '/profile': (context) => ProfilePage(),
+              '/add_bench': (context) => AddBenchScreen(),
               AddCommentPage.routeName: (context) => AddCommentPage(),
               FavoritesPage.routeName: (context) => FavoritesPage(),
               BenchPage.routeName: (context) => BenchPage(),

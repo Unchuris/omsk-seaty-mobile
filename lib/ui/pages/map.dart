@@ -11,15 +11,12 @@ import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
-
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
-
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 import 'bench/bench.dart';
-import 'favorites/favorites.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -184,7 +181,7 @@ class _MapScreenState extends State<MapScreen>
         child: _isVisibleHelpElements
             ? RawMaterialButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, FavoritesPage.routeName);
+                  Navigator.pushNamed(context, '/add_bench');
                 },
                 elevation: 8.0,
                 fillColor: Theme.of(context).buttonColor,
