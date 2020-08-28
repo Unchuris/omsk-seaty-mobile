@@ -109,14 +109,16 @@ class AddPhotoScreen extends StatelessWidget {
                   child: Text(state.address ?? noLocationString,
                       style: Theme.of(context).textTheme.bodyText1))
             ],
+
+          ButtonTheme(
+            child: FlatButton(
+                child: Text(
+                    AppLocalizations.of(context).translate("string_on_map"),
+                    style: TextStyle(color: Theme.of(context).accentColor)),
+                onPressed: () =>
+                    _showMapForBenchLocation(context, state.geoPoint)),
           ),
-          /*TextButton(
-              child: Text(
-                  AppLocalizations.of(context).translate("string_on_map"),
-                  style: TextStyle(color: Theme.of(context).accentColor)),
-              onPressed: () =>
-                  _showMapForBenchLocation(context, state.geoPoint)),
-        */
+
         ]));
   }
 

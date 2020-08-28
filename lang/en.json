@@ -54,5 +54,7 @@
     "string_add_new_photo": "Add a photo for your new bench",
     "string_cancel": "Cancel",
     "top_benches": "Top benches",
-    "my_benches": "My benches"
+    "my_benches": "My benches",
+
+    "about_bench": "About bench"
 }
