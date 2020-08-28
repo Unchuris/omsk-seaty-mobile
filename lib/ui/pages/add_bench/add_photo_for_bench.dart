@@ -72,21 +72,24 @@ class AddPhotoScreen extends StatelessWidget {
           state.imagePath != null) {
         return _buildButtonWithOpacity(context, 1, onNextButton);
       }
-      return _buildButtonWithOpacity(context, 0.5, (){});
+      return _buildButtonWithOpacity(context, 0.5, () {});
     });
   }
 
-  Widget _buildButtonWithOpacity(BuildContext context, double opacity, Function onTap) {
-    return Opacity(opacity: opacity, child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.all(24),
-        child: MaterialButton(
-          onPressed: onTap,
-          child:
-          Text(AppLocalizations.of(context).translate("string_next")),
-          color: Theme.of(context).accentColor,
-          textColor: Theme.of(context).primaryColor,
-        )));
+  Widget _buildButtonWithOpacity(
+      BuildContext context, double opacity, Function onTap) {
+    return Opacity(
+        opacity: opacity,
+        child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.all(24),
+            child: MaterialButton(
+              onPressed: onTap,
+              child:
+                  Text(AppLocalizations.of(context).translate("string_next")),
+              color: Theme.of(context).accentColor,
+              textColor: Theme.of(context).primaryColor,
+            )));
   }
 
   Container _buildAddressRow(BuildContext context, AddImageSuccess state) {
@@ -107,12 +110,14 @@ class AddPhotoScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyText1))
             ],
           ),
-          TextButton(
-              child: Text(
-                  AppLocalizations.of(context).translate("string_on_map"),
-                  style: TextStyle(color: Theme.of(context).accentColor)),
-              onPressed: () =>
-                  _showMapForBenchLocation(context, state.geoPoint)),
+          ButtonTheme(
+            child: FlatButton(
+                child: Text(
+                    AppLocalizations.of(context).translate("string_on_map"),
+                    style: TextStyle(color: Theme.of(context).accentColor)),
+                onPressed: () =>
+                    _showMapForBenchLocation(context, state.geoPoint)),
+          ),
         ]));
   }
 
