@@ -15,7 +15,7 @@
     <application
         android:requestLegacyExternalStorage="true"
         android:name="io.flutter.app.FlutterApplication"
-        android:label="omsk_seaty_mobile"
+        android:label="OmskSeaty"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDNNAEqIIEzup-TDwIfuHo0L5Sxp3zRhMs"/>
         

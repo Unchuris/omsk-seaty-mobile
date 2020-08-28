@@ -11,6 +11,7 @@ import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
+import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
@@ -197,8 +198,7 @@ class _MapScreenState extends State<MapScreen>
   Widget _getGoogleMap(Map<String, Marker> data) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-          //TODO move to const
-          target: LatLng(54.991351, 73.364528),
+          target: omskCenterPoint.toLatLng(),
           zoom: 10),
       zoomControlsEnabled: false,
       myLocationEnabled: true,
