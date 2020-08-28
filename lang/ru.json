@@ -58,6 +58,7 @@
     "my_benches": "Мои лавочки",
 
     "route": "В путь",
+    "network_connection_error": "Ошибка подключения к сети",
 
     "about_bench": "О лавочке"
 }

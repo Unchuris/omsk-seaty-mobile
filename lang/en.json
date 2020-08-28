@@ -57,6 +57,7 @@
     "my_benches": "My benches",
 
     "route": "Route",
+    "network_connection_error": "Network connection error happened",
 
     "about_bench": "About bench"
 }
