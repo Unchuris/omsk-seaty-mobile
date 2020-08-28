@@ -28,6 +28,8 @@ class AuthenticationBloc
   ) async* {
     if (event is AuthenticationStarted) {
       yield* _mapAuthenticationStartedToState();
+    } else if (event is LoginWithGooglePressed) {
+      yield* _mapLoginWithGooglePressedToState();
     } else if (event is AuthenticationLoggedIn) {
       yield* _mapAuthenticationLoggedInToState();
     } else if (event is AuthenticationLoggedOut) {
@@ -41,7 +43,7 @@ class AuthenticationBloc
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       _user = await _userRepository.getUser();
-      var responce = await dio.post('users/', data: _user.toJson());
+      var response = await dio.post('users/', data: _user.toJson());
 
       yield AuthenticationSuccess(_user);
     } else {
@@ -49,10 +51,20 @@ class AuthenticationBloc
     }
   }
 
+  Stream<AuthenticationState> _mapLoginWithGooglePressedToState() async* {
+    try {
+      yield AuthenticationInProgress();
+      await _userRepository.signInWithGoogle();
+      yield* _mapAuthenticationLoggedInToState();
+    } catch (_) {
+      AuthenticationFailure();
+    }
+  }
+
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
     _user = await _userRepository.getUser();
     //TODO что это?)
-    var responce = await dio.post('users/', data: _user.toJson());
+    var response = await dio.post('users/', data: _user.toJson());
 
     _userRepository.saveUserToPreferences(_user);
     if (await _userRepository.isSkipped()) _userRepository.removeIsSkipped();

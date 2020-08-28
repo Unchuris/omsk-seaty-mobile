@@ -109,7 +109,7 @@ class AddPhotoScreen extends StatelessWidget {
                   child: Text(state.address ?? noLocationString,
                       style: Theme.of(context).textTheme.bodyText1))
             ],
-          ),
+
           ButtonTheme(
             child: FlatButton(
                 child: Text(
@@ -118,6 +118,7 @@ class AddPhotoScreen extends StatelessWidget {
                 onPressed: () =>
                     _showMapForBenchLocation(context, state.geoPoint)),
           ),
+
         ]));
   }
 

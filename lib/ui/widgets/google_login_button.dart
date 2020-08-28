@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-
-import 'package:omsk_seaty_mobile/blocs/authentication/login/login_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 
 class GoogleLoginButton extends StatelessWidget {
   @override
@@ -55,7 +54,7 @@ class GoogleLoginButton extends StatelessWidget {
                 child: InkWell(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     onTap: () {
-                      BlocProvider.of<LoginBloc>(context)
+                      BlocProvider.of<AuthenticationBloc>(context)
                           .add(LoginWithGooglePressed());
                     }),
               ),
