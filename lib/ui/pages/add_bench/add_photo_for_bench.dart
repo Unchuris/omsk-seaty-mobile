@@ -232,10 +232,15 @@ class AddPhotoScreen extends StatelessWidget {
   }
 
   Future<GeoPoint> getCurrentLocation() async {
-    final location = await Geolocator()
-        .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
-    if (location == null) return null;
-    return GeoPoint(latitude: location.latitude, longitude: location.longitude);
+    try {
+      final location = await Geolocator()
+          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      if (location == null) return null;
+      return GeoPoint(
+          latitude: location.latitude, longitude: location.longitude);
+    } catch(err) {
+      return null;
+    }
   }
 
   Future<void> _setImageFromInAppCamera(BuildContext context) async {

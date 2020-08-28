@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
-import 'package:omsk_seaty_mobile/ui/utils/geocoder.dart';
+import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,25 +24,36 @@ class AddPhotoCameraScreen extends StatefulWidget {
 
 class _AddPhotoCameraScreenState extends State<AddPhotoCameraScreen> {
   CameraController _controller;
-  Future<void> _initControllerFuture;
+  bool _cameraError = false;
 
   @override
   void initState() {
     super.initState();
-    _initControllerFuture = _initializeCamera();
+    _initializeCamera();
   }
 
   Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
-    _controller = CameraController(firstCamera, ResolutionPreset.high);
-    await _controller.initialize();
-    setState(() {});
+    try {
+      final cameras = await availableCameras();
+      final firstCamera = cameras.first;
+      _controller = CameraController(firstCamera, ResolutionPreset.high,
+          enableAudio: false);
+      await _controller.initialize();
+      setState(() {});
+    } catch (err) {
+      setState(() {
+        _cameraError = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_cameraError) {
+      Navigator.of(context).pop();
+    }
     if (_controller?.value?.isInitialized != true) return Container();
+
     final size = MediaQuery.of(context).size;
 
     return Stack(

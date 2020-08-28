@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:exif/exif.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/utils/geo_exif_provider.dart';
-import 'package:omsk_seaty_mobile/ui/utils/geocoder.dart';
+import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
 
 part 'add_image_event.dart';
 part 'add_image_state.dart';

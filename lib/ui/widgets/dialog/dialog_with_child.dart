@@ -53,7 +53,7 @@ class DialogWithChild extends StatelessWidget {
     const bottomBorder = BorderRadius.vertical(bottom: Radius.circular(10));
 
     return SizedBox(
-      width: 280,
+      width: double.infinity,
       height: 50,
       child: Center(
         child: Stack(
