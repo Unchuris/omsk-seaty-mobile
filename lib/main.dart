@@ -7,6 +7,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart';
 
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
@@ -44,8 +45,7 @@ void main() async {
   final bool isSigned =
       await _userRepository.isSignedIn() || await _userRepository.isSkipped();
 
-  dio.options
-    ..baseUrl = "https://355032-cu98624.tmweb.ru/api/";
+  dio.options..baseUrl = "https://355032-cu98624.tmweb.ru/api/";
   dio.interceptors
       .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
     var customHeaders;
@@ -71,6 +71,10 @@ void main() async {
       providers: [
         BlocProvider<AddImageBloc>(
           create: (context) => AddImageBloc(),
+          child: AddBenchScreen(),
+        ),
+        BlocProvider<CheckBoxListBloc>(
+          create: (context) => CheckBoxListBloc(),
           child: AddBenchScreen(),
         ),
         BlocProvider<AuthenticationBloc>(

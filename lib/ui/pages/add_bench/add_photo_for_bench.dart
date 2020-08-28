@@ -72,21 +72,24 @@ class AddPhotoScreen extends StatelessWidget {
           state.imagePath != null) {
         return _buildButtonWithOpacity(context, 1, onNextButton);
       }
-      return _buildButtonWithOpacity(context, 0.5, (){});
+      return _buildButtonWithOpacity(context, 0.5, () {});
     });
   }
 
-  Widget _buildButtonWithOpacity(BuildContext context, double opacity, Function onTap) {
-    return Opacity(opacity: opacity, child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.all(24),
-        child: MaterialButton(
-          onPressed: onTap,
-          child:
-          Text(AppLocalizations.of(context).translate("string_next")),
-          color: Theme.of(context).accentColor,
-          textColor: Theme.of(context).primaryColor,
-        )));
+  Widget _buildButtonWithOpacity(
+      BuildContext context, double opacity, Function onTap) {
+    return Opacity(
+        opacity: opacity,
+        child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.all(24),
+            child: MaterialButton(
+              onPressed: onTap,
+              child:
+                  Text(AppLocalizations.of(context).translate("string_next")),
+              color: Theme.of(context).accentColor,
+              textColor: Theme.of(context).primaryColor,
+            )));
   }
 
   Container _buildAddressRow(BuildContext context, AddImageSuccess state) {
@@ -96,23 +99,23 @@ class AddPhotoScreen extends StatelessWidget {
         padding: EdgeInsets.only(top: 16, bottom: 8, left: 12, right: 12),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(
-            children: <Widget>[
-              Icon(Icons.location_on,
-                  color: Theme.of(context).textTheme.bodyText1.color),
-              Container(
-                  width: 160,
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(state.address ?? noLocationString,
-                      style: Theme.of(context).textTheme.bodyText1))
-            ],
+          Row(children: <Widget>[
+            Icon(Icons.location_on,
+                color: Theme.of(context).textTheme.bodyText1.color),
+            Container(
+                width: 160,
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                child: Text(state.address ?? noLocationString,
+                    style: Theme.of(context).textTheme.bodyText1))
+          ]),
+          ButtonTheme(
+            child: FlatButton(
+                child: Text(
+                    AppLocalizations.of(context).translate("string_on_map"),
+                    style: TextStyle(color: Theme.of(context).accentColor)),
+                onPressed: () =>
+                    _showMapForBenchLocation(context, state.geoPoint)),
           ),
-          TextButton(
-              child: Text(
-                  AppLocalizations.of(context).translate("string_on_map"),
-                  style: TextStyle(color: Theme.of(context).accentColor)),
-              onPressed: () =>
-                  _showMapForBenchLocation(context, state.geoPoint)),
         ]));
   }
 

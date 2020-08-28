@@ -55,5 +55,7 @@
     "string_cancel": "Отмена",
     "top_users":"ТОП пользователей",
     "top_benches": "ТОП лавочек",
-    "my_benches": "Мои лавочки"
+    "my_benches": "Мои лавочки",
+
+    "about_bench": "О лавочке"
 }
