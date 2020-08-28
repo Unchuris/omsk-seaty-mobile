@@ -20,10 +20,12 @@ class BenchMaterialStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> rowWidgets = _getRowStepWidgets(context);
+    final textWidth = 120.0;
+    final padding = textWidth / 2 - (12 + 8);
 
     return Column(children: [
       Container(
-          padding: EdgeInsets.only(top: 16, left: 32, right: 32),
+          padding: EdgeInsets.only(top: 16, left: padding, right: padding),
           child: Container(
               child: Center(
                   child: Row(
@@ -32,16 +34,18 @@ class BenchMaterialStepper extends StatelessWidget {
       Container(
           margin: EdgeInsets.only(bottom: 8),
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               textBaseline: TextBaseline.ideographic,
               children: steps
                   .mapIndexed((index, step) => Opacity(
                       opacity: index <= currentStep ? 1 : 0.5,
-                      child: Text(step.title,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Theme.of(context).accentColor))))
+                      child: Container(
+                          width: textWidth,
+                          child: Text(step.title.toLowerCase(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).accentColor)))))
                   .toList())),
       Expanded(child: steps[currentStep].body)
     ]);
@@ -70,7 +74,7 @@ class BenchMaterialStepper extends StatelessWidget {
     return Opacity(
         opacity: active ? 1 : 0.5,
         child: Container(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 4),
             child: Column(children: [
               Row(children: [
                 CircleAvatar(
