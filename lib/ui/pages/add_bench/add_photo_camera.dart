@@ -10,6 +10,7 @@ import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
 import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
+import 'package:omsk_seaty_mobile/ui/utils/orientation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,6 +30,7 @@ class _AddPhotoCameraScreenState extends State<AddPhotoCameraScreen> {
   @override
   void initState() {
     super.initState();
+    AppOrientation.enableLandscape();
     _initializeCamera();
   }
 
@@ -103,6 +105,7 @@ class _AddPhotoCameraScreenState extends State<AddPhotoCameraScreen> {
   @override
   void dispose() {
     _controller?.dispose();
+    AppOrientation.fixPortrait();
     super.dispose();
   }
 
