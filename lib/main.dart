@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:omsk_seaty_mobile/blocs/add_comment_step/add_comment_step_bloc.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart';
@@ -75,6 +76,10 @@ void main() async {
         ),
         BlocProvider<CheckBoxListBloc>(
           create: (context) => CheckBoxListBloc(),
+          child: AddBenchScreen(),
+        ),
+        BlocProvider<AddCommentStepBloc>(
+          create: (context) => AddCommentStepBloc(),
           child: AddBenchScreen(),
         ),
         BlocProvider<AuthenticationBloc>(

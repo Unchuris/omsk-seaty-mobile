@@ -56,5 +56,8 @@
     "top_benches": "Top benches",
     "my_benches": "My benches",
 
-    "about_bench": "About bench"
+    "about_bench": "About bench",
+
+    "validate_textfield": "Please, enter some text",
+    "validate_raing": "Please, enter some rating"
 }

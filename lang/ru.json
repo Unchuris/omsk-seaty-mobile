@@ -57,5 +57,8 @@
     "top_benches": "ТОП лавочек",
     "my_benches": "Мои лавочки",
 
-    "about_bench": "О лавочке"
+    "about_bench": "О лавочке",
+
+    "validate_textfield": "Введите текст, пожалуйста",
+    "validate_raing": "Оцените лавочку пожалуйста"
 }
