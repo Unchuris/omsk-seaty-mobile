@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
+
   const CustomAppBar({
     Key key,
     @required this.height,
@@ -16,9 +17,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: EdgeInsets.only(top: height),
       child: Stack(
         children: <Widget>[
-          Positioned(
-            top: 10.0,
-            left: 9.0,
+          Container(
+            height: double.infinity,
             child: IconButton(
                 icon: SvgPicture.asset(
                   "assets/leftArrow.svg",
@@ -39,5 +39,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(height + 42);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

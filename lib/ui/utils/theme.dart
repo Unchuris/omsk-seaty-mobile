@@ -69,7 +69,7 @@ class AppTheme {
             fontSize: 24.0,
             color: Color(0xff8E8E93)),
         headline6: TextStyle(
-            fontWeight: FontWeight.w500, fontSize: 20.0, color: Colors.black87),
+            fontWeight: FontWeight.w500, fontSize: 20.0, color: Color(0xFF4F4F4F)),
         subtitle1: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0,
@@ -89,7 +89,7 @@ class AppTheme {
         caption: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 12.0,
-            color: Color(0xFF828282)),
+            color: Colors.white),
         overline: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 12.0,

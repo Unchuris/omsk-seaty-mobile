@@ -9,12 +9,14 @@ import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 class TopBechesPage extends StatefulWidget {
   TopBechesPage({Key key}) : super(key: key);
   static String routeName = "/top-benches";
+
   @override
   _TopBechesPageState createState() => _TopBechesPageState();
 }
 
 class _TopBechesPageState extends State<TopBechesPage> {
   TopBenchesBloc _bloc = TopBenchesBloc();
+
   @override
   void initState() {
     _bloc.add(GetTopBenchesEvent());
@@ -32,19 +34,17 @@ class _TopBechesPageState extends State<TopBechesPage> {
         child: BlocBuilder<TopBenchesBloc, TopBenchesState>(
             builder: (context, state) {
           if (state is TopBenchesInitial) {
-            print('initial');
             return Center(child: CircularProgressIndicator());
           } else if (state is TopBenchesPageLoading) {
-            print('loading');
             return Center(child: CircularProgressIndicator());
           } else if (state is TopBenchesPageInitialed) {
-            print('load');
             return _buildBenchCard(state.benchCard);
           } else if (state is TopBenchesPageError) {
             return Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                //TODO
                 Text(
                   "Ошибка соединения",
                   style: Theme.of(context).textTheme.bodyText1,
@@ -67,6 +67,8 @@ class _TopBechesPageState extends State<TopBechesPage> {
                 )
               ],
             ));
+          } else {
+            return Container();
           }
         }),
       ),
