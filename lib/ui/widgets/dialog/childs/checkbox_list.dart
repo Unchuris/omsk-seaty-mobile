@@ -16,13 +16,13 @@ class _CheckBoxListState extends State<CheckBoxList> {
   Widget build(BuildContext context) {
     var provider = ListProvider.of(context);
     return Container(
-      width: 280,
+      width: double.infinity,
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         children: provider.list.keys.map((Object key) {
           return CheckboxListTile(
-            title: Text(_getNameOfObject(key)),
+            title: Text(_getNameOfObject(key), style: Theme.of(context).textTheme.headline5),
             value: provider.list[key],
             activeColor: Colors.orange,
             controlAffinity: ListTileControlAffinity.leading,

@@ -18,7 +18,7 @@ class DialogWithChild extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 10,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).backgroundColor,
       child: _dialogContent(context),
     );
   }
@@ -29,9 +29,9 @@ class DialogWithChild extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 10),
-          _createTitle(),
-          SizedBox(height: 10),
+          Padding(
+              padding: EdgeInsets.only(top: 16, bottom: 16),
+              child: _createTitle(context)),
           child,
           _createBottomButton(context)
         ],
@@ -39,13 +39,13 @@ class DialogWithChild extends StatelessWidget {
     );
   }
 
-  Widget _createTitle() {
+  Widget _createTitle(BuildContext context) {
     return Container(
-        width: 210,
+        width: double.infinity,
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
+          style: Theme.of(context).textTheme.headline4,
         ));
   }
 
