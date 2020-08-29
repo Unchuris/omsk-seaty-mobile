@@ -60,7 +60,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
                 AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
             onTap: () {
-              Navigator.of(context, rootNavigator: true).pop(context);
+              Navigator.popAndPushNamed(context, "/map");
             },
             buttonType: DialogButtonType.CLOSE));
   }

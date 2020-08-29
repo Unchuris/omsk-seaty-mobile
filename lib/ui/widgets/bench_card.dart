@@ -20,8 +20,8 @@ class _BenchCardState extends State<BenchCard> {
 
   @override
   Widget build(BuildContext context) {
-    var bench = UIBencCard(widget.bench.name, widget.bench.score,
-        widget.bench.imageUrl, widget.bench.like);
+    var bench = UIBencCard(widget.bench.id, widget.bench.name,
+        widget.bench.score, widget.bench.imageUrl, widget.bench.like);
     return _buildBenchCard(bench);
   }
 
@@ -90,7 +90,8 @@ class _BenchCardState extends State<BenchCard> {
           ),
           Row(
             children: <Widget>[
-              RouteIcon(lat: bench.lat, lon: bench.lon),
+              RouteIcon(
+                  lat: widget.bench.latitude, lon: widget.bench.longitude),
               Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: LikeButton(bench: bench),
