@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:omsk_seaty_mobile/blocs/add_comment_step/add_comment_step_bloc.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart';
 
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 import 'package:omsk_seaty_mobile/data/repositories/geolocation_repository.dart';
 import 'package:omsk_seaty_mobile/data/repositories/marker_repository.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
@@ -50,7 +50,12 @@ void main() async {
   dio.interceptors
       .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
     var customHeaders;
-    if (_userRepository.getUid() != "") {
+    if (options.path == "https://355032-cu98624.tmweb.ru/api/bench/") {
+      customHeaders = {
+        'content-type': 'multipart/form-data',
+        'Authorization': 'token ${_userRepository.getUid()}'
+      };
+    } else if (_userRepository.getUid() != "") {
       customHeaders = {
         'content-type': 'application/json',
         'Authorization': 'token ${_userRepository.getUid()}'
@@ -78,8 +83,8 @@ void main() async {
           create: (context) => CheckBoxListBloc(),
           child: AddBenchScreen(),
         ),
-        BlocProvider<AddCommentStepBloc>(
-          create: (context) => AddCommentStepBloc(),
+        BlocProvider<StepperStorageBloc>(
+          create: (context) => StepperStorageBloc(),
           child: AddBenchScreen(),
         ),
         BlocProvider<AuthenticationBloc>(

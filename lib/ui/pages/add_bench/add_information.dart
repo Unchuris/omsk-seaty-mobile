@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
@@ -76,8 +77,12 @@ class _AddInformationStepState extends State<AddInformationStep> {
     return BlocBuilder<CheckBoxListBloc, CheckBoxListState>(
         builder: (context, state) {
       if (state is CheckBoxListDone && state.map.containsValue(true)) {
+        BlocProvider.of<StepperStorageBloc>(context)
+            .add(AddFeature(features: state.map));
         return _buildButtonWithOpacity(context, 1, widget.onNextButton);
       } else if (state is CheckBoxItemChange && state.map.containsValue(true)) {
+        BlocProvider.of<StepperStorageBloc>(context)
+            .add(AddFeature(features: state.map));
         return _buildButtonWithOpacity(context, 1, widget.onNextButton);
       }
       return _buildButtonWithOpacity(context, 0.5, () {});

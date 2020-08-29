@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_camera.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_map.dart';
@@ -70,6 +71,12 @@ class AddPhotoScreen extends StatelessWidget {
       if (state is AddImageSuccess &&
           state.geoPoint != null &&
           state.imagePath != null) {
+        BlocProvider.of<StepperStorageBloc>(context).add(AddImagePath(
+            imagePath: state.imagePath,
+            name: state.address,
+            address: state.address,
+            lat: state.geoPoint.latitude,
+            lon: state.geoPoint.longitude));
         return _buildButtonWithOpacity(context, 1, onNextButton);
       }
       return _buildButtonWithOpacity(context, 0.5, () {});

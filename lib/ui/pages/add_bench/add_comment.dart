@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/blocs/add_comment_step/add_comment_step_bloc.dart';
+
+import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/start_rating.dart';
 
 class AddCommentStep extends StatefulWidget {
@@ -20,10 +21,14 @@ class _AddCommentStepState extends State<AddCommentStep> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildComment();
+    return BlocBuilder<StepperStorageBloc, StepperStorageState>(
+        builder: (context, state) {
+      return _buildComment();
+    });
   }
 
   final _formKey = GlobalKey<FormState>();
+  final myController = TextEditingController();
   Widget _buildComment() {
     return Form(
       key: _formKey,
@@ -42,10 +47,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: TextFormField(
-                  onChanged: (text) {
-                    BlocProvider.of<AddCommentStepBloc>(context)
-                        .add(CloseTextFieldEvent(text: text, rating: rating));
-                  },
+                  controller: myController,
                   validator: (value) {
                     if (value.length < 8) {
                       return AppLocalizations.of(context)
@@ -102,7 +104,11 @@ class _AddCommentStepState extends State<AddCommentStep> {
                           backgroundColor: Colors.red,
                         ));
                       }
-                      if (_formKey.currentState.validate() && rating > 0) {}
+                      if (_formKey.currentState.validate() && rating > 0) {
+                        BlocProvider.of<StepperStorageBloc>(context).add(
+                            AddComment(
+                                rating: rating, text: myController.text));
+                      }
                     }),
               ),
             ),
