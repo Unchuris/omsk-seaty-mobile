@@ -25,7 +25,10 @@
 - [Fastlane](https://fastlane.tools/) для автоматизации сборки и их отправления в Firebase. 
 
 # Скриншоты
-
+![](https://raw.githubusercontent.com/Unchuris/omsk-seaty-mobile/develop/screenshots/screenshot1.png?token=AE3KWBGP5XUYPOULZWU72KK7JH246)
+![](https://raw.githubusercontent.com/Unchuris/omsk-seaty-mobile/develop/screenshots/screenshot2.png?token=AE3KWBE727MW5ZZ6DQOK2HS7JH3BQ)
+![](https://raw.githubusercontent.com/Unchuris/omsk-seaty-mobile/develop/screenshots/screenshot3.png?token=AE3KWBG74LN76BVIV7YFR227JH3CO)
+![](https://raw.githubusercontent.com/Unchuris/omsk-seaty-mobile/develop/screenshots/screenshot4.png?token=AE3KWBF6OPXHJKFEEAJXEOS7JH3D6)
 # Сопровождающие
 Проект поддерживается силами этих людей:
 - Владислав Унчурис (автор идеи)
