@@ -6,6 +6,7 @@ import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart'
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_information.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_bench/add_photo_for_bench.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 
 import 'stepper.dart';
 
@@ -25,10 +26,16 @@ class _AddBenchState extends State<AddBenchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
         key: scaffoldKey,
         appBar: AppBar(
             title: Text(
                 AppLocalizations.of(context).translate("string_add_bench"))),
+=======
+        appBar: CustomAppBar(
+            height: MediaQuery.of(context).padding.top,
+            title: AppLocalizations.of(context).translate("string_add_bench")),
+>>>>>>> develop
         body: _buildStepper(context));
   }
 

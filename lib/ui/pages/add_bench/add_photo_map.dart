@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:omsk_seaty_mobile/data/models/geopoint.dart';
-import 'package:omsk_seaty_mobile/ui/utils/geocoder.dart';
+import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 class AddPhotoMapScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
   @override
   void initState() {
     super.initState();
-    _centerPoint = widget.startPoint ?? GeoPoint(latitude: 55, longitude: 73);
+    _centerPoint = widget.startPoint ?? omskCenterPoint.toLatLng();
     _animationController = AnimationController(
         duration: Duration(seconds: 1, milliseconds: 300), vsync: this);
     _markerAnimation = _animationController.drive(
@@ -75,14 +75,13 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
             _mapController.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
-                    target:
-                        LatLng(_centerPoint.latitude, _centerPoint.longitude),
+                    target: _centerPoint.toLatLng(),
                     zoom: 20.0),
               ),
             );
           },
           initialCameraPosition: CameraPosition(
-              target: LatLng(_centerPoint.latitude, _centerPoint.longitude)),
+              target: _centerPoint.toLatLng()),
         ),
         Center(
           child: Icon(Icons.location_on,
@@ -116,7 +115,7 @@ class _AddPhotoMapScreenState extends State<AddPhotoMapScreen>
         future: getAddressString(_centerPoint),
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Text(snapshot.data,
+            return Text(snapshot.data ?? "${_centerPoint.latitude}, ${_centerPoint.longitude}",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline4);
           } else {

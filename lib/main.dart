@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -28,6 +29,7 @@ import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
+import 'package:omsk_seaty_mobile/ui/utils/orientation.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
@@ -37,6 +39,7 @@ import 'http.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppOrientation.fixPortrait();
   HydratedCubit.storage = await HydratedStorage.build();
   final UserRepository _userRepository = UserRepository();
   await _userRepository.init();

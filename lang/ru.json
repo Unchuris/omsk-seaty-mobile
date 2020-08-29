@@ -41,10 +41,10 @@
     "bench_filter": "Фильтр лавочек",
     "find": "Найти",
 
-    "string_add_photo": "Добавить фото",
+    "string_add_photo": "Фото",
     "string_add_bench": "Добавить лавочку",
-    "string_add_info": "Добавить информацию",
-    "string_rate_bench": "Оценить лавочку",
+    "string_add_info": "Информация",
+    "string_rate_bench": "Оценка",
     "string_select_from_where": "Выбрать фото",
     "string_gallery": "Галерея",
     "string_camera": "Камера",
@@ -57,8 +57,16 @@
     "top_benches": "ТОП лавочек",
     "my_benches": "Мои лавочки",
 
+
     "about_bench": "О лавочке",
 
     "validate_textfield": "Введите текст, пожалуйста",
-    "validate_raing": "Оцените лавочку пожалуйста"
+    "validate_raing": "Оцените лавочку пожалуйста",
+
+    "route": "В путь",
+    "network_connection_error": "Ошибка подключения к сети",
+
+    
+
 }
+

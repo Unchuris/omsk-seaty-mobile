@@ -11,11 +11,13 @@ import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/slider_benches_ui.dart';
+import 'package:omsk_seaty_mobile/ui/utils/geo.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/app_drawer.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/bench_slider.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/right_drawer.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
+import '../../app_localizations.dart';
 import 'bench/bench.dart';
 
 class MapScreen extends StatefulWidget {
@@ -39,7 +41,6 @@ class _MapScreenState extends State<MapScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final blocMap = BlocProvider.of<MapBloc>(context);
 
     return Material(
@@ -48,7 +49,9 @@ class _MapScreenState extends State<MapScreen>
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
           if (effect is LoadDataFailture) {
             _scaffoldKey.currentState.showSnackBar(getSnackBarError(
-                "Опа, а че с инетом?!", context)); //TODO change text
+                AppLocalizations.of(context)
+                    .translate("network_connection_error"),
+                context));
             return;
           }
           if (effect is UpdateUserLocationEffect) {
@@ -196,10 +199,8 @@ class _MapScreenState extends State<MapScreen>
 
   Widget _getGoogleMap(Map<String, Marker> data) {
     return GoogleMap(
-      initialCameraPosition: CameraPosition(
-          //TODO move to const
-          target: LatLng(54.991351, 73.364528),
-          zoom: 10),
+      initialCameraPosition:
+          CameraPosition(target: omskCenterPoint.toLatLng(), zoom: 10),
       zoomControlsEnabled: false,
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
@@ -230,7 +231,7 @@ class _MapScreenState extends State<MapScreen>
   Widget _getMenuButton(BuildContext context) {
     return Positioned(
         top: 51,
-        left: -24,
+        left: -24, //это хак
         child: ButtonTheme(
           minWidth: 63.0,
           height: 56.0,
@@ -250,7 +251,7 @@ class _MapScreenState extends State<MapScreen>
   Widget _getFilterButton(BuildContext context) {
     return Positioned(
         top: 51,
-        right: -24,
+        right: -24, //это хак
         child: ButtonTheme(
           minWidth: 63.0,
           height: 56.0,

@@ -6,22 +6,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
-import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
+import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/like.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/route.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../http.dart';
 
@@ -46,6 +48,7 @@ class _BenchPageState extends State<BenchPage> {
     ComplainType.OFFENSIVE_MATERIAL: false
   };
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
@@ -133,6 +136,8 @@ class _BenchPageState extends State<BenchPage> {
                   )
                 ],
               ));
+            } else {
+              return Container();
             }
           }),
         ),
@@ -147,26 +152,24 @@ class _BenchPageState extends State<BenchPage> {
           flex: 3,
           child: Stack(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: CachedNetworkImageProvider(bench.imageUrl),
-                        fit: BoxFit.fill)),
+              CachedNetworkImage(
+                imageUrl: bench.imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.fill),
+                )),
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(value: downloadProgress.progress),
+                //errorWidget: (context, url, error) => Icon(Icons.error), //TODO add error image
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.2),
-                          Colors.black.withOpacity(0.7),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Color(0xb2000000), Color(0x33000000)],
+                )),
               ),
               Positioned(
                 top: 12 + MediaQuery.of(context).padding.top,
@@ -244,60 +247,16 @@ class _BenchPageState extends State<BenchPage> {
                     ],
                   )),
               Positioned(
-                bottom: 10,
-                right: 60,
-                child: ButtonTheme(
-                  minWidth: 24.0,
-                  height: 34.0,
-                  child: RawMaterialButton(
-                      elevation: 8.0,
-                      fillColor: Theme.of(context).buttonColor,
-                      child: Text("В путь",
-                          style: Theme.of(context).textTheme.button),
-                      onPressed: _launchURL),
-                ),
-              ),
-              Positioned(
-                bottom: 16,
-                right: 16,
-                child: SizedBox(
-                  height: 36.0,
-                  width: 36.0,
-                  child: MaterialButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () async {
-                      if (bench.like) {
-                        setState(() {
-                          bench.like = false;
-                        });
-                        var user = BlocProvider.of<AuthenticationBloc>(context)
-                            .getUser;
-                        var respone =
-                            dio.patch('/benches/${widget.benchId}/like/');
-                        BlocProvider.of<MapBloc>(context).add(
-                            OnLikeClickedEvent(
-                                markerId: widget.benchId, liked: bench.like));
-                      } else {
-                        setState(() {
-                          bench.like = true;
-                        });
-                        var user = BlocProvider.of<AuthenticationBloc>(context)
-                            .getUser;
-                        var respone =
-                            await dio.put('/benches/${widget.benchId}/like/');
-                        BlocProvider.of<MapBloc>(context).add(
-                            OnLikeClickedEvent(
-                                markerId: widget.benchId, liked: bench.like));
-                      }
-                    },
-                    color: Colors.white,
-                    child: bench.like
-                        ? SvgPicture.asset("assets/like.svg")
-                        : SvgPicture.asset("assets/unlike.svg"),
-                    shape: CircleBorder(),
-                  ),
-                ),
-              ),
+                  bottom: 10,
+                  right: 10,
+                  child: Row(children: [
+                    RouteButton(lat: _bench.lat, lon: _bench.lon),
+                    Padding(
+                        padding: EdgeInsets.only(left: 16.0),
+                        child: LikeButton(
+                            bench: UIBencCard(_bench.name, _bench.rate,
+                                _bench.imageUrl, _bench.like))),
+                  ])),
             ],
           ),
         ),
@@ -413,9 +372,10 @@ class _BenchPageState extends State<BenchPage> {
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: ButtonTheme(
-                        minWidth: 270,
+                        minWidth: double.infinity,
                         height: 52,
                         child: FlatButton(
+                          //TODO поправить кнопку
                           child: Text("ПОЖАЛОВАТЬСЯ",
                               style: Theme.of(context)
                                   .textTheme
@@ -465,32 +425,20 @@ class _BenchPageState extends State<BenchPage> {
     } on DioError catch (e) {
       if (e.response.statusCode == 405) {
         print("405 ошибка");
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Вы уже жаловались на эту лавочку.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context)
+                .translate('Вы уже жаловались на эту лавочку.'),
+            context));
       } else {
         print("ошибка сети");
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Проблемы с соединением, повторите попытку.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate("network_connection_error"),
+            context));
       }
     }
   }
 
+  //TODO это что за хаки?
   push() async {}
 
   addComment() {
@@ -521,16 +469,6 @@ class _BenchPageState extends State<BenchPage> {
       columns.add(Column(children: [items[i], items[i + 1]]));
     }
     return columns;
-  }
-
-  _launchURL() async {
-    var url =
-        'https://www.google.ru/maps/dir/?api=1&destination=${_bench.lat},${_bench.lon}&travelmode=walking';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   FilterCheckBox _getFilterCheckBox(BenchType benchType) {
