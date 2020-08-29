@@ -74,15 +74,8 @@ class _MyBenchPageState extends State<MyBenchPage> {
         }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var responce = await dio.post("/bench/", data: {
-            "name": "Моя лавочка",
-            "address": "ул Пушкина д.55",
-            "lat": 55.045890,
-            "lon": 73.326172,
-            "imageUrl": "",
-          });
-          _bloc.add(GetMyBenchesEvent());
+        onPressed: () {
+          Navigator.pushNamed(context, "/add_bench");
         },
         elevation: 8.0,
         backgroundColor: Theme.of(context).buttonColor,

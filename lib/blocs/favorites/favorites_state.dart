@@ -30,3 +30,9 @@ class FavoritesPageError extends FavoritesState {
   @override
   List<Object> get props => [];
 }
+
+class FavoritesPage403 extends FavoritesState {
+  const FavoritesPage403();
+  @override
+  List<Object> get props => [];
+}

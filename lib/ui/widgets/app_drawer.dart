@@ -21,7 +21,6 @@ import 'dialog/dialog_with_child.dart';
 import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
-
   const AppDrawer();
 
   @override
@@ -71,41 +70,21 @@ class _AppDrawerState extends State<AppDrawer> {
                 Navigator.pushNamed(context, TopUserPage.routeName);
               },
             ),
-            _createDrawerItem(
-              icon: Icon(Icons.settings),
-              text: 'Dialog test list',
-              onTap: () {
-                _createDialogWithList();
-              },
-            ),
-            _createDrawerItem(
-              icon: Icon(Icons.settings),
-              text: 'Dialog test complain',
-              onTap: () {
-                _createDialogComplain();
-              },
-            ),
-            _createDrawerItem(
-                icon: Icon(Icons.settings),
-                text: 'Dialog test thanks',
-                onTap: () {
-                  _createDialogThanks();
-                }),
-            BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
+            /*   BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
                 builder: (context, state) {
               return Switch(
                   value: state.themeState.isLightMode,
                   onChanged: (value) =>
                       BlocProvider.of<ThemeChangeBloc>(context)
                           .add(OnThemeChangedEvent(value)));
-            })
+            }) */
           ],
         ),
       ),
     );
   }
 
-  void _createDialogWithList() {
+  /*  void _createDialogWithList() {
     Map<BenchType, bool> benches = {
       BenchType.TABLE_NEARBY: false,
       BenchType.COVERED_BENCH: false,
@@ -156,7 +135,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
             buttonType: DialogButtonType.CLOSE));
-  }
+  } */
 }
 
 Widget _createHeaderWithUser(User user, BuildContext context) {

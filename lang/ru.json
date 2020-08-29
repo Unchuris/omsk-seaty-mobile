@@ -57,8 +57,18 @@
     "top_benches": "ТОП лавочек",
     "my_benches": "Мои лавочки",
 
+
+    "about_bench": "О лавочке",
+
+    "validate_textfield": "Введите текст, пожалуйста",
+    "validate_raing": "Оцените лавочку пожалуйста",
+
     "route": "В путь",
     "network_connection_error": "Ошибка подключения к сети",
 
-    "about_bench": "О лавочке"
+    "pending_card": "На проверке у модератора"
+
+    
+
 }
+

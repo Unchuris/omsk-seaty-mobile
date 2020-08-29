@@ -56,8 +56,18 @@
     "top_benches": "Top benches",
     "my_benches": "My benches",
 
+
+    "about_bench": "About bench",
+
+    "validate_textfield": "Please, enter some text",
+    "validate_raing": "Please, enter some rating",
+
     "route": "Route",
     "network_connection_error": "Network connection error happened",
 
-    "about_bench": "About bench"
+    "pending_card": "On verification"
+    
+
+    
+
 }

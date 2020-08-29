@@ -17,7 +17,7 @@ class AddBenchScreen extends StatefulWidget {
 
 class _AddBenchState extends State<AddBenchScreen> {
   int _currentStep = 0;
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -26,9 +26,10 @@ class _AddBenchState extends State<AddBenchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-            height: MediaQuery.of(context).padding.top,
-            title: AppLocalizations.of(context).translate("string_add_bench")),
+        key: scaffoldKey,
+        appBar: AppBar(
+            title: Text(
+                AppLocalizations.of(context).translate("string_add_bench"))),
         body: _buildStepper(context));
   }
 
@@ -47,7 +48,9 @@ class _AddBenchState extends State<AddBenchScreen> {
           BenchStep(
               title:
                   AppLocalizations.of(context).translate("string_rate_bench"),
-              body: AddCommentStep()),
+              body: AddCommentStep(
+                scaffoldKey: scaffoldKey,
+              )),
         ]),
         onWillPop: () async {
           if (_currentStep != 0) {
