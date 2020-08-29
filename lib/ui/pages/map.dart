@@ -294,7 +294,6 @@ class _MapScreenState extends State<MapScreen>
         MaterialPageRoute(
             builder: (context) => BenchPage(
                   benchId: benchLight.id,
-                  scaffoldKey: _scaffoldKey,
                 )));
   }
 
