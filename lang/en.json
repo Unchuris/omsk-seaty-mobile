@@ -63,7 +63,10 @@
     "validate_raing": "Please, enter some rating",
 
     "route": "Route",
-    "network_connection_error": "Network connection error happened"
+    "network_connection_error": "Network connection error happened",
+
+    "pending_card": "On verification"
+    
 
     
 

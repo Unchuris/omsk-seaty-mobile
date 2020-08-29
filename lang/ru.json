@@ -64,7 +64,9 @@
     "validate_raing": "Оцените лавочку пожалуйста",
 
     "route": "В путь",
-    "network_connection_error": "Ошибка подключения к сети"
+    "network_connection_error": "Ошибка подключения к сети",
+
+    "pending_card": "На проверке у модератора"
 
     
 

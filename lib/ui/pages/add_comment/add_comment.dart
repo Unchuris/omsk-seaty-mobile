@@ -52,7 +52,8 @@ class _AddCommentPageState extends State<AddCommentPage> {
                   child: TextFormField(
                     controller: myController,
                     validator: (value) {
-                      if (value.length < 8) {
+                      if (value.trim().isEmpty) {
+                        myController.clear();
                         return AppLocalizations.of(context)
                             .translate("validate_textfield");
                       }
@@ -107,41 +108,43 @@ class _AddCommentPageState extends State<AddCommentPage> {
                           backgroundColor: Colors.red,
                         ));
                       }
-                      if (_formKey.currentState.validate() && rating > 0) {}
-                      var _user =
-                          BlocProvider.of<AuthenticationBloc>(context).getUser;
-                      try {
-                        var responce = await dio.post('/comments/', data: {
-                          'bench_id': widget.benchId,
-                          'text': myController.text,
-                          'rating': rating
-                        });
-                        widget.onAdd();
-                        Navigator.pop(context);
-                      } on DioError catch (e) {
-                        if (e.response.statusCode == 405) {
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Вы уже комментировали даннулю лавочку.'),
-                                Icon(Icons.error)
-                              ],
-                            ),
-                            backgroundColor: Colors.red,
-                          ));
-                        } else {
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    'Проблемы с соединением,повторите попытку.'),
-                                Icon(Icons.error)
-                              ],
-                            ),
-                            backgroundColor: Colors.red,
-                          ));
+                      if (_formKey.currentState.validate() && rating > 0) {
+                        try {
+                          var responce = await dio.post('/comments/', data: {
+                            'bench_id': widget.benchId,
+                            'text': myController.text,
+                            'rating': rating
+                          });
+                          widget.onAdd();
+                          Navigator.pop(context);
+                        } on DioError catch (e) {
+                          if (e.response.statusCode == 405) {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      'Вы уже комментировали даннулю лавочку.'),
+                                  Icon(Icons.error)
+                                ],
+                              ),
+                              backgroundColor: Colors.red,
+                            ));
+                          } else {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      'Проблемы с соединением,повторите попытку.'),
+                                  Icon(Icons.error)
+                                ],
+                              ),
+                              backgroundColor: Colors.red,
+                            ));
+                          }
                         }
                       }
                     },

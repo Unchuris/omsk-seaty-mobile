@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/model/my_bench_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,28 +30,41 @@ class _MyBenchCardState extends State<MyBenchCard> {
         break;
       default:
     }
-    return Padding(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => BenchPage(
-                        benchId: bench.id,
-                      )));
-        },
-        child: Container(
-            width: MediaQuery.of(context).size.width * .90,
-            height: MediaQuery.of(context).size.height * .28,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: CachedNetworkImageProvider(bench.imageUrl),
-                    fit: BoxFit.cover),
-                borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            child: benchCard),
-      ),
-    );
+    return (bench.status == "IN_POOL")
+        ? Padding(
+            padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BenchPage(
+                              benchId: bench.id,
+                            )));
+              },
+              child: Container(
+                  width: MediaQuery.of(context).size.width * .90,
+                  height: MediaQuery.of(context).size.height * .28,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: CachedNetworkImageProvider(bench.imageUrl),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  child: benchCard),
+            ),
+          )
+        : Padding(
+            padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+            child: Container(
+                width: MediaQuery.of(context).size.width * .90,
+                height: MediaQuery.of(context).size.height * .28,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: CachedNetworkImageProvider(bench.imageUrl),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                child: benchCard),
+          );
   }
 
   Widget _pendginCard(UiMyBench bench) {
@@ -69,13 +83,11 @@ class _MyBenchCardState extends State<MyBenchCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    "На проверке у модератора",
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        fontSize: 18.5,
-                        fontFamily: "Roboto"),
-                  ),
+                  Text(AppLocalizations.of(context).translate('pending_card'),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Colors.white)),
                 ],
               ),
             ),
@@ -102,13 +114,11 @@ class _MyBenchCardState extends State<MyBenchCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    bench.name,
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        fontSize: 18.5,
-                        fontFamily: "Roboto"),
-                  ),
+                  Text(bench.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Colors.white)),
                 ],
               ),
             ),
@@ -130,8 +140,7 @@ class _MyBenchCardState extends State<MyBenchCard> {
               padding: const EdgeInsets.only(top: 6.0, left: 4.0),
               child: Text(
                 bench.rate.toStringAsFixed(1),
-                style: TextStyle(
-                    fontFamily: "Roboto", fontSize: 14.0, color: Colors.white),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
           ],
@@ -146,8 +155,8 @@ class _MyBenchCardState extends State<MyBenchCard> {
             child: RawMaterialButton(
                 elevation: 8.0,
                 fillColor: Theme.of(context).buttonColor,
-                child:
-                    Text("В путь", style: Theme.of(context).textTheme.button),
+                child: Text(AppLocalizations.of(context).translate('route'),
+                    style: Theme.of(context).textTheme.button),
                 onPressed: _launchURL),
           )),
     ]);

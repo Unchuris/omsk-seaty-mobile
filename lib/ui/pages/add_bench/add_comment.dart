@@ -87,7 +87,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
                 child: TextFormField(
                   controller: myController,
                   validator: (value) {
-                    if (value.length < 8) {
+                    if (value.trim().isEmpty) {
                       return AppLocalizations.of(context)
                           .translate("validate_textfield");
                     }
