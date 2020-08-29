@@ -29,11 +29,6 @@ class _AddInformationStepState extends State<AddInformationStep> {
   };
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
