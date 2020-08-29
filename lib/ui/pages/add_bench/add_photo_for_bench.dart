@@ -215,11 +215,16 @@ class AddPhotoScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(16),
               child: Row(children: [
-                Icon(icon),
+                Icon(
+                  icon,
+                  color: Theme.of(context).buttonColor,
+                ),
                 Container(
                     margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)
-                        .translate(textTranslateString))),
+                    child: Text(
+                        AppLocalizations.of(context)
+                            .translate(textTranslateString),
+                        style: Theme.of(context).textTheme.headline5)),
               ]),
             )));
   }
@@ -248,7 +253,7 @@ class AddPhotoScreen extends StatelessWidget {
       if (location == null) return null;
       return GeoPoint(
           latitude: location.latitude, longitude: location.longitude);
-    } catch(err) {
+    } catch (err) {
       return null;
     }
   }

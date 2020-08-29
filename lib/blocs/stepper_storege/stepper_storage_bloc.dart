@@ -66,7 +66,10 @@ class StepperStorageBloc
 
         var responce = await dio
             .post("https://355032-cu98624.tmweb.ru/api/bench/", data: formData);
-      } on DioError catch (e) {}
+        yield SucessState();
+      } on DioError catch (e) {
+        yield ErrorState();
+      }
     }
   }
 

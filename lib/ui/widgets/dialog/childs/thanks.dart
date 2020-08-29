@@ -15,12 +15,17 @@ class ThanksChild extends StatelessWidget {
               height: 94, child: SvgPicture.asset('assets/seaty_logo.svg')),
           SizedBox(height: 10),
           Text(AppLocalizations.of(context).translate('dialog_child_string'),
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+              textAlign: TextAlign.center,
+              style:
+                  Theme.of(context).textTheme.headline5.copyWith(fontSize: 18)),
           SizedBox(height: 10),
           Text(
               AppLocalizations.of(context)
                   .translate('dialog_child_status_bench'),
-              style: TextStyle(fontSize: 12)),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontSize: 12.0)),
           //SizedBox(height: 10),
           GestureDetector(
             onTap: () {

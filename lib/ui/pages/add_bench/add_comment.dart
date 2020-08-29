@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/start_rating.dart';
 
 class AddCommentStep extends StatefulWidget {
@@ -21,10 +24,45 @@ class _AddCommentStepState extends State<AddCommentStep> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StepperStorageBloc, StepperStorageState>(
-        builder: (context, state) {
-      return _buildComment();
-    });
+    return BlocListener<StepperStorageBloc, StepperStorageState>(
+      listener: (context, state) {
+        if (state is ErrorState) {
+          widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+              AppLocalizations.of(context)
+                  .translate("network_connection_error"),
+              context));
+        } else if (state is SucessState) {
+          _createDialogThanks(context);
+        }
+      },
+      child: BlocBuilder<StepperStorageBloc, StepperStorageState>(
+          builder: (context, state) {
+        if (state is AddCommentState || state is RequestState) {
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (state is ErrorState) {}
+        return _buildComment();
+      }),
+    );
+  }
+
+  void _createDialogThanks(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => DialogWithChild(
+            title:
+                AppLocalizations.of(context).translate('dialog_title_thanks'),
+            buttonText:
+                AppLocalizations.of(context).translate('dialog_button_good'),
+            child: ThanksChild(),
+            onTap: () {
+              Navigator.of(context, rootNavigator: true).pop(context);
+            },
+            buttonType: DialogButtonType.CLOSE));
   }
 
   final _formKey = GlobalKey<FormState>();

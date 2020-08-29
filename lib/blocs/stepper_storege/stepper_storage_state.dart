@@ -36,3 +36,7 @@ class RequestState extends StepperStorageState {
   @override
   List<Object> get props => [];
 }
+
+class ErrorState extends StepperStorageState {}
+
+class SucessState extends StepperStorageState {}
