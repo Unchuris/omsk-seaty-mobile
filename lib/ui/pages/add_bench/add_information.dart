@@ -6,7 +6,6 @@ import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart'
 import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
-import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
@@ -29,6 +28,12 @@ class _AddInformationStepState extends State<AddInformationStep> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showDialog());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
@@ -37,6 +42,7 @@ class _AddInformationStepState extends State<AddInformationStep> {
           Container(
             width: double.infinity,
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -50,13 +56,10 @@ class _AddInformationStepState extends State<AddInformationStep> {
                   ],
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildAddInformationButton(context),
-                    SizedBox(
-                      height: 30.0,
-                      width: MediaQuery.of(context).size.width * 0.87,
-                      child: _buildBenchesOtpions(context),
-                    )
+                    _buildBenchesOtpions(context)
                   ],
                 ),
               ],
@@ -139,61 +142,62 @@ class _AddInformationStepState extends State<AddInformationStep> {
   }
 
   _buildBenchesOtpions(BuildContext context) {
-    return Container(
-      height: 50,
-      margin: const EdgeInsets.only(left: 16),
-      child: BlocBuilder<CheckBoxListBloc, CheckBoxListState>(
-        builder: (context, state) {
-          List<Widget> children = [];
-          if (state is CheckBoxListDone) {
-            print(state.map);
-            children = [];
-            benches = state.map;
-            benches.forEach((key, value) {
-              if (value == true) {
-                children.add(_getFilterCheckBox(key));
-              }
-            });
-            return ListView.builder(
-              itemCount: children.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: children[index],
-                );
-              },
-              scrollDirection: Axis.horizontal,
-            );
-          } else if (state is CheckBoxItemChange) {
-            benches = state.map;
-            children = [];
-            benches.forEach((key, value) {
-              if (value == true) {
-                children.add(_getFilterCheckBox(key));
-              }
-            });
-            return ListView.builder(
-              itemCount: children.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: children[index],
-                );
-              },
-              scrollDirection: Axis.horizontal,
-            );
-          }
-          return ListView.builder(
-            itemCount: children.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: children[index],
+    return Expanded(
+      child: LimitedBox(
+        maxHeight: 250,
+        child: BlocBuilder<CheckBoxListBloc, CheckBoxListState>(
+          builder: (context, state) {
+            List<Widget> children = [];
+            if (state is CheckBoxListDone) {
+              print(state.map);
+              children = [];
+              benches = state.map;
+              benches.forEach((key, value) {
+                if (value == true) {
+                  children.add(_getFilterCheckBox(key));
+                }
+              });
+              return ListView.builder(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                itemCount: children.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: children[index],
+                  );
+                },
               );
-            },
-            scrollDirection: Axis.horizontal,
-          );
-        },
+            } else if (state is CheckBoxItemChange) {
+              benches = state.map;
+              children = [];
+              benches.forEach((key, value) {
+                if (value == true) {
+                  children.add(_getFilterCheckBox(key));
+                }
+              });
+              return ListView.builder(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                itemCount: children.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: children[index],
+                  );
+                },
+              );
+            }
+            return ListView.builder(
+              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+              itemCount: children.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+                  child: children[index],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
