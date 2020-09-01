@@ -24,67 +24,63 @@ class _AddInformationStepState extends State<AddInformationStep> {
     BenchType.TABLE_NEARBY: false,
     BenchType.COVERED_BENCH: false,
     BenchType.SCENIC_VIEW: false,
-    BenchType.FOR_A_LARGE_COMPANY: false
+    BenchType.FOR_A_LARGE_COMPANY: false,
+    BenchType.URN_NEARBY: false
   };
-
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showDialog());
+    BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxListOpened());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          AppLocalizations.of(context).translate("about_bench"),
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildAddInformationButton(context),
-                    _buildBenchesOtpions(context)
-                  ],
-                ),
-              ],
+    return BlocListener<CheckBoxListBloc, CheckBoxListState>(
+      listener: (context, state) {
+        if (state is CheckBoxListOpen) {
+          benches = state.map;
+          if (!benches.containsValue(true)) {
+            _showDialog();
+          }
+        }
+      },
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .translate("about_bench"),
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildAddInformationButton(context),
+                      _buildBenchesOtpions(context)
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          _buildNextButton(context),
-        ],
+            _buildButtonWithOpacity(context, 1, widget.onNextButton),
+          ],
+        ),
       ),
     );
-  }
-
-  Widget _buildNextButton(BuildContext context) {
-    return BlocBuilder<CheckBoxListBloc, CheckBoxListState>(
-        builder: (context, state) {
-      if (state is CheckBoxListDone && state.map.containsValue(true)) {
-        BlocProvider.of<StepperStorageBloc>(context)
-            .add(AddFeature(features: state.map));
-        return _buildButtonWithOpacity(context, 1, widget.onNextButton);
-      } else if (state is CheckBoxItemChange && state.map.containsValue(true)) {
-        BlocProvider.of<StepperStorageBloc>(context)
-            .add(AddFeature(features: state.map));
-        return _buildButtonWithOpacity(context, 1, widget.onNextButton);
-      }
-      return _buildButtonWithOpacity(context, 0.5, () {});
-    });
   }
 
   Widget _buildButtonWithOpacity(
@@ -142,12 +138,17 @@ class _AddInformationStepState extends State<AddInformationStep> {
   }
 
   _buildBenchesOtpions(BuildContext context) {
+    List<Widget> children = [];
+    benches.forEach((key, value) {
+      if (value == true) {
+        children.add(_getFilterCheckBox(key));
+      }
+    });
     return Expanded(
       child: LimitedBox(
         maxHeight: 250,
         child: BlocBuilder<CheckBoxListBloc, CheckBoxListState>(
           builder: (context, state) {
-            List<Widget> children = [];
             if (state is CheckBoxListDone) {
               print(state.map);
               children = [];
@@ -185,17 +186,26 @@ class _AddInformationStepState extends State<AddInformationStep> {
                   );
                 },
               );
+            } else if (state is CheckBoxListOpen) {
+              benches = state.map;
+              children = [];
+              benches.forEach((key, value) {
+                if (value == true) {
+                  children.add(_getFilterCheckBox(key));
+                }
+              });
+              return ListView.builder(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                itemCount: children.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: children[index],
+                  );
+                },
+              );
             }
-            return ListView.builder(
-              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-              itemCount: children.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
-                  child: children[index],
-                );
-              },
-            );
+            return Container();
           },
         ),
       ),

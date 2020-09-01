@@ -7,6 +7,8 @@ abstract class CheckBoxListEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class CheckBoxListOpened extends CheckBoxListEvent {}
+
 class CheckBoxListDialogOpened extends CheckBoxListEvent {}
 
 class CheckBoxListChanged extends CheckBoxListEvent {
