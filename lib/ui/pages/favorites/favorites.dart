@@ -33,13 +33,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
         child: BlocBuilder<FavoritesBloc, FavoritesState>(
             builder: (context, state) {
           if (state is FavoritesInitial) {
-            print('initial');
             return Center(child: CircularProgressIndicator());
           } else if (state is FavoritesPageLoading) {
-            print('loading');
             return Center(child: CircularProgressIndicator());
           } else if (state is FavoritesPageInitialed) {
-            print('load');
             return _buildBenchCard(state.benchCard);
           } else if (state is FavoritesPageError) {
             return Center(
@@ -97,12 +94,21 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   _buildBenchCard(List<UIBencCard> benches) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return BenchFavoriteCard(bench: benches[index]);
-      },
-      itemCount: benches.length,
-    );
+    if (benches.length == 0) {
+      return Container(
+          child: Center(
+              child: Text(
+        AppLocalizations.of(context).translate("favorites_empty"),
+        style: Theme.of(context).textTheme.bodyText1,
+      )));
+    } else {
+      return ListView.builder(
+        itemBuilder: (context, index) {
+          return BenchFavoriteCard(bench: benches[index]);
+        },
+        itemCount: benches.length,
+      );
+    }
   }
 
   @override

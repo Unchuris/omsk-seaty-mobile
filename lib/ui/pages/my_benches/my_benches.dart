@@ -35,13 +35,10 @@ class _MyBenchPageState extends State<MyBenchPage> {
         child: BlocBuilder<MyBenchesBloc, MyBenchesState>(
             builder: (context, state) {
           if (state is MyBenchesInitial) {
-            print('initial');
             return Center(child: CircularProgressIndicator());
           } else if (state is MyBenchesPageLoading) {
-            print('loading');
             return Center(child: CircularProgressIndicator());
           } else if (state is MyBenchesPageInitialed) {
-            print('load');
             return _buildBenchCard(state.benchCard);
           } else if (state is MyBenchesPageError) {
             return Center(
@@ -86,11 +83,20 @@ class _MyBenchPageState extends State<MyBenchPage> {
   }
 
   _buildBenchCard(List<UiMyBench> benches) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return MyBenchCard(bench: benches[index]);
-      },
-      itemCount: benches.length,
-    );
+    if (benches.length == 0) {
+      return Container(
+          child: Center(
+              child: Text(
+        AppLocalizations.of(context).translate("favorites_empty"),
+        style: Theme.of(context).textTheme.bodyText1,
+      )));
+    } else {
+      return ListView.builder(
+        itemBuilder: (context, index) {
+          return MyBenchCard(bench: benches[index]);
+        },
+        itemCount: benches.length,
+      );
+    }
   }
 }

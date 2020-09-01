@@ -65,7 +65,8 @@
     "route": "Route",
     "network_connection_error": "Network connection error happened",
 
-    "pending_card": "On verification"
+    "pending_card": "On verification",
+    "favorites_empty": "You haven't added any benches yet"
     
 
     
