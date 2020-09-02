@@ -5,20 +5,11 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
-import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
-import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
-import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
-import 'package:omsk_seaty_mobile/ui/utils/theme_change_bloc.dart';
-import 'package:omsk_seaty_mobile/ui/utils/theme_change_event.dart';
-import 'package:omsk_seaty_mobile/ui/utils/theme_change_state.dart';
-import 'dialog/childs/checkbox_list.dart';
-import 'dialog/dialog_with_child.dart';
-import 'dialog/list_provider.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer();
@@ -32,44 +23,75 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Drawer(
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, state) {
-                if (state is AuthenticationSuccess)
-                  return _createHeaderWithUser(state.user, context);
-                return _createHeaderWitoutUser(context);
-              },
+            Column(
+              children: [
+                BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                  builder: (context, state) {
+                    if (state is AuthenticationSuccess)
+                      return _createHeaderWithUser(state.user, context);
+                    return _createHeaderWitoutUser(context);
+                  },
+                ),
+                _createDrawerItem(
+                    icon: SvgPicture.asset("assets/myBench.svg"),
+                    text: AppLocalizations.of(context)
+                        .translate('string_my_benches'),
+                    onTap: () {
+                      Navigator.pushNamed(context, MyBenchPage.routeName);
+                    }),
+                _createDrawerItem(
+                    icon: SvgPicture.asset("assets/favorites.svg"),
+                    text: AppLocalizations.of(context)
+                        .translate('string_favorites'),
+                    onTap: () {
+                      Navigator.pushNamed(context, FavoritesPage.routeName);
+                    }),
+                _createDrawerItem(
+                  icon: SvgPicture.asset("assets/topBenches.svg"),
+                  text: AppLocalizations.of(context)
+                      .translate('string_top_benches'),
+                  onTap: () {
+                    Navigator.pushNamed(context, TopBechesPage.routeName);
+                  },
+                ),
+                _createDrawerItem(
+                  icon: SvgPicture.asset("assets/topUsers.svg"),
+                  text: AppLocalizations.of(context)
+                      .translate('string_top_users'),
+                  onTap: () {
+                    Navigator.pushNamed(context, TopUserPage.routeName);
+                  },
+                ),
+              ],
             ),
-            _createDrawerItem(
-                icon: SvgPicture.asset("assets/myBench.svg"),
-                text:
-                    AppLocalizations.of(context).translate('string_my_benches'),
-                onTap: () {
-                  Navigator.pushNamed(context, MyBenchPage.routeName);
-                }),
-            _createDrawerItem(
-                icon: SvgPicture.asset("assets/favorites.svg"),
-                text:
-                    AppLocalizations.of(context).translate('string_favorites'),
-                onTap: () {
-                  Navigator.pushNamed(context, FavoritesPage.routeName);
-                }),
-            _createDrawerItem(
-              icon: SvgPicture.asset("assets/topBenches.svg"),
-              text:
-                  AppLocalizations.of(context).translate('string_top_benches'),
-              onTap: () {
-                Navigator.pushNamed(context, TopBechesPage.routeName);
-              },
-            ),
-            _createDrawerItem(
-              icon: SvgPicture.asset("assets/topUsers.svg"),
-              text: AppLocalizations.of(context).translate('string_top_users'),
-              onTap: () {
-                Navigator.pushNamed(context, TopUserPage.routeName);
-              },
-            ),
+            Column(
+              children: [
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/add_bench');
+                  },
+                  elevation: 8.0,
+                  fillColor: Theme.of(context).buttonColor,
+                  child: SvgPicture.asset("assets/ic_add_bench.svg"),
+                  padding: EdgeInsets.only(
+                      left: 16.0, right: 16.0, top: 10, bottom: 10),
+                  shape: CircleBorder(),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  AppLocalizations.of(context).translate("string_add_bench"),
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 105.0,
+                ),
+              ],
+            )
             /*   BlocBuilder<ThemeChangeBloc, ThemeChangeState>(
                 builder: (context, state) {
               return Switch(
