@@ -18,6 +18,15 @@ class CheckBoxListDone extends CheckBoxListState {
   List<Object> get props => [map];
 }
 
+class CheckBoxListInitOpen extends CheckBoxListState {
+  final Map<Object, bool> map;
+
+  const CheckBoxListInitOpen(this.map);
+
+  @override
+  List<Object> get props => [map];
+}
+
 class CheckBoxListOpen extends CheckBoxListState {
   final Map<Object, bool> map;
 

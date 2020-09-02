@@ -29,7 +29,6 @@ class _AddInformationStepState extends State<AddInformationStep> {
   };
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxListOpened());
   }
@@ -38,7 +37,7 @@ class _AddInformationStepState extends State<AddInformationStep> {
   Widget build(BuildContext context) {
     return BlocListener<CheckBoxListBloc, CheckBoxListState>(
       listener: (context, state) {
-        if (state is CheckBoxListOpen) {
+        if (state is CheckBoxListInitOpen) {
           benches = state.map;
           if (!benches.containsValue(true)) {
             _showDialog();

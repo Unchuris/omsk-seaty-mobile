@@ -31,7 +31,7 @@ class CheckBoxListBloc extends Bloc<CheckBoxListEvent, CheckBoxListState> {
     } else if (event is CheckBoxClouse) {
       yield CheckBoxPageClosed();
     } else if (event is CheckBoxListOpened) {
-      yield CheckBoxListOpen(benches);
+      yield CheckBoxListInitOpen(benches);
     }
   }
 }
