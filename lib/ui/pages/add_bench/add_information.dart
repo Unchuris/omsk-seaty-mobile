@@ -129,6 +129,8 @@ class _AddInformationStepState extends State<AddInformationStep> {
           onTap: () {
             BlocProvider.of<CheckBoxListBloc>(context)
                 .add(CheckBoxListChanged(benches));
+            BlocProvider.of<StepperStorageBloc>(context)
+                .add(AddFeature(features: benches));
             Navigator.pop(context);
           },
         ),

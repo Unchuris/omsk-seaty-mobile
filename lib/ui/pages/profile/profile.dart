@@ -52,10 +52,10 @@ class ProfilePage extends StatelessWidget {
             child: Text(
                 AppLocalizations.of(context).translate('string_log_out'),
                 style: TextStyle(color: Color(0xFF828282))),
-            onPressed: () => {
+            onPressed: () {
+              Navigator.pushNamed(context, '/login');
               BlocProvider.of<AuthenticationBloc>(context)
-                  .add(AuthenticationLoggedOut()),
-              Navigator.pushReplacementNamed(context, '/login')
+                  .add(AuthenticationLoggedOut());
             },
           ),
         )),

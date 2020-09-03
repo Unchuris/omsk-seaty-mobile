@@ -1,4 +1,5 @@
 class UiTopUser {
+  String id;
   String uid;
   String displayName;
   String rank;
@@ -6,9 +7,15 @@ class UiTopUser {
   int benches;
 
   UiTopUser(
-      {this.uid, this.displayName, this.benches, this.rank, this.photoUrl});
+      {this.id,
+      this.uid,
+      this.displayName,
+      this.benches,
+      this.rank,
+      this.photoUrl});
 
   UiTopUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
     uid = json['uid'];
     displayName = json['displayName'];
     benches = json['benches'];

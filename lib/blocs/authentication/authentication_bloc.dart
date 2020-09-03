@@ -27,19 +27,26 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AuthenticationStarted) {
+      print("старт");
       yield* _mapAuthenticationStartedToState();
     } else if (event is LoginWithGooglePressed) {
+      print("гугл");
       yield* _mapLoginWithGooglePressedToState();
     } else if (event is AuthenticationLoggedIn) {
+      print("входим");
       yield* _mapAuthenticationLoggedInToState();
     } else if (event is AuthenticationLoggedOut) {
-      yield* _mapAuthenticationLoggedOutToState();
+      print("выходим");
+      _userRepository.signOut();
+      yield AuthenticationFailure();
     } else if (event is AuthenticationSkipped) {
+      print("скипнул");
       yield* _mapAuthenticationSkippedToState();
     }
   }
 
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
+    yield AuthenticationStart();
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       _user = await _userRepository.getUser();
@@ -72,8 +79,8 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {
-    yield AuthenticationFailure();
     _userRepository.signOut();
+    yield AuthenticationFailure();
   }
 
   Stream<AuthenticationState> _mapAuthenticationSkippedToState() async* {

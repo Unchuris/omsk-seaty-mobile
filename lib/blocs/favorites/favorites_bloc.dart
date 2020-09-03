@@ -29,8 +29,9 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       } on DioError catch (e) {
         if (e.response.statusCode == 403) {
           yield FavoritesPage403();
+        } else {
+          yield FavoritesPageError();
         }
-        yield FavoritesPageError();
       }
     }
   }

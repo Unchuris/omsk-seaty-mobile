@@ -44,7 +44,6 @@ class _BenchPageState extends State<BenchPage> {
   Map<ComplainType, bool> _complains = {
     ComplainType.ABSENT_BENCH: false,
     ComplainType.INAPPROPRIATE_CONTENT: false,
-    ComplainType.OFFENSIVE_MATERIAL: false
   };
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -97,26 +96,25 @@ class _BenchPageState extends State<BenchPage> {
           child: BlocBuilder<BenchPageBloc, BenchPageState>(
               builder: (context, state) {
             if (state is BenchPageLoading) {
-              print('loading');
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitial) {
-              print('initial');
+              ;
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
-              print('loaded');
               return _buildBenchPage(state.benchUi, context);
             } else if (state is BenchPageError) {
-              print('error');
               return Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Ошибка соединения",
+                    AppLocalizations.of(context)
+                        .translate("network_connection_error"),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   Text(
-                    "Проверьте соединение и попробуйте еще.",
+                    AppLocalizations.of(context)
+                        .translate("cheak_network_try_again"),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(
@@ -374,8 +372,10 @@ class _BenchPageState extends State<BenchPage> {
                         minWidth: double.infinity,
                         height: 52,
                         child: FlatButton(
-                          //TODO поправить кнопку
-                          child: Text("ПОЖАЛОВАТЬСЯ",
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .translate("report")
+                                  .toUpperCase(),
                               style: Theme.of(context)
                                   .textTheme
                                   .button
@@ -423,13 +423,13 @@ class _BenchPageState extends State<BenchPage> {
           data: {"bench_id": widget.benchId, "report_message": report});
     } on DioError catch (e) {
       if (e.response.statusCode == 405) {
-        print("405 ошибка");
         _scaffoldKey.currentState.showSnackBar(getSnackBarError(
-            AppLocalizations.of(context)
-                .translate('Вы уже жаловались на эту лавочку.'),
+            AppLocalizations.of(context).translate('already_report_bench'),
             context));
+      } else if (e.response.statusCode == 403) {
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('403_error'), context));
       } else {
-        print("ошибка сети");
         _scaffoldKey.currentState.showSnackBar(getSnackBarError(
             AppLocalizations.of(context).translate("network_connection_error"),
             context));

@@ -92,8 +92,7 @@ void main() async {
         ),
         BlocProvider<AuthenticationBloc>(
             create: (context) =>
-                AuthenticationBloc(userRepository: _userRepository)
-                  ..add(AuthenticationStarted())),
+                AuthenticationBloc(userRepository: _userRepository)),
         BlocProvider<MapBloc>(
             create: (context) => MapBloc(
                 repository: MarkerRepository(),

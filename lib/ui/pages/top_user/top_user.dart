@@ -8,13 +8,14 @@ import 'package:omsk_seaty_mobile/ui/widgets/top_user_card.dart';
 class TopUserPage extends StatefulWidget {
   TopUserPage({Key key}) : super(key: key);
   static String routeName = 'topUser';
+
   @override
   _TopUserPageState createState() => _TopUserPageState();
 }
 
 class _TopUserPageState extends State<TopUserPage> {
   TopUserBloc _topUserBloc = TopUserBloc();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _topUserBloc.add(GetTopUserEvent());
@@ -24,6 +25,7 @@ class _TopUserPageState extends State<TopUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: (Theme.of(context).brightness == Brightness.light)
           ? Color(0xFFE5E5E5)
           : Color(0xFFE5E5E5),
@@ -56,7 +58,10 @@ class _TopUserPageState extends State<TopUserPage> {
         return Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-            child: TopUserCard(uiTopUser: uiTopUsers[index]));
+            child: TopUserCard(
+              uiTopUser: uiTopUsers[index],
+              scaffoldKey: _scaffoldKey,
+            ));
       },
     );
   }

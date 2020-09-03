@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/blocs/add_image/add_image_bloc.dart';
+import 'package:omsk_seaty_mobile/blocs/check_box_list/check_box_list_bloc.dart';
 
 import 'package:omsk_seaty_mobile/blocs/stepper_storege/stepper_storage_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/thanks.dart';
@@ -60,6 +62,8 @@ class _AddCommentStepState extends State<AddCommentStep> {
                 AppLocalizations.of(context).translate('dialog_button_good'),
             child: ThanksChild(),
             onTap: () {
+              BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxClouse());
+              BlocProvider.of<AddImageBloc>(context).add(AddImageCanceled());
               Navigator.popAndPushNamed(context, "/map");
             },
             buttonType: DialogButtonType.CLOSE));

@@ -48,29 +48,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       .translate("network_connection_error"),
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
-                SizedBox(
-                  height: 60,
-                ),
-                RawMaterialButton(
-                  onPressed: () => {_bloc.add(GetFavoritesEvent())},
-                  elevation: 8.0,
-                  fillColor: Theme.of(context).buttonColor,
-                  child: Icon(Icons.refresh),
-                  padding: EdgeInsets.only(
-                      left: 19.0, right: 19.0, top: 15, bottom: 15),
-                  shape: CircleBorder(),
-                )
-              ],
-            ));
-          }
-          /* else if (state is FavoritesPage403) {
-            return Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
                 Text(
                   AppLocalizations.of(context)
-                      .translate("network_connection_error"),
+                      .translate("cheak_network_try_again"),
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 SizedBox(
@@ -87,7 +67,33 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 )
               ],
             ));
-          } */
+          } else if (state is FavoritesPage403) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Text(
+                    AppLocalizations.of(context).translate("403_error"),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ),
+                RawMaterialButton(
+                  onPressed: () => {Navigator.pushNamed(context, "/login")},
+                  elevation: 8.0,
+                  fillColor: Theme.of(context).buttonColor,
+                  child: Text(
+                    AppLocalizations.of(context).translate("login_in"),
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                  padding: EdgeInsets.only(
+                      left: 19.0, right: 19.0, top: 15, bottom: 15),
+                )
+              ],
+            ));
+          }
         }),
       ),
     );

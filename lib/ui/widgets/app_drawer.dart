@@ -30,9 +30,11 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, state) {
-                    if (state is AuthenticationSuccess)
+                    if (state is AuthenticationSuccess) {
                       return _createHeaderWithUser(state.user, context);
-                    return _createHeaderWitoutUser(context);
+                    } else {
+                      return _createHeaderWitoutUser(context);
+                    }
                   },
                 ),
                 _createDrawerItem(

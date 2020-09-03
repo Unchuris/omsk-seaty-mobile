@@ -29,6 +29,13 @@ class CheckBoxListBloc extends Bloc<CheckBoxListEvent, CheckBoxListState> {
       benches[event.item] = false;
       yield CheckBoxItemChange(item: event.item, map: benches);
     } else if (event is CheckBoxClouse) {
+      benches = {
+        BenchType.TABLE_NEARBY: false,
+        BenchType.COVERED_BENCH: false,
+        BenchType.SCENIC_VIEW: false,
+        BenchType.FOR_A_LARGE_COMPANY: false,
+        BenchType.URN_NEARBY: false
+      };
       yield CheckBoxPageClosed();
     } else if (event is CheckBoxListOpened) {
       yield CheckBoxListInitOpen(benches);

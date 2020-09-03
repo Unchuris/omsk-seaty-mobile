@@ -26,9 +26,9 @@ class LoginForm extends StatelessWidget {
       },
       child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
+          print(state);
           if (state is AuthenticationInProgress ||
               state is AuthenticationSuccess) {
-            print('загрузка');
             return Column(
               children: [
                 SizedBox(height: 10),

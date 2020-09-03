@@ -9,6 +9,11 @@ abstract class AuthenticationState extends Equatable {
 
 class AuthenticationInitial extends AuthenticationState {}
 
+class AuthenticationStart extends AuthenticationState {
+  @override
+  String toString() => 'Authenticated start }';
+}
+
 class AuthenticationSuccess extends AuthenticationState {
   final User user;
 
@@ -21,6 +26,12 @@ class AuthenticationSuccess extends AuthenticationState {
   String toString() => 'Authenticated { displayName: ${user.displayName} }';
 }
 
-class AuthenticationFailure extends AuthenticationState {}
+class AuthenticationFailure extends AuthenticationState {
+  @override
+  String toString() => 'Authenticated faile}';
+}
 
-class AuthenticationInProgress extends AuthenticationState {}
+class AuthenticationInProgress extends AuthenticationState {
+  @override
+  String toString() => 'Authenticated in progress}';
+}
