@@ -38,7 +38,7 @@ class _AddPhotoCameraScreenState extends State<AddPhotoCameraScreen> {
     try {
       final cameras = await availableCameras();
       final firstCamera = cameras.first;
-      _controller = CameraController(firstCamera, ResolutionPreset.high,
+      _controller = CameraController(firstCamera, ResolutionPreset.veryHigh,
           enableAudio: false);
       await _controller.initialize();
       setState(() {});
