@@ -39,4 +39,6 @@ class RequestState extends StepperStorageState {
 
 class ErrorState extends StepperStorageState {}
 
+class Error403State extends StepperStorageState {}
+
 class SucessState extends StepperStorageState {}

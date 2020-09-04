@@ -23,7 +23,7 @@ class BenchLight {
       this.feature});
 
   @override
-  bool operator == (Object o) {
+  bool operator ==(Object o) {
     if (identical(this, o)) return true;
     return o is BenchLight && o.id == id;
   }
@@ -35,8 +35,10 @@ class BenchLight {
     latitude = json['lat'];
     longitude = json['lon'];
     //TODO
-    imageUrl =
-        'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg';
+    (json['imageUrl'] == "")
+        ? imageUrl =
+            'https://m.bk55.ru/fileadmin/bkinform/image/2017/12/29/1514539988/9c572fa5eeb303b8e665d6f7e1430e2f.jpg'
+        : imageUrl = json['imageUrl'];
     like = json['like'];
     score = json['rating'];
     if (json['features'] != null) {
