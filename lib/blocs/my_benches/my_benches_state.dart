@@ -30,3 +30,10 @@ class MyBenchesPageError extends MyBenchesState {
   @override
   List<Object> get props => [];
 }
+
+class MyBenchesPage403Error extends MyBenchesState {
+  const MyBenchesPage403Error();
+
+  @override
+  List<Object> get props => [];
+}

@@ -13,31 +13,32 @@ class CheckBoxListBloc extends Bloc<CheckBoxListEvent, CheckBoxListState> {
     BenchType.TABLE_NEARBY: false,
     BenchType.COVERED_BENCH: false,
     BenchType.SCENIC_VIEW: false,
-    BenchType.FOR_A_LARGE_COMPANY: false
+    BenchType.FOR_A_LARGE_COMPANY: false,
+    BenchType.URN_NEARBY: false
   };
   @override
   Stream<CheckBoxListState> mapEventToState(
     CheckBoxListEvent event,
   ) async* {
     if (event is CheckBoxListChanged) {
-      print('поменялись значения');
       benches = event.map;
       yield CheckBoxListDone(benches);
     } else if (event is CheckBoxListDialogOpened) {
-      print('диалог открылся');
-      yield CheckBoxListOpen();
+      yield CheckBoxListOpen(benches);
     } else if (event is CheckBoxItemDelete) {
       benches[event.item] = false;
       yield CheckBoxItemChange(item: event.item, map: benches);
     } else if (event is CheckBoxClouse) {
+      benches = {
+        BenchType.TABLE_NEARBY: false,
+        BenchType.COVERED_BENCH: false,
+        BenchType.SCENIC_VIEW: false,
+        BenchType.FOR_A_LARGE_COMPANY: false,
+        BenchType.URN_NEARBY: false
+      };
       yield CheckBoxPageClosed();
+    } else if (event is CheckBoxListOpened) {
+      yield CheckBoxListInitOpen(benches);
     }
   }
-
-  Stream<CheckBoxListState> _mapCheckBoxListDialogOpenedToState() async* {
-    yield CheckBoxListOpen();
-  }
-
-  Stream<CheckBoxListState> _mapCheckBoxListChangedToState(
-      Map<Object, bool> map) async* {}
 }

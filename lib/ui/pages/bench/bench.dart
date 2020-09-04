@@ -6,13 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
-import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/bench_page/bench_page_bloc.dart';
-import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
 import 'package:omsk_seaty_mobile/ui/pages/add_comment/add_comment.dart';
 import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_bench.dart';
+import 'package:omsk_seaty_mobile/ui/pages/favorites/model/ui_bench_card.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/comment.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
@@ -20,8 +19,10 @@ import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
 
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/like.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/route.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/star_rate.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../http.dart';
 
@@ -43,9 +44,9 @@ class _BenchPageState extends State<BenchPage> {
   Map<ComplainType, bool> _complains = {
     ComplainType.ABSENT_BENCH: false,
     ComplainType.INAPPROPRIATE_CONTENT: false,
-    ComplainType.OFFENSIVE_MATERIAL: false
   };
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
@@ -63,9 +64,14 @@ class _BenchPageState extends State<BenchPage> {
         create: (context) => _benchPageBloc,
         child: BlocListener<BenchPageBloc, BenchPageState>(
           listener: (context, state) {
-            if (state is BenchPageInitial) {}
-            if (state is BenchPageLoading) {}
+            if (state is BenchPageInitial) {
+              print("initial");
+            }
+            if (state is BenchPageLoading) {
+              print('loading');
+            }
             if (state is BenchPageInitialed) {
+              print('loaded');
               _bench = state.benchUi;
 
               switch (_bench.comments.length) {
@@ -92,6 +98,7 @@ class _BenchPageState extends State<BenchPage> {
             if (state is BenchPageLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitial) {
+              ;
               return Center(child: CircularProgressIndicator());
             } else if (state is BenchPageInitialed) {
               return _buildBenchPage(state.benchUi, context);
@@ -101,11 +108,13 @@ class _BenchPageState extends State<BenchPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Ошибка соединения",
+                    AppLocalizations.of(context)
+                        .translate("network_connection_error"),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   Text(
-                    "Проверьте соединение и попробуйте еще.",
+                    AppLocalizations.of(context)
+                        .translate("cheak_network_try_again"),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(
@@ -124,6 +133,8 @@ class _BenchPageState extends State<BenchPage> {
                   )
                 ],
               ));
+            } else {
+              return Container();
             }
           }),
         ),
@@ -132,188 +143,123 @@ class _BenchPageState extends State<BenchPage> {
   }
 
   Widget _buildBenchPage(UiBench bench, BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: Color(0xFFE5E5E5),
-      child: Column(
-        children: [
-          Expanded(
-            child: Stack(children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.31,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: CachedNetworkImageProvider(bench.imageUrl),
-                        fit: BoxFit.fill)),
+    return Column(
+      children: [
+        Flexible(
+          flex: 3,
+          child: Stack(
+            children: [
+              CachedNetworkImage(
+                imageUrl: bench.imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.fill),
+                )),
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(value: downloadProgress.progress),
+                //errorWidget: (context, url, error) => Icon(Icons.error), //TODO add error image
               ),
               Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.31,
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.2),
-                          Colors.black.withOpacity(0.7),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Color(0xb2000000), Color(0x33000000)],
+                )),
               ),
-              Column(
-                children: [
-                  Row(
+              Positioned(
+                top: 12 + MediaQuery.of(context).padding.top,
+                left: 6,
+                child: SizedBox(
+                  height: 36.0,
+                  width: 45.0,
+                  child: MaterialButton(
+                      child: SvgPicture.asset(
+                        "assets/leftarrowwhite.svg",
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                ),
+              ),
+              Positioned(
+                left: 16,
+                bottom: 66,
+                child: Row(
+                  children: [
+                    Text(
+                      _bench.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                  left: 16,
+                  bottom: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 50.0,
-                        padding: EdgeInsets.only(top: 32.0, left: 15.0),
-                        child: IconButton(
-                            icon: SvgPicture.asset(
-                              "assets/leftarrowwhite.svg",
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            }),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 28.0, left: 16.0),
-                        child: Text(
-                          _bench.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline4
-                              .copyWith(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 28.0, left: 16.0),
-                                  child: SvgPicture.asset(
-                                    "assets/pin.svg",
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 28.0, left: 8.0),
-                                  child: Text(
-                                    bench.address,
-                                    style: TextStyle(
-                                        fontFamily: "Roboto",
-                                        fontSize: 14.0,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 6.0, left: 16.0),
-                                  child: SvgPicture.asset(
-                                    "assets/rate.svg",
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 6.0, left: 8.0),
-                                  child: Text(
-                                    bench.rate.toStringAsFixed(1),
-                                    style: TextStyle(
-                                        fontFamily: "Roboto",
-                                        fontSize: 14.0,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30.0, right: 17.0),
-                        child: ButtonTheme(
-                          minWidth: 24.0,
-                          height: 34.0,
-                          child: RawMaterialButton(
-                              elevation: 8.0,
-                              fillColor: Theme.of(context).buttonColor,
-                              child: Text("В путь",
-                                  style: Theme.of(context).textTheme.button),
-                              onPressed: _launchURL),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 32.0, right: 17.0),
-                        child: SizedBox(
-                          height: 36.0,
-                          width: 36.0,
-                          child: MaterialButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () async {
-                              if (bench.like) {
-                                setState(() {
-                                  bench.like = false;
-                                });
-                                var user =
-                                    BlocProvider.of<AuthenticationBloc>(context)
-                                        .getUser;
-                                var respone = dio
-                                    .patch('/benches/${widget.benchId}/like/');
-                                BlocProvider.of<MapBloc>(context).add(
-                                    OnLikeClickedEvent(
-                                        markerId: widget.benchId,
-                                        liked: bench.like));
-                              } else {
-                                setState(() {
-                                  bench.like = true;
-                                });
-                                var user =
-                                    BlocProvider.of<AuthenticationBloc>(context)
-                                        .getUser;
-                                var respone = await dio
-                                    .put('/benches/${widget.benchId}/like/');
-                                BlocProvider.of<MapBloc>(context).add(
-                                    OnLikeClickedEvent(
-                                        markerId: widget.benchId,
-                                        liked: bench.like));
-                              }
-                            },
-                            color: Colors.white,
-                            child: bench.like
-                                ? SvgPicture.asset("assets/like.svg")
-                                : SvgPicture.asset("assets/unlike.svg"),
-                            shape: CircleBorder(),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/pin.svg",
                           ),
-                        ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            bench.address,
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 14.0,
+                                color: Colors.white),
+                          ),
+                        ],
                       ),
+                      SizedBox(
+                        height: 7,
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/rate.svg",
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            bench.rate.toStringAsFixed(1),
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 14.0,
+                                color: Colors.white),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              )
-            ]),
+                  )),
+              Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Row(children: [
+                    RouteButton(lat: _bench.lat, lon: _bench.lon),
+                    Padding(
+                        padding: EdgeInsets.only(left: 16.0),
+                        child: LikeButton(
+                            bench: UIBencCard(widget.benchId, _bench.name,
+                                _bench.rate, _bench.imageUrl, _bench.like))),
+                  ])),
+            ],
           ),
-          Container(
+        ),
+        Flexible(
+          flex: 2,
+          child: Container(
             padding: EdgeInsets.all(0.0),
             child: Column(
               children: [
@@ -369,7 +315,10 @@ class _BenchPageState extends State<BenchPage> {
               ],
             ),
           ),
-          Container(
+        ),
+        Flexible(
+          flex: 4,
+          child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.489,
             child: Stack(children: [
@@ -420,10 +369,13 @@ class _BenchPageState extends State<BenchPage> {
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: ButtonTheme(
-                        minWidth: 270,
+                        minWidth: double.infinity,
                         height: 52,
                         child: FlatButton(
-                          child: Text("ПОЖАЛОВАТЬСЯ",
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .translate("report")
+                                  .toUpperCase(),
                               style: Theme.of(context)
                                   .textTheme
                                   .button
@@ -437,8 +389,8 @@ class _BenchPageState extends State<BenchPage> {
               )
             ]),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -471,34 +423,19 @@ class _BenchPageState extends State<BenchPage> {
           data: {"bench_id": widget.benchId, "report_message": report});
     } on DioError catch (e) {
       if (e.response.statusCode == 405) {
-        print("405 ошибка");
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Вы уже жаловались на эту лавочку.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('already_report_bench'),
+            context));
+      } else if (e.response.statusCode == 403) {
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('403_error'), context));
       } else {
-        print("ошибка сети");
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Проблемы с соединением, повторите попытку.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        _scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate("network_connection_error"),
+            context));
       }
     }
   }
-
-  push() async {}
 
   addComment() {
     _benchPageBloc.add(GetBenchEvent(benchId: widget.benchId));
@@ -528,16 +465,6 @@ class _BenchPageState extends State<BenchPage> {
       columns.add(Column(children: [items[i], items[i + 1]]));
     }
     return columns;
-  }
-
-  _launchURL() async {
-    var url =
-        'https://www.google.ru/maps/dir/?api=1&destination=${_bench.lat},${_bench.lon}&travelmode=walking';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   FilterCheckBox _getFilterCheckBox(BenchType benchType) {

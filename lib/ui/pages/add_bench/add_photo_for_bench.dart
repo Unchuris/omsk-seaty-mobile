@@ -231,7 +231,8 @@ class AddPhotoScreen extends StatelessWidget {
 
   Future<void> _setImageFromSource(
       BuildContext context, ImageSource imageSource) async {
-    final image = await ImagePicker().getImage(source: imageSource);
+    final image = await ImagePicker()
+        .getImage(source: imageSource, maxWidth: 1920, maxHeight: 1080);
     BlocProvider.of<AddImageBloc>(context).add(AddImageStarted(image.path));
   }
 

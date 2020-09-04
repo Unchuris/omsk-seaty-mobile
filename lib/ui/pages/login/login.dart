@@ -16,17 +16,11 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<AuthenticationBloc>(
-        create: (context) =>
-            AuthenticationBloc(userRepository: _userRepository),
-        child: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-              SvgPicture.asset('assets/seaty_logo.svg'),
-              LoginForm()
-            ])),
-      ),
+      body: Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        SvgPicture.asset('assets/seaty_logo.svg'),
+        LoginForm()
+      ])),
     );
   }
 }

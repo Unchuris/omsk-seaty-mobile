@@ -10,6 +10,7 @@ import 'package:omsk_seaty_mobile/ui/pages/bench/model/ui_comment.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 import '../../http.dart';
 
 class Comment extends StatefulWidget {
@@ -26,7 +27,6 @@ class _CommentState extends State<Comment> {
   double _height;
   int _maxLine = 1;
   Map<ComplainType, bool> _complains = {
-    ComplainType.ABSENT_BENCH: false,
     ComplainType.INAPPROPRIATE_CONTENT: false,
     ComplainType.OFFENSIVE_MATERIAL: false
   };
@@ -138,10 +138,11 @@ class _CommentState extends State<Comment> {
                                               _createDialogComplain(context);
                                             },
                                             child: Text(
-                                              "Пожаловаться",
+                                              AppLocalizations.of(context)
+                                                  .translate("report"),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .caption,
+                                                  .bodyText1,
                                             )),
                                       )
                                     ]))
@@ -186,29 +187,16 @@ class _CommentState extends State<Comment> {
           data: {"comment_id": widget.comment.id, "report_message": report});
     } on DioError catch (e) {
       if (e.response.statusCode == 405) {
-        print("405 ошибка");
-        widget.scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Вы уже жаловались на этот комментарий.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('already_report_bench'),
+            context));
+      } else if (e.response.statusCode == 403) {
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('403_error'), context));
       } else {
-        print("ошибка сети");
-        widget.scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Проблемы с соединением, повторите попытку.'),
-              Icon(Icons.error)
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ));
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate("network_connection_error"),
+            context));
       }
     }
   }

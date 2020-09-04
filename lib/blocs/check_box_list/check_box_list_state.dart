@@ -9,12 +9,28 @@ abstract class CheckBoxListState extends Equatable {
 
 class CheckBoxListInitial extends CheckBoxListState {}
 
-class CheckBoxListOpen extends CheckBoxListState {}
-
 class CheckBoxListDone extends CheckBoxListState {
   final Map<Object, bool> map;
 
   const CheckBoxListDone(this.map);
+
+  @override
+  List<Object> get props => [map];
+}
+
+class CheckBoxListInitOpen extends CheckBoxListState {
+  final Map<Object, bool> map;
+
+  const CheckBoxListInitOpen(this.map);
+
+  @override
+  List<Object> get props => [map];
+}
+
+class CheckBoxListOpen extends CheckBoxListState {
+  final Map<Object, bool> map;
+
+  const CheckBoxListOpen(this.map);
 
   @override
   List<Object> get props => [map];

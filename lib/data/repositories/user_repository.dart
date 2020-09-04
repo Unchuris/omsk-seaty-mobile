@@ -60,10 +60,11 @@ class UserRepository {
     return null;
   }
 
-  Future signOut() async {
+  signOut() {
     _removeUserFromPreferences();
     _uid = null;
-    Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
+    _firebaseAuth.signOut();
+    _googleSignIn.signOut();
   }
 
   Future<User> getUser() async {

@@ -1,10 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/data/models/complain_type.dart';
+import 'package:omsk_seaty_mobile/http.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/model/ui_top_user.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/childs/checkbox_list.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/dialog_with_child.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/dialog/list_provider.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
-class TopUserCard extends StatelessWidget {
+class TopUserCard extends StatefulWidget {
   final UiTopUser uiTopUser;
-  const TopUserCard({Key key, this.uiTopUser}) : super(key: key);
+  const TopUserCard({Key key, this.uiTopUser, this.scaffoldKey})
+      : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  @override
+  _TopUserCardState createState() => _TopUserCardState();
+}
+
+class _TopUserCardState extends State<TopUserCard> {
+  Map<ComplainType, bool> _complains = {
+    ComplainType.INAPPROPRIATE_CONTENT: false,
+    ComplainType.OFFENSIVE_MATERIAL: false
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +47,8 @@ class TopUserCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(uiTopUser.photoUrl)),
+                      image: CachedNetworkImageProvider(
+                          widget.uiTopUser.photoUrl)),
                 ),
               ),
             ),
@@ -40,11 +61,11 @@ class TopUserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    uiTopUser.displayName,
+                    widget.uiTopUser.displayName,
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Text(
-                    uiTopUser.rank,
+                    widget.uiTopUser.rank,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Row(
@@ -57,7 +78,7 @@ class TopUserCard extends StatelessWidget {
                         width: 16,
                       ),
                       Text(
-                        uiTopUser.benches.toString(),
+                        widget.uiTopUser.benches.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
@@ -76,19 +97,74 @@ class TopUserCard extends StatelessWidget {
               children: [
                 Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: SizedBox(
-                        width: 24.0,
-                        height: 24.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            iconSize: 24.0,
-                            icon: Icon(Icons.more_vert),
-                            onPressed: null))),
+                    child: PopupMenuButton(
+                        padding: const EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: Colors.black,
+                        ),
+                        itemBuilder: (context) => [
+                              PopupMenuItem(
+                                child: InkWell(
+                                    onTap: () {
+                                      _createDialogComplain(context);
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("report"),
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    )),
+                              )
+                            ])),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _createDialogComplain(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => ListProvider(
+          _complains,
+          DialogWithChild(
+              title: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              buttonText: AppLocalizations.of(context)
+                  .translate('dialog_title_complain'),
+              child: CheckBoxList(),
+              onTap: onTap,
+              buttonType: DialogButtonType.COMPLAIN)),
+    );
+  }
+
+  onTap() async {
+    var report = '';
+    _complains.forEach((key, value) {
+      if (value == true) {
+        report = report + complaintTypeToString(key, context) + " ";
+      }
+    });
+    Navigator.pop(context);
+    try {
+      var response = await dio.post("/reports/create-comment-report/",
+          data: {"comment_id": widget.uiTopUser.id, "report_message": report});
+    } on DioError catch (e) {
+      if (e.response.statusCode == 405) {
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('already_report_bench'),
+            context));
+      } else if (e.response.statusCode == 403) {
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate('403_error'), context));
+      } else {
+        widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+            AppLocalizations.of(context).translate("network_connection_error"),
+            context));
+      }
+    }
   }
 }

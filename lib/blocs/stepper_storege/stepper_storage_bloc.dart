@@ -45,10 +45,15 @@ class StepperStorageBloc
     } else if (event is RequestEvent) {
       try {
         var file_name = imagePath.split('/').last;
+        var feature;
+        Map<String, String> json_feature;
+        if (features != null) {
+          feature = _getFeatures(features);
+          json_feature = flattenTranslations(feature);
+        }
 
-        var feature = _getFeatures(features);
         var formData = FormData();
-        Map<String, String> json_feature = flattenTranslations(feature);
+
         String Srating = rating.toString();
         formData.fields
           ..add(MapEntry("name", name))
@@ -56,8 +61,11 @@ class StepperStorageBloc
           ..add(MapEntry("lat", lat.toString()))
           ..add(MapEntry("lon", lon.toString()))
           ..add(MapEntry("text", commentText))
-          ..add(MapEntry("rating", Srating))
-          ..add(MapEntry(json_feature.keys.first, json_feature.values.first));
+          ..add(MapEntry("rating", Srating));
+        if (features != null) {
+          formData.fields.add(
+              MapEntry(json_feature.keys.first, json_feature.values.first));
+        }
 
         formData.files.add(MapEntry(
             "file",
@@ -68,7 +76,11 @@ class StepperStorageBloc
             .post("https://355032-cu98624.tmweb.ru/api/bench/", data: formData);
         yield SucessState();
       } on DioError catch (e) {
-        yield ErrorState();
+        if (e.response.statusCode == 403) {
+          yield Error403State();
+        } else {
+          yield ErrorState();
+        }
       }
     }
   }
@@ -98,7 +110,7 @@ class StepperStorageBloc
         }
       }
     });
-    var f = {"features": feature};
+    var f = {"  ": feature};
     return f;
   }
 

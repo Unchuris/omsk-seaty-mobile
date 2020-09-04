@@ -65,8 +65,14 @@
     "route": "Route",
     "network_connection_error": "Network connection error happened",
 
-    "pending_card": "On verification"
-    
+    "pending_card": "On verification",
+    "favorites_empty": "You haven't added any benches yet",
+    "403_error": "You should be logged in to use this feature.",
+    "already_report_bench": "You have already reported this bench",
+    "already_report_comment":"You have already reported this comment.",
+    "report":"Report",
+    "cheak_network_try_again":"Check your network connetion and try again, please",
+    "login_in":"Login in"
 
     
 
