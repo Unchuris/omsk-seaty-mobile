@@ -29,13 +29,16 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen>
     with AutomaticKeepAliveClientMixin {
+  static const MIN_ZOOM_SIZE = 10.0;
   static const DEFAULT_ZOOM_SIZE = 16.0;
+  static const MAX_ZOOM_SIZE = 19.0;
   final Completer<GoogleMapController> _controller = Completer();
   final CarouselControllerImpl _carouselController = CarouselController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _isVisibleHelpElements = true;
   bool _isCloseBottomSheet = true;
+  bool isLoading = true;
   SliderBenchesUi _sliderBenchesUi;
   PersistentBottomSheetController _bottomSheetController;
 
@@ -48,10 +51,23 @@ class _MapScreenState extends State<MapScreen>
       listeners: [
         BlocListener<MapBloc, MapState>(listener: (context, effect) async {
           if (effect is LoadDataFailture) {
+            if (isLoading) {
+              setState(() {
+                isLoading = false;
+              });
+            }
             _scaffoldKey.currentState.showSnackBar(getSnackBarError(
                 AppLocalizations.of(context)
                     .translate("network_connection_error"),
                 context));
+            return;
+          }
+          if (effect is Loading) {
+            if (!isLoading) {
+              setState(() {
+                isLoading = true;
+              });
+            }
             return;
           }
           if (effect is UpdateUserLocationEffect) {
@@ -119,12 +135,19 @@ class _MapScreenState extends State<MapScreen>
                   StreamBuilder<Map<String, Marker>>(
                       stream: blocMap.markers,
                       builder: (context, snapshotMarkers) {
+                        if (snapshotMarkers != null && snapshotMarkers.data != null) {
+                          isLoading = false;
+                        }
                         return Scaffold(
                           key: _scaffoldKey,
                           body: Stack(children: [
                             _getGoogleMap(snapshotMarkers.data),
                             _getMenuButton(context),
                             _getFilterButton(context),
+                            Align(
+                              alignment: Alignment.center,
+                              child: isLoading ? CircularProgressIndicator() : SizedBox.shrink()
+                            ),
                             Positioned(
                                 bottom: 56,
                                 right: 0,
@@ -138,9 +161,11 @@ class _MapScreenState extends State<MapScreen>
                                   ],
                                 ))
                           ]),
-                          //TODO remove mock favorites
                           drawer: AppDrawer(),
                           endDrawer: FilterDrawer(
+                              options: FilterOptions(
+                                onFilterChanged: _onFilterChanged
+                              ),
                               filters: snapshotFilter.data != null
                                   ? snapshotFilter.data
                                   : Set()),
@@ -210,8 +235,7 @@ class _MapScreenState extends State<MapScreen>
       onCameraMoveStarted: _onCameraMoveStarted,
       onCameraIdle: _onCameraIdle,
       markers: (data != null) ? Set<Marker>.from(data.values) : Set(),
-      //TODO move to const
-      minMaxZoomPreference: const MinMaxZoomPreference(10, 21),
+      minMaxZoomPreference: const MinMaxZoomPreference(MIN_ZOOM_SIZE, MAX_ZOOM_SIZE),
     );
   }
 
@@ -281,6 +305,14 @@ class _MapScreenState extends State<MapScreen>
       BlocProvider.of<MapBloc>(context)
           .add(OnCameraIdleEvent(cameraPosition: cameraPosition));
     });
+  }
+
+  void _onFilterChanged(Set<FilterType> _filters) {
+    if (_bottomSheetController != null && !_isCloseBottomSheet) {
+      _bottomSheetController.close();
+    }
+    BlocProvider.of<MapBloc>(context).add(
+        OnFilterChangedEvent(filterTypes: _filters));
   }
 
   void _onBenchSliderPageChanged(BenchLight benchLight, int index) {

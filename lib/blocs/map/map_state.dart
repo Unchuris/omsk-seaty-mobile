@@ -23,6 +23,12 @@ class LoadDataFailture extends MapState {
   List<Object> get props => [message];
 }
 
+class Loading extends MapState {
+  const Loading();
+  @override
+  List<Object> get props => [];
+}
+
 class FindButtonPressingState extends MapState {
   final Map<String, bool> checkBox;
   const FindButtonPressingState({this.checkBox});
