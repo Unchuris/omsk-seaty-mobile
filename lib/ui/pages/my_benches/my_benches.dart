@@ -6,7 +6,6 @@ import 'package:omsk_seaty_mobile/blocs/my_benches/my_benches_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/model/my_bench_ui.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/my_bench_card.dart';
-import '../../../http.dart';
 
 class MyBenchPage extends StatefulWidget {
   MyBenchPage({Key key}) : super(key: key);
@@ -95,6 +94,8 @@ class _MyBenchPageState extends State<MyBenchPage> {
                 )
               ],
             ));
+          } else {
+            return Container();
           }
         }),
       ),

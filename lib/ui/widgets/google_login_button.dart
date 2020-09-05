@@ -7,7 +7,7 @@ class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 270,
+      width: 280,
       height: 50,
       child: Container(
         decoration: BoxDecoration(
@@ -40,6 +40,7 @@ class GoogleLoginButton extends StatelessWidget {
                     child: Text(
                         AppLocalizations.of(context)
                             .translate('string_google_sign_in'),
+                        textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
                             .button

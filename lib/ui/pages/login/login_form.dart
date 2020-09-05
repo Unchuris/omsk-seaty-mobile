@@ -37,13 +37,12 @@ class LoginForm extends StatelessWidget {
               ],
             );
           } else {
-            print('авторизация');
             return Column(
               children: <Widget>[
                 GoogleLoginButton(),
                 SizedBox(height: 10),
                 ButtonTheme(
-                  minWidth: 270,
+                  minWidth: 280,
                   height: 50,
                   child: FlatButton(
                     child: Text(
