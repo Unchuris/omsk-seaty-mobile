@@ -6,7 +6,7 @@ SnackBar getSnackBarError(String message, BuildContext context) {
     content: Text(
         message,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyText1
+        style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.white)
     ),
     backgroundColor: Theme.of(context).errorColor
   );

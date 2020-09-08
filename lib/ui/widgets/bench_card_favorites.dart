@@ -47,7 +47,6 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
                               Radius.circular(_CIRCLE_RADIUS)))),
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(value: downloadProgress.progress),
-                  //TODO есть бага, сначала индикатор загрузки в левом верхнем углы, а потом по центру становится
                   //errorWidget: (context, url, error) => Icon(Icons.error), //TODO add error image
                 ),
                 Container(
@@ -100,7 +99,7 @@ class _BenchFavoriteCardState extends State<BenchFavoriteCard> {
           Row(
             children: <Widget>[
               RouteButton(lat: bench.lat, lon: bench.lon),
-              Padding(
+              bench.like == null ? SizedBox.shrink() : Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: LikeButton(bench: bench),
               )

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_type.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/filter_checkbox_button.dart';
 import 'package:collection/collection.dart';
@@ -9,15 +7,17 @@ import 'package:collection/collection.dart';
 import '../../app_localizations.dart';
 
 class FilterDrawer extends StatefulWidget {
+  final FilterOptions options;
   final Set<FilterType> filters;
 
-  const FilterDrawer({Key key, this.filters}) : super(key: key);
+  const FilterDrawer({Key key, this.filters, this.options}) : super(key: key);
 
   @override
   _FilterDrawerState createState() => _FilterDrawerState();
 }
 
 class _FilterDrawerState extends State<FilterDrawer> {
+  FilterOptions get options => widget.options ?? FilterOptions();
   List<FilterType> get _filters => widget.filters.toList() ?? List();
   var startList = List();
   Function eq = ListEquality().equals;
@@ -48,8 +48,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
               _isChangeList ? 1 : 0.5,
               _isChangeList
                   ? () {
-                      BlocProvider.of<MapBloc>(context).add(
-                          OnFilterChangedEvent(filterTypes: _filters.toSet()));
+                      options.onFilterChanged(_filters.toSet());
                       Navigator.pop(context);
                     }
                   : () {})
@@ -189,4 +188,13 @@ class _FilterDrawerState extends State<FilterDrawer> {
                 _updateFilter(filterType, isSelected));
     }
   }
+}
+
+class FilterOptions {
+
+  final Function(Set<FilterType>) onFilterChanged;
+
+  FilterOptions({
+    this.onFilterChanged,
+  });
 }

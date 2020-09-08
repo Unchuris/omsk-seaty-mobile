@@ -78,6 +78,8 @@ class StepperStorageBloc
       } on DioError catch (e) {
         if (e.response.statusCode == 403) {
           yield Error403State();
+        } else if (e.response.statusCode == 413) {
+          yield Error413State();
         } else {
           yield ErrorState();
         }

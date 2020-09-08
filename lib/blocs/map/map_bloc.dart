@@ -38,8 +38,7 @@ class CurrentMarker {
   const CurrentMarker({this.type, this.markerId});
 }
 
-//TODO добавить обработку ошибки сети и добавить loading
-//TODO исправить баг, если слайдер открыт, то при нажатии на пин показывается не он
+
 class MapBloc extends Bloc<MapEvent, MapState> {
   static const maxZoom = 21;
   static const thumbnailWidth = 250;
@@ -72,6 +71,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   //TODO dirty hack
   bool _onMarkerTaped = false;
+  bool _isLoadData = false;
 
   Map<String, Marker> _markers;
   final _markerController = StreamController<Map<String, Marker>>.broadcast();
@@ -112,6 +112,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         _userPosition = position;
       });
       try {
+        yield Loading();
         await _buildMediaPool();
       } catch (_) {
         yield* _showLoadDaraFailtureState(null);
@@ -223,6 +224,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }
     if (event is OnCameraIdleEvent) {
+      if (_repository.benches.isEmpty && !_isLoadData) {
+        //TODO rework with synchronize
+        _isLoadData = true;
+        try {
+          yield Loading();
+          await _buildMediaPool();
+        } catch (_) {
+          yield* _showLoadDaraFailtureState(null);
+        }
+        _isLoadData = false;
+        return;
+      }
       _currentCameraPosition = event.cameraPosition;
       _displayMarkers();
       await _updateBenchesByVisibleRegion();

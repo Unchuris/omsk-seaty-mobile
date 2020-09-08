@@ -6,7 +6,7 @@ class UIBencCard {
   double lat;
   double lon;
   bool like;
-  UIBencCard(this.id, this.name, this.rate, this.imageUrl, this.like);
+  UIBencCard(this.id, this.name, this.rate, this.imageUrl, this.like, this.lat, this.lon);
   UIBencCard.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     lat = json['lat'];

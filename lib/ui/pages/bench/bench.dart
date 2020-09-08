@@ -252,7 +252,7 @@ class _BenchPageState extends State<BenchPage> {
                         padding: EdgeInsets.only(left: 16.0),
                         child: LikeButton(
                             bench: UIBencCard(widget.benchId, _bench.name,
-                                _bench.rate, _bench.imageUrl, _bench.like))),
+                                _bench.rate, _bench.imageUrl, _bench.like, _bench.lat, _bench.lon))),
                   ])),
             ],
           ),

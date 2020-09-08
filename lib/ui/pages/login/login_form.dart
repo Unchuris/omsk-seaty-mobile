@@ -4,6 +4,7 @@ import 'package:omsk_seaty_mobile/app_localizations.dart';
 
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/google_login_button.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 class LoginForm extends StatelessWidget {
   @override
@@ -12,13 +13,8 @@ class LoginForm extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthenticationFailure) {
           Scaffold.of(context)
-            ..showSnackBar(SnackBar(
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('Error'), Icon(Icons.error)],
-              ),
-              backgroundColor: Colors.red,
-            ));
+            ..showSnackBar(getSnackBarError(AppLocalizations.of(context)
+                .translate("network_connection_error"), context));
         }
         if (state is AuthenticationSuccess) {
           _swithToMapScreen(context);
@@ -37,13 +33,12 @@ class LoginForm extends StatelessWidget {
               ],
             );
           } else {
-            print('авторизация');
             return Column(
               children: <Widget>[
                 GoogleLoginButton(),
                 SizedBox(height: 10),
                 ButtonTheme(
-                  minWidth: 270,
+                  minWidth: 280,
                   height: 50,
                   child: FlatButton(
                     child: Text(

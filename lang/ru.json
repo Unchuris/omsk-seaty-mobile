@@ -24,7 +24,7 @@
     "dialog_button_add": "Добавить",
     "dialog_child_string": "Ваша лавочка появится на карте как только пройдет проверку модератором",
     "dialog_child_status_bench": "Статус добавления можно посмотреть в",
-    "dialog_child_my_benches_string": "Мои лавочки",
+    "dialog_child_my_benches_string": "\\0020мои лавочки",
 
     "high_comfort": "Высокий комфорт",
     "urn_nearby": "Урна рядом",
@@ -65,6 +65,8 @@
 
     "route": "В путь",
     "network_connection_error": "Ошибка подключения к сети",
+    "image_size_is_too_large": "Размер изображения слишком велик",
+    "guest": "Гость",
 
     "pending_card": "На проверке у модератора",
     "favorites_empty": "Вы еще не добавили ни одной лавочки",
