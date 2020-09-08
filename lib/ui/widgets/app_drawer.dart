@@ -38,6 +38,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   },
                 ),
                 _createDrawerItem(
+                    context: context,
                     icon: SvgPicture.asset("assets/myBench.svg"),
                     text: AppLocalizations.of(context)
                         .translate('string_my_benches'),
@@ -45,6 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, MyBenchPage.routeName);
                     }),
                 _createDrawerItem(
+                    context: context,
                     icon: SvgPicture.asset("assets/favorites.svg"),
                     text: AppLocalizations.of(context)
                         .translate('string_favorites'),
@@ -52,6 +54,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, FavoritesPage.routeName);
                     }),
                 _createDrawerItem(
+                  context: context,
                   icon: SvgPicture.asset("assets/topBenches.svg"),
                   text: AppLocalizations.of(context)
                       .translate('string_top_benches'),
@@ -60,6 +63,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   },
                 ),
                 _createDrawerItem(
+                  context: context,
                   icon: SvgPicture.asset("assets/topUsers.svg"),
                   text: AppLocalizations.of(context)
                       .translate('string_top_users'),
@@ -107,59 +111,6 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
     );
   }
-
-  /*  void _createDialogWithList() {
-    Map<BenchType, bool> benches = {
-      BenchType.TABLE_NEARBY: false,
-      BenchType.COVERED_BENCH: false,
-      BenchType.SCENIC_VIEW: false,
-      BenchType.FOR_A_LARGE_COMPANY: false
-    };
-
-    showDialog(
-        context: context,
-        builder: (context) => ListProvider(
-            benches,
-            DialogWithChild(
-                title: AppLocalizations.of(context)
-                    .translate('dialog_title_choose'),
-                buttonText:
-                    AppLocalizations.of(context).translate('dialog_button_add'),
-                child: CheckBoxList(),
-                buttonType: DialogButtonType.LIST)));
-  }
-
-  void _createDialogComplain() {
-    Map<ComplainType, bool> complains = {
-      ComplainType.ABSENT_BENCH: false,
-      ComplainType.INAPPROPRIATE_CONTENT: false,
-      ComplainType.OFFENSIVE_MATERIAL: false
-    };
-
-    showDialog(
-        context: context,
-        builder: (context) => ListProvider(
-            complains,
-            DialogWithChild(
-                title: AppLocalizations.of(context)
-                    .translate('dialog_title_complain'),
-                buttonText: AppLocalizations.of(context)
-                    .translate('dialog_title_complain'),
-                child: CheckBoxList(),
-                buttonType: DialogButtonType.COMPLAIN)));
-  }
-
-  void _createDialogThanks() {
-    showDialog(
-        context: context,
-        builder: (context) => DialogWithChild(
-            title:
-                AppLocalizations.of(context).translate('dialog_title_thanks'),
-            buttonText:
-                AppLocalizations.of(context).translate('dialog_button_good'),
-            child: ThanksChild(),
-            buttonType: DialogButtonType.CLOSE));
-  } */
 }
 
 Widget _createHeaderWithUser(User user, BuildContext context) {
@@ -185,17 +136,30 @@ Widget _createHeaderWithUser(User user, BuildContext context) {
 
 Widget _createHeaderWitoutUser(BuildContext context) {
   return UserAccountsDrawerHeader(
-    accountName: Text('Not Auth'),
-    accountEmail: Text('Not Auth'),
+    accountName: Text(''),
+    accountEmail: Text(AppLocalizations.of(context).translate("guest")),
     onDetailsPressed: () => Navigator.pushReplacementNamed(context, '/login'),
   );
 }
 
-Widget _createDrawerItem({Widget icon, String text, GestureTapCallback onTap}) {
-  return ListTile(
-    contentPadding: EdgeInsets.only(left: 8),
-    title: Align(alignment: Alignment(-1.2, 0), child: Text(text)),
-    leading: icon,
-    onTap: onTap,
-  );
+Widget _createDrawerItem(
+    {BuildContext context,
+    Widget icon,
+    String text,
+    GestureTapCallback onTap}) {
+  return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+          onTap: onTap,
+          child: Container(
+              padding: EdgeInsets.symmetric(vertical: 6.0),
+              child: Column(children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(icon: icon),
+                    Text(text, style: Theme.of(context).textTheme.bodyText1),
+                  ],
+                ),
+              ]))));
 }

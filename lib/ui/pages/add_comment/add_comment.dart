@@ -50,6 +50,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     controller: myController,
                     validator: (value) {
                       if (value.trim().isEmpty) {

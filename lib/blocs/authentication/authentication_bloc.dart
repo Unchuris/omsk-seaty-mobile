@@ -27,20 +27,15 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AuthenticationStarted) {
-      print("старт");
       yield* _mapAuthenticationStartedToState();
     } else if (event is LoginWithGooglePressed) {
-      print("гугл");
       yield* _mapLoginWithGooglePressedToState();
     } else if (event is AuthenticationLoggedIn) {
-      print("входим");
       yield* _mapAuthenticationLoggedInToState();
     } else if (event is AuthenticationLoggedOut) {
-      print("выходим");
       _userRepository.signOut();
       yield AuthenticationFailure();
     } else if (event is AuthenticationSkipped) {
-      print("скипнул");
       yield* _mapAuthenticationSkippedToState();
     }
   }
@@ -64,7 +59,7 @@ class AuthenticationBloc
       await _userRepository.signInWithGoogle();
       yield* _mapAuthenticationLoggedInToState();
     } catch (_) {
-      AuthenticationFailure();
+      yield AuthenticationFailure();
     }
   }
 

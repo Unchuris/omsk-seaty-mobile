@@ -26,6 +26,7 @@ class _AddBenchState extends State<AddBenchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldKey,
         appBar: CustomAppBar(
             height: MediaQuery.of(context).padding.top,
             title: AppLocalizations.of(context).translate("string_add_bench")),

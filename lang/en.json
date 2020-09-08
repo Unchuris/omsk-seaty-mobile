@@ -24,7 +24,7 @@
     "dialog_button_add": "Add",
     "dialog_child_string": "Your bench will appear on the map as soon as it is checked by the moderator",
     "dialog_child_status_bench": "The status of adding can be viewed in",
-    "dialog_child_my_benches_string": "My benches",
+    "dialog_child_my_benches_string": "\\0020my benches",
 
     "high_comfort": "High comfort",
     "urn_nearby": "Urn nearby",
@@ -64,6 +64,8 @@
 
     "route": "Route",
     "network_connection_error": "Network connection error happened",
+    "image_size_is_too_large": "Image size is too large",
+    "guest": "Guest",
 
     "pending_card": "On verification",
     "favorites_empty": "You haven't added any benches yet",

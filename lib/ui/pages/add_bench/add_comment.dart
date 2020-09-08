@@ -28,11 +28,16 @@ class _AddCommentStepState extends State<AddCommentStep> {
   Widget build(BuildContext context) {
     return BlocListener<StepperStorageBloc, StepperStorageState>(
       listener: (context, state) {
-        if (state is ErrorState) {
+        if (state is ErrorState || state is Error403State) {
           widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
               AppLocalizations.of(context)
                   .translate("network_connection_error"),
               context));
+        }
+        if (state is Error413State) {
+          widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
+              AppLocalizations.of(context).translate("image_size_is_too_large"), context)
+          );
         } else if (state is SucessState) {
           _createDialogThanks(context);
         }
@@ -64,7 +69,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
             onTap: () {
               BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxClouse());
               BlocProvider.of<AddImageBloc>(context).add(AddImageCanceled());
-              Navigator.popAndPushNamed(context, "/map");
+              Navigator.popUntil(context, ModalRoute.withName("/map"));
             },
             buttonType: DialogButtonType.CLOSE));
   }
@@ -89,6 +94,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: myController,
                   validator: (value) {
                     if (value.trim().isEmpty) {
