@@ -110,7 +110,7 @@ class StepperStorageBloc
         }
       }
     });
-    var f = {"  ": feature};
+    var f = {"features": feature};
     return f;
   }
 
