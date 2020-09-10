@@ -8,6 +8,7 @@ import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart'
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
+import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
 
@@ -122,7 +123,7 @@ Widget _createHeaderWithUser(User user, BuildContext context) {
         style: Theme.of(context).textTheme.bodyText1,
       ),
       onDetailsPressed: () {
-        Navigator.pushNamed(context, '/profile', arguments: user);
+        Navigator.pushNamed(context, ProfilePage.routeName);
       },
       currentAccountPicture: Hero(
         tag: 'avatar',

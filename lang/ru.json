@@ -65,8 +65,14 @@
 
     "route": "В путь",
     "network_connection_error": "Ошибка подключения к сети",
+    "network_error": "Ошибка соединения",
+    "check_connection_and_try_again": "Проверьте соединение и попробуйте еще",
     "image_size_is_too_large": "Размер изображения слишком велик",
     "guest": "Гость",
+
+    "score": "Рейтинг",
+    "benches": "Скамеек",
+    "comments": "Ответы",
 
     "pending_card": "На проверке у модератора",
     "favorites_empty": "Вы еще не добавили ни одной лавочки",

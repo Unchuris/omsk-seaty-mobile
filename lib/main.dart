@@ -152,7 +152,7 @@ class MyApp extends StatelessWidget {
               '/login': (context) =>
                   LoginScreen(userRepository: _userRepository),
               '/map': (context) => MapScreen(),
-              '/profile': (context) => ProfilePage(),
+              ProfilePage.routeName: (context) => ProfilePage(),
               '/add_bench': (context) => AddBenchScreen(),
               AddCommentPage.routeName: (context) => AddCommentPage(),
               FavoritesPage.routeName: (context) => FavoritesPage(),
