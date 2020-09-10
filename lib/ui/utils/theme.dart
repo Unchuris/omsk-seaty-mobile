@@ -16,6 +16,7 @@ class AppTheme {
       errorColor: Colors.red,
       primaryColor: Color(0xffE0E0E0),
       accentColor: Color(0xfff2994a),
+      secondaryHeaderColor: Color(0xff037f51),
       buttonColor: Color(0xfff2994a),
       backgroundColor: Colors.white,
       bottomSheetTheme: BottomSheetThemeData(
@@ -40,6 +41,7 @@ class AppTheme {
       canvasColor: Colors.white,
       errorColor: Colors.red,
       primaryColor: Colors.black,
+      secondaryHeaderColor: Colors.black,
       accentColor: Colors.green,
       buttonColor: Colors.green,
       backgroundColor: Colors.black,

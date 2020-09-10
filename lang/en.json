@@ -6,7 +6,7 @@
     "string_starred": "Favorites",
     "string_google_sign_in": "Sign in with Google",
     "string_skip": "SKIP",
-    "string_log_out": "Log out",
+    "string_log_out": "Logout",
     "string_top_benches": "Top benches",
     "string_top_users": "Top users",
     "string_my_benches": "My benches",
@@ -64,8 +64,14 @@
 
     "route": "Route",
     "network_connection_error": "Network connection error happened",
+    "network_error": "Network error",
+    "check_connection_and_try_again": "Check connection and try again",
     "image_size_is_too_large": "Image size is too large",
     "guest": "Guest",
+
+    "score": "Score",
+    "benches": "Benches",
+    "comments": "Comments",
 
     "pending_card": "On verification",
     "favorites_empty": "You haven't added any benches yet",
