@@ -51,20 +51,50 @@ class _LikeButtonState extends State<LikeButton> {
                 BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
                     markerId: widget.bench.id, liked: bench.like));
               } on DioError catch (e) {
-                Scaffold.of(context).showSnackBar(getSnackBarError(
-                    AppLocalizations.of(context)
-                        .translate("network_connection_error"),
-                    context));
+                if (e.response == null) {
+                  Scaffold.of(context).showSnackBar(getSnackBarError(
+                      AppLocalizations.of(context)
+                          .translate("network_connection_error"),
+                      context));
+                  setState(() {
+                    bench.like = false;
+                  });
+                } else if (e.response.statusCode == 403) {
+                  setState(() {
+                    bench.like = true;
+                  });
+                  Scaffold.of(context).showSnackBar(getSnackBarError(
+                      AppLocalizations.of(context).translate("403_error"),
+                      context));
+                }
               }
             } else {
               setState(() {
                 bench.like = true;
               });
-
-              var respone = await dio.put('/benches/${widget.bench.id}/like/');
-
-              BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
-                  markerId: widget.bench.id, liked: bench.like));
+              try {
+                var respone =
+                    await dio.patch('/benches/${widget.bench.id}/like/');
+                BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
+                    markerId: widget.bench.id, liked: bench.like));
+              } on DioError catch (e) {
+                if (e.response == null) {
+                  Scaffold.of(context).showSnackBar(getSnackBarError(
+                      AppLocalizations.of(context)
+                          .translate("network_connection_error"),
+                      context));
+                  setState(() {
+                    bench.like = false;
+                  });
+                } else if (e.response.statusCode == 403) {
+                  setState(() {
+                    bench.like = false;
+                  });
+                  Scaffold.of(context).showSnackBar(getSnackBarError(
+                      AppLocalizations.of(context).translate("403_error"),
+                      context));
+                }
+              }
             }
           },
         ),

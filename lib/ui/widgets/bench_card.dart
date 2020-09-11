@@ -20,16 +20,22 @@ class _BenchCardState extends State<BenchCard> {
 
   @override
   Widget build(BuildContext context) {
-    var bench = UIBencCard(widget.bench.id, widget.bench.name,
-        widget.bench.score, widget.bench.imageUrl, widget.bench.like, widget.bench.latitude, widget.bench.longitude);
+    var bench = UIBencCard(
+        widget.bench.id,
+        widget.bench.name,
+        widget.bench.score,
+        widget.bench.imageUrl,
+        widget.bench.like,
+        widget.bench.latitude,
+        widget.bench.longitude);
     return _buildBenchCard(bench);
   }
 
   Widget _buildBenchCard(UIBencCard bench) {
-    return Padding(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-      child: AspectRatio(
-          aspectRatio: 2 / 1,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Padding(
+          padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
           child: Stack(
             children: [
               CachedNetworkImage(
@@ -90,8 +96,7 @@ class _BenchCardState extends State<BenchCard> {
           ),
           Row(
             children: <Widget>[
-              RouteIcon(
-                  lat: bench.lat, lon: bench.lon),
+              RouteIcon(lat: bench.lat, lon: bench.lon),
               Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: LikeButton(bench: bench),
