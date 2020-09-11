@@ -44,13 +44,14 @@ class _TopBechesPageState extends State<TopBechesPage> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //TODO
                 Text(
-                  "Ошибка соединения",
+                  AppLocalizations.of(context)
+                      .translate("network_connection_error"),
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 Text(
-                  "Проверьте соединение и попробуйте еще.",
+                  AppLocalizations.of(context)
+                      .translate("cheak_network_try_again"),
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 SizedBox(

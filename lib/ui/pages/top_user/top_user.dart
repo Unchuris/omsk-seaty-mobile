@@ -45,6 +45,35 @@ class _TopUserPageState extends State<TopUserPage> {
           } else if (state is TopUserPageInitialed) {
             print('load');
             return _buildTopUserCard(state.uiTopUsers);
+          } else if (state is TopUserPageError) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  AppLocalizations.of(context)
+                      .translate("network_connection_error"),
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Text(
+                  AppLocalizations.of(context)
+                      .translate("cheak_network_try_again"),
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+                RawMaterialButton(
+                  onPressed: () => {_topUserBloc.add(GetTopUserEvent())},
+                  elevation: 8.0,
+                  fillColor: Theme.of(context).buttonColor,
+                  child: Icon(Icons.refresh),
+                  padding: EdgeInsets.only(
+                      left: 19.0, right: 19.0, top: 15, bottom: 15),
+                  shape: CircleBorder(),
+                )
+              ],
+            ));
           }
         }),
       ),
