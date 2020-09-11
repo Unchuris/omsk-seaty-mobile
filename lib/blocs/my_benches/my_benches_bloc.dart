@@ -26,11 +26,11 @@ class MyBenchesBloc extends Bloc<MyBenchesEvent, MyBenchesState> {
 
         yield MyBenchesPageInitialed(benchCard: uiBench);
       } on DioError catch (e) {
-        if (e.response.statusCode == 403) {
-          yield MyBenchesPage403Error();
-        } else {
+        if (e.response == null) {
           yield MyBenchesPageError();
-        }
+        } else if (e.response.statusCode == 403) {
+          yield MyBenchesPage403Error();
+        } else {}
       }
     }
   }

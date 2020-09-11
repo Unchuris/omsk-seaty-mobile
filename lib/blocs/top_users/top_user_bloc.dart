@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:omsk_seaty_mobile/http.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/model/ui_top_user.dart';
@@ -24,8 +25,8 @@ class TopUserBloc extends Bloc<TopUserEvent, TopUserState> {
             List<UiTopUser>.from(data.map((i) => UiTopUser.fromJson(i)));
 
         yield TopUserPageInitialed(uiTopUsers: uiTopUser);
-      } catch (e) {
-        var s = e;
+      } on DioError catch (e) {
+        yield TopUserPageError();
       }
     }
   }
