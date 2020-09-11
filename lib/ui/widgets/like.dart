@@ -74,7 +74,7 @@ class _LikeButtonState extends State<LikeButton> {
               });
               try {
                 var respone =
-                    await dio.patch('/benches/${widget.bench.id}/like/');
+                    await dio.put('/benches/${widget.bench.id}/like/');
                 BlocProvider.of<MapBloc>(context).add(OnLikeClickedEvent(
                     markerId: widget.bench.id, liked: bench.like));
               } on DioError catch (e) {
