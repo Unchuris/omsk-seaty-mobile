@@ -57,7 +57,7 @@ class _LikeButtonState extends State<LikeButton> {
                           .translate("network_connection_error"),
                       context));
                   setState(() {
-                    bench.like = false;
+                    bench.like = true;
                   });
                 } else if (e.response.statusCode == 403) {
                   setState(() {
