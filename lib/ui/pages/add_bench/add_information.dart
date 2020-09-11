@@ -27,56 +27,60 @@ class _AddInformationStepState extends State<AddInformationStep> {
     BenchType.FOR_A_LARGE_COMPANY: false,
     BenchType.URN_NEARBY: false
   };
+  CheckBoxListBloc _bloc = CheckBoxListBloc();
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxListOpened());
+    _bloc.add(CheckBoxListOpened());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CheckBoxListBloc, CheckBoxListState>(
-      listener: (context, state) {
-        if (state is CheckBoxListInitOpen) {
-          benches = state.map;
-          if (!benches.containsValue(true)) {
-            _showDialog();
+    return BlocProvider(
+      create: (context) => _bloc,
+      child: BlocListener<CheckBoxListBloc, CheckBoxListState>(
+        listener: (context, state) {
+          if (state is CheckBoxListInitOpen) {
+            benches = state.map;
+            if (!benches.containsValue(true)) {
+              _showDialog();
+            }
           }
-        }
-      },
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            AppLocalizations.of(context)
-                                .translate("about_bench"),
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildAddInformationButton(context),
-                      _buildBenchesOtpions(context)
-                    ],
-                  ),
-                ],
+        },
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .translate("about_bench"),
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildAddInformationButton(context),
+                        _buildBenchesOtpions(context)
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _buildButtonWithOpacity(context, 1, widget.onNextButton),
-          ],
+              _buildButtonWithOpacity(context, 1, widget.onNextButton),
+            ],
+          ),
         ),
       ),
     );
@@ -116,7 +120,7 @@ class _AddInformationStepState extends State<AddInformationStep> {
   }
 
   _showDialog() {
-    BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxListDialogOpened());
+    _bloc.add(CheckBoxListDialogOpened());
     showDialog(
       context: context,
       builder: (context) => ListProvider(
@@ -127,8 +131,7 @@ class _AddInformationStepState extends State<AddInformationStep> {
               AppLocalizations.of(context).translate('dialog_button_add'),
           child: CheckBoxList(),
           onTap: () {
-            BlocProvider.of<CheckBoxListBloc>(context)
-                .add(CheckBoxListChanged(benches));
+            _bloc.add(CheckBoxListChanged(benches));
             BlocProvider.of<StepperStorageBloc>(context)
                 .add(AddFeature(features: benches));
             Navigator.pop(context);
@@ -257,5 +260,12 @@ class _AddInformationStepState extends State<AddInformationStep> {
           icon: SvgPicture.asset("assets/beautifulPlase.svg"),
         );
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _bloc.close();
   }
 }

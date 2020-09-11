@@ -109,7 +109,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                           backgroundColor: Colors.red,
                         ));
                       }
-                      if (_formKey.currentState.validate() && rating > 0) {
+                      if (rating > 0) {
                         try {
                           var responce = await dio.post('/comments/', data: {
                             'bench_id': widget.benchId,

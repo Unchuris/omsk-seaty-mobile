@@ -81,10 +81,6 @@ void main() async {
           create: (context) => AddImageBloc(),
           child: AddBenchScreen(),
         ),
-        BlocProvider<CheckBoxListBloc>(
-          create: (context) => CheckBoxListBloc(),
-          child: AddBenchScreen(),
-        ),
         BlocProvider<StepperStorageBloc>(
           create: (context) => StepperStorageBloc(),
           child: AddBenchScreen(),

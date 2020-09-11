@@ -59,7 +59,7 @@ class _AddBenchState extends State<AddBenchScreen> {
             });
             return false;
           }
-          BlocProvider.of<CheckBoxListBloc>(context).add(CheckBoxClouse());
+
           BlocProvider.of<AddImageBloc>(context).add(AddImageCanceled());
           return true;
         });

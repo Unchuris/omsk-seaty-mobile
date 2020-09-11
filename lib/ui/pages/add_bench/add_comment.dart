@@ -36,8 +36,8 @@ class _AddCommentStepState extends State<AddCommentStep> {
         }
         if (state is Error413State) {
           widget.scaffoldKey.currentState.showSnackBar(getSnackBarError(
-              AppLocalizations.of(context).translate("image_size_is_too_large"), context)
-          );
+              AppLocalizations.of(context).translate("image_size_is_too_large"),
+              context));
         } else if (state is SucessState) {
           _createDialogThanks(context);
         }
@@ -152,7 +152,7 @@ class _AddCommentStepState extends State<AddCommentStep> {
                           backgroundColor: Colors.red,
                         ));
                       }
-                      if (_formKey.currentState.validate() && rating > 0) {
+                      if (rating > 0) {
                         BlocProvider.of<StepperStorageBloc>(context).add(
                             AddComment(
                                 rating: rating, text: myController.text));
