@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "953709135359-2vs3v0uc1fnrpilmh5e5f791t2q0785d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omsk_seaty",
+            "certificate_hash": "7eb34d2ed9ff211e2d67b16d7664cd81669d09e2"
+          }
+        },
+        {
+          "client_id": "953709135359-get8gtq68ud3ggi1or950s95ls44ed4i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omsk_seaty",
+            "certificate_hash": "6a78bf65f97a3c8c65163f84131efb9c035c2481"
+          }
+        },
+        {
           "client_id": "953709135359-nbussfkpvae38vnr62075ulkbapar2su.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

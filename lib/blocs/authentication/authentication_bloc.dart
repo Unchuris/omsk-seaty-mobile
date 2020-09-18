@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -41,7 +40,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
-    yield AuthenticationStart();
+
     final isSignedIn = await _userRepository.isSignedIn();
     if (isSignedIn) {
       _user = await _userRepository.getUser();
@@ -79,6 +78,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationSkippedToState() async* {
+    _user = null;
     _userRepository.saveIsSkipped();
   }
 }

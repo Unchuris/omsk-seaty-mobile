@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/map/map_effect.dart';
 import 'package:omsk_seaty_mobile/data/models/bench_light.dart';
@@ -19,6 +20,7 @@ import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 import '../../app_localizations.dart';
 import 'bench/bench.dart';
+import 'login_error.dart';
 
 class MapScreen extends StatefulWidget {
   final String routeName = "Карта";
@@ -135,7 +137,8 @@ class _MapScreenState extends State<MapScreen>
                   StreamBuilder<Map<String, Marker>>(
                       stream: blocMap.markers,
                       builder: (context, snapshotMarkers) {
-                        if (snapshotMarkers != null && snapshotMarkers.data != null) {
+                        if (snapshotMarkers != null &&
+                            snapshotMarkers.data != null) {
                           isLoading = false;
                         }
                         return Scaffold(
@@ -145,9 +148,10 @@ class _MapScreenState extends State<MapScreen>
                             _getMenuButton(context),
                             _getFilterButton(context),
                             Align(
-                              alignment: Alignment.center,
-                              child: isLoading ? CircularProgressIndicator() : SizedBox.shrink()
-                            ),
+                                alignment: Alignment.center,
+                                child: isLoading
+                                    ? CircularProgressIndicator()
+                                    : SizedBox.shrink()),
                             Positioned(
                                 bottom: 56,
                                 right: 0,
@@ -164,8 +168,7 @@ class _MapScreenState extends State<MapScreen>
                           drawer: AppDrawer(),
                           endDrawer: FilterDrawer(
                               options: FilterOptions(
-                                onFilterChanged: _onFilterChanged
-                              ),
+                                  onFilterChanged: _onFilterChanged),
                               filters: snapshotFilter.data != null
                                   ? snapshotFilter.data
                                   : Set()),
@@ -210,7 +213,13 @@ class _MapScreenState extends State<MapScreen>
         child: _isVisibleHelpElements
             ? RawMaterialButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/add_bench');
+                  var user = BlocProvider.of<AuthenticationBloc>(context).getUser;
+                  if (user == null || user.uid ==""){
+                    Navigator.pushNamed(context, ErrorLoginPage.routeName);
+                  }
+                  else {
+                    Navigator.pushNamed(context, '/add_bench');
+                  }
                 },
                 elevation: 8.0,
                 fillColor: Theme.of(context).buttonColor,
@@ -235,7 +244,8 @@ class _MapScreenState extends State<MapScreen>
       onCameraMoveStarted: _onCameraMoveStarted,
       onCameraIdle: _onCameraIdle,
       markers: (data != null) ? Set<Marker>.from(data.values) : Set(),
-      minMaxZoomPreference: const MinMaxZoomPreference(MIN_ZOOM_SIZE, MAX_ZOOM_SIZE),
+      minMaxZoomPreference:
+          const MinMaxZoomPreference(MIN_ZOOM_SIZE, MAX_ZOOM_SIZE),
     );
   }
 
@@ -311,8 +321,8 @@ class _MapScreenState extends State<MapScreen>
     if (_bottomSheetController != null && !_isCloseBottomSheet) {
       _bottomSheetController.close();
     }
-    BlocProvider.of<MapBloc>(context).add(
-        OnFilterChangedEvent(filterTypes: _filters));
+    BlocProvider.of<MapBloc>(context)
+        .add(OnFilterChangedEvent(filterTypes: _filters));
   }
 
   void _onBenchSliderPageChanged(BenchLight benchLight, int index) {

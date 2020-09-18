@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:omsk_seaty_mobile/app_localizations.dart';
+import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/blocs/my_benches/my_benches_bloc.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/model/my_bench_ui.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/custom_app_bar.dart';
 import 'package:omsk_seaty_mobile/ui/widgets/my_bench_card.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 class MyBenchPage extends StatefulWidget {
   MyBenchPage({Key key}) : super(key: key);
@@ -101,7 +103,13 @@ class _MyBenchPageState extends State<MyBenchPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "/add_bench");
+          var user = BlocProvider.of<AuthenticationBloc>(context).getUser;
+          if (user == null || user.uid ==""){
+            Scaffold.of(context).showSnackBar(getSnackBarError(AppLocalizations.of(context).translate("403_error"), context));
+          }
+          else {
+            Navigator.pushNamed(context, '/add_bench');
+          }
         },
         elevation: 8.0,
         backgroundColor: Theme.of(context).buttonColor,

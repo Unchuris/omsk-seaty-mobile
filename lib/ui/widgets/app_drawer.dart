@@ -7,10 +7,12 @@ import 'package:omsk_seaty_mobile/app_localizations.dart';
 import 'package:omsk_seaty_mobile/blocs/authentication/authentication_bloc.dart';
 import 'package:omsk_seaty_mobile/data/models/user.dart';
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/pages/login_error.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/profile/profile.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_benches/top_benches.dart';
 import 'package:omsk_seaty_mobile/ui/pages/top_user/top_user.dart';
+import 'package:omsk_seaty_mobile/ui/widgets/snackbar.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer();
@@ -78,7 +80,13 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 RawMaterialButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/add_bench');
+                    var user = BlocProvider.of<AuthenticationBloc>(context).getUser;
+                    if (user == null || user.uid ==""){
+                      Navigator.pushNamed(context, ErrorLoginPage.routeName);
+                    }
+                    else {
+                      Navigator.pushNamed(context, '/add_bench');
+                    }
                   },
                   elevation: 8.0,
                   fillColor: Theme.of(context).buttonColor,

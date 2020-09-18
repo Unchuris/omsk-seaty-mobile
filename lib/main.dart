@@ -22,6 +22,7 @@ import 'package:omsk_seaty_mobile/ui/pages/bench/bench.dart';
 import 'package:omsk_seaty_mobile/ui/pages/login/login.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/favorites/favorites.dart';
+import 'package:omsk_seaty_mobile/ui/pages/login_error.dart';
 
 import 'package:omsk_seaty_mobile/ui/pages/map.dart';
 import 'package:omsk_seaty_mobile/ui/pages/my_benches/my_benches.dart';
@@ -156,6 +157,7 @@ class MyApp extends StatelessWidget {
               TopUserPage.routeName: (context) => TopUserPage(),
               TopBechesPage.routeName: (context) => TopBechesPage(),
               MyBenchPage.routeName: (context) => MyBenchPage(),
+              ErrorLoginPage.routeName: (context) => ErrorLoginPage()
             },
           );
         }));
